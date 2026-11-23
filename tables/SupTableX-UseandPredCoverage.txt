@@ -1,0 +1,7 @@
+"Use"	"Num.Chems"	"Num.Chems.with.Structure"	"Frac.No.Structure"	"Frac.No.Pred"	"Frac.with.Struct.but.No.Pred"
+"industrial"	209703	151957	0.275	0.78	0.697
+"food"	18477	13273	0.282	0.6	0.451
+"pharmaceutical"	9785	9334	0.0461	0.375	0.351
+"consumer"	38325	27730	0.276	0.674	0.555
+"unknown"	12914	12858	0.00434	0.62	0.618
+"agricultural"	10810	7335	0.321	0.58	0.392

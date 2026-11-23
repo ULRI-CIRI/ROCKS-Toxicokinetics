@@ -1,0 +1,480 @@
+"class"	"n"	"n.invivo"	"n.invitro"	"n.inside.HTTKQSPR.AD"	"n.inside.OPERAlogP.AD"	"n.inside.OPERApKa.AD"	"n.outside.HTTKQSPR.AD"	"n.outside.OPERAlogP.AD"	"n.outside.OPERApKa.AD"	"F.outside.HTTKQSPR.AD"	"F.outside.OPERAlogP.AD"	"F.outside.OPERApKa.AD"	"n.OPERAlogP.training"	"n.OPERApKa.training"
+"(3'->5')-dinucleotides and analogues"	32	0	0	0	14	12	32	18	20	1	0.562	0.625	0	0
+"(5'->5')-dinucleotides"	28	0	0	2	23	20	26	5	8	0.929	0.179	0.286	3	0
+"1,3-thiazolo[5,4-d]pyrimidines"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"1-azafluoranthenes"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"1-hydroxylamino, 4-unsubstituted benzenoids"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"2',5'-dideoxyribonucleosides"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"2-arylbenzofuran flavonoids"	65	1	1	14	36	21	51	29	44	0.785	0.446	0.677	0	0
+"3,4-dihydrocoumarins"	7	0	0	2	4	2	5	3	5	0.714	0.429	0.714	1	0
+"5'-deoxyribonucleosides"	33	3	1	13	19	15	20	14	18	0.606	0.424	0.545	1	0
+"6,6a-secoaporphines"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"6,7-benzomorphans"	27	0	0	7	13	8	20	14	19	0.741	0.519	0.704	0	0
+"Acenaphthylenes"	4	0	1	1	4	3	3	0	1	0.75	0	0.25	0	0
+"Actinide organides"	8	0	0	0	0	0	8	8	8	1	1	1	0	0
+"Actinide oxoanionic compounds"	12	0	0	0	0	0	12	12	12	1	1	1	0	0
+"Actinide salts"	15	0	0	0	0	0	15	15	15	1	1	1	0	0
+"Acutumine and related alkaloids"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"Acyclic allenes"	4	0	0	0	2	2	4	2	2	1	0.5	0.5	0	0
+"Acyl halides"	175	0	4	33	126	91	142	49	84	0.811	0.28	0.48	4	0
+"Ajmaline-sarpagine alkaloids"	10	1	1	2	3	2	8	7	8	0.8	0.7	0.8	0	0
+"Alkali metal organides"	126	1	1	0	7	5	126	119	121	1	0.944	0.96	0	0
+"Alkali metal oxoanionic compounds"	323	1	1	0	0	0	323	323	323	1	1	1	0	0
+"Alkali metal salts"	125	0	0	0	0	0	125	125	125	1	1	1	0	0
+"Alkaline earth metal organides"	80	0	0	0	1	1	80	79	79	1	0.988	0.988	0	0
+"Alkaline earth metal oxoanionic compounds"	238	0	0	0	0	0	238	238	238	1	1	1	0	0
+"Alkaline earth metal salts"	63	0	0	0	0	0	63	63	63	1	1	1	0	0
+"Alkyl halides"	544	28	43	9	323	243	535	221	301	0.983	0.406	0.553	6	1
+"Alkylhalophosphines"	13	0	0	4	11	10	9	2	3	0.692	0.154	0.231	0	0
+"Allocolchicine alkaloids"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"Allyl sulfur compounds"	23	0	0	6	21	18	17	2	5	0.739	0.087	0.217	0	0
+"Allyl-type 1,3-dipolar organic compounds"	284	1	0	94	216	169	190	68	115	0.669	0.239	0.405	7	8
+"Alpha-methyldeoxybenzoin flavonoids"	3	0	0	1	2	1	2	1	2	0.667	0.333	0.667	0	0
+"Amaryllidaceae alkaloids"	14	1	1	7	8	9	7	6	5	0.5	0.429	0.357	1	0
+"Anatoxins"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Angucyclines"	3	0	0	2	2	2	1	1	1	0.333	0.333	0.333	0	0
+"Anthracenes"	1748	6	8	681	1252	938	1067	496	810	0.61	0.284	0.463	51	4
+"Anthracyclines"	63	9	6	23	39	27	40	24	36	0.635	0.381	0.571	2	0
+"Aporphines"	64	1	2	25	35	28	39	29	36	0.609	0.453	0.562	0	0
+"Aristolactams"	2	0	0	2	2	2	0	0	0	0	0	0	0	0
+"Aromatic hydrocarbons"	31	0	0	1	8	6	30	23	25	0.968	0.742	0.806	0	0
+"Aryl halides"	112	1	0	17	82	57	95	30	55	0.848	0.268	0.491	3	3
+"Arylnaphthalene lignans"	29	0	0	8	19	13	21	10	16	0.724	0.345	0.552	0	0
+"Aryltetralin lignans"	13	0	0	4	9	5	9	4	8	0.692	0.308	0.615	0	0
+"Aspidospermatan-type alkaloids"	6	0	0	1	1	1	5	5	5	0.833	0.833	0.833	0	0
+"Aurone flavonoids"	9	0	0	3	3	3	6	6	6	0.667	0.667	0.667	0	0
+"Azacyclic compounds"	20	0	0	7	13	9	13	7	11	0.65	0.35	0.55	0	0
+"Azaspirodecane derivatives"	70	2	1	23	40	28	47	30	42	0.671	0.429	0.6	2	0
+"Azepanes"	55	2	2	26	39	30	29	16	25	0.527	0.291	0.455	0	2
+"Azepines"	15	1	0	7	8	8	8	7	7	0.533	0.467	0.467	0	0
+"Azetidines"	20	0	0	4	16	11	16	4	9	0.8	0.2	0.45	0	1
+"Aziridines"	9	0	0	0	6	3	9	3	6	1	0.333	0.667	1	2
+"Azobenzenes"	1301	3	7	532	842	646	769	459	655	0.591	0.353	0.503	52	4
+"Azoles"	2431	37	37	922	1624	1224	1509	807	1207	0.621	0.332	0.497	58	83
+"Azolidines"	491	9	9	178	340	244	313	151	247	0.637	0.308	0.503	15	11
+"Azolines"	203	4	3	55	128	101	148	75	102	0.729	0.369	0.502	5	3
+"Benzazepines"	177	16	10	58	109	66	119	68	111	0.672	0.384	0.627	7	1
+"Benzene and substituted derivatives"	27643	443	500	10724	18229	13688	16919	9414	13955	0.612	0.341	0.505	715	482
+"Benzimidazole ribonucleosides and ribonucleotides"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Benzimidazoles"	488	13	13	218	332	257	270	156	231	0.553	0.32	0.473	15	26
+"Benzisoxazoles"	23	1	1	11	19	14	12	4	9	0.522	0.174	0.391	3	0
+"Benzo-1,2,3-triazines"	14	1	1	10	13	10	4	1	4	0.286	0.0714	0.286	0	0
+"Benzocycloheptapyridines"	15	2	1	9	12	10	6	3	5	0.4	0.2	0.333	1	0
+"Benzodiazepines"	228	39	23	115	167	124	113	61	104	0.496	0.268	0.456	7	0
+"Benzodioxanes"	64	2	4	25	38	29	39	26	35	0.609	0.406	0.547	1	0
+"Benzodioxins"	96	7	0	22	79	58	74	17	38	0.771	0.177	0.396	2	0
+"Benzodioxoles"	205	4	6	98	140	112	107	65	93	0.522	0.317	0.454	3	0
+"Benzodithiins"	9	0	0	3	5	3	6	4	6	0.667	0.444	0.667	0	0
+"Benzofurans"	491	12	8	174	359	256	317	132	235	0.646	0.269	0.479	6	2
+"Benzophenanthridine alkaloids"	17	0	0	5	10	6	12	7	11	0.706	0.412	0.647	0	1
+"Benzopyrans"	737	12	9	256	483	376	481	254	361	0.653	0.345	0.49	8	1
+"Benzopyrazoles"	106	2	3	48	71	56	58	35	50	0.547	0.33	0.472	2	10
+"Benzothiadiazoles"	25	1	2	13	17	15	12	8	10	0.48	0.32	0.4	1	0
+"Benzothiazepines"	39	4	4	21	23	22	18	16	17	0.462	0.41	0.436	0	0
+"Benzothiazines"	296	22	14	134	211	153	162	85	143	0.547	0.287	0.483	4	2
+"Benzothiazoles"	728	5	13	329	507	387	399	221	341	0.548	0.304	0.468	15	7
+"Benzothiepins"	30	3	0	14	22	18	16	8	12	0.533	0.267	0.4	0	0
+"Benzothiophenes"	121	2	1	45	85	53	76	36	68	0.628	0.298	0.562	3	2
+"Benzothiopyrans"	51	5	2	23	40	27	28	11	24	0.549	0.216	0.471	1	0
+"Benzotriazoles"	102	2	1	40	62	49	62	40	53	0.608	0.392	0.52	2	6
+"Benzoxadiazoles"	43	0	0	19	34	27	24	9	16	0.558	0.209	0.372	0	0
+"Benzoxathiins"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Benzoxathioles"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Benzoxazepines"	16	2	0	9	13	11	7	3	5	0.438	0.188	0.312	2	0
+"Benzoxazines"	225	2	3	75	133	112	150	92	113	0.667	0.409	0.502	8	1
+"Benzoxazoles"	161	0	2	77	116	86	84	45	75	0.522	0.28	0.466	5	2
+"Benzoxazolines"	55	0	0	18	29	23	37	26	32	0.673	0.473	0.582	0	0
+"Benzoxepines"	40	3	3	15	21	18	25	19	22	0.625	0.475	0.55	0	0
+"Betalains"	3	0	0	0	3	2	3	0	1	1	0	0.333	0	0
+"Bi- and oligothiophenes"	28	0	0	10	23	17	18	5	11	0.643	0.179	0.393	0	0
+"Biotin and derivatives"	34	1	0	13	23	14	21	11	20	0.618	0.324	0.588	1	0
+"Borinic acid derivatives"	2	0	0	0	0	1	2	2	1	1	1	0.5	1	0
+"Boronic acid derivatives"	55	0	0	0	36	29	55	19	26	1	0.345	0.473	0	1
+"Brevetoxins and derivatives"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Camptothecins"	31	6	4	14	21	16	17	10	15	0.548	0.323	0.484	0	0
+"Carbene-type 1,3-dipolar compounds"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Carbothioic O-acids"	2	0	0	0	1	0	2	1	2	1	0.5	1	0	0
+"Carbothioic S-acids"	7	0	0	2	7	6	5	0	1	0.714	0	0.143	0	1
+"Carboximidic acids and derivatives"	106	4	4	23	62	55	83	44	51	0.783	0.415	0.481	5	3
+"Carboxylic acids and derivatives"	12685	197	153	3229	7251	5442	9456	5434	7243	0.745	0.428	0.571	280	112
+"Cephalotaxus alkaloids"	2	1	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Ciguatera toxins"	3	0	0	0	3	3	3	0	0	1	0	0	0	0
+"Cinchona alkaloids"	77	4	4	26	42	30	51	35	47	0.662	0.455	0.61	0	0
+"Cinnamaldehydes"	84	0	1	33	48	37	51	36	47	0.607	0.429	0.56	2	0
+"Cinnamic acids and derivatives"	504	5	5	195	294	228	309	210	276	0.613	0.417	0.548	11	9
+"Cinnamyl alcohols"	24	0	0	13	15	13	11	9	11	0.458	0.375	0.458	1	0
+"Corynanthean-type alkaloids"	8	1	0	4	5	4	4	3	4	0.5	0.375	0.5	0	0
+"Coumarans"	68	2	5	22	42	33	46	26	35	0.676	0.382	0.515	0	0
+"Coumarinolignans"	2	0	0	1	2	1	1	0	1	0.5	0	0.5	0	0
+"Coumarins and derivatives"	524	7	12	243	364	280	281	160	244	0.536	0.305	0.466	6	8
+"Cyanide salts"	2	0	0	0	1	0	2	1	2	1	0.5	1	0	0
+"Cycloheptafurans"	3	0	0	3	3	3	0	0	0	0	0	0	0	0
+"Cycloheptapyrans"	2	0	0	1	2	1	1	0	1	0.5	0	0.5	0	0
+"Cycloheptathiophenes"	4	3	1	3	4	3	1	0	1	0.25	0	0.25	0	0
+"Cytochalasans"	8	0	0	5	6	5	3	2	3	0.375	0.25	0.375	0	0
+"Daphniphylline-type alkaloids"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Depsides and depsidones"	336	2	2	131	207	152	205	129	184	0.61	0.384	0.548	7	0
+"Diarylheptanoids"	220	3	8	80	149	108	140	71	112	0.636	0.323	0.509	3	0
+"Diazanaphthalenes"	642	26	22	286	455	350	356	187	292	0.555	0.291	0.455	19	24
+"Diazepanes"	11	0	0	1	5	2	10	6	9	0.909	0.545	0.818	1	0
+"Diazepines"	1	0	0	0	1	1	1	0	0	1	0	0	0	0
+"Diazinanes"	633	35	30	252	427	334	381	206	299	0.602	0.325	0.472	20	9
+"Diazines"	1300	44	32	480	895	663	820	405	637	0.631	0.312	0.49	30	58
+"Dibenzocycloheptenes"	72	6	6	32	50	32	40	22	40	0.556	0.306	0.556	2	1
+"Dibenzylbutane lignans"	13	1	2	5	6	5	8	7	8	0.615	0.538	0.615	1	0
+"Dihydrofurans"	177	1	1	48	111	83	129	66	94	0.729	0.373	0.531	4	0
+"Dihydroisoquinolines"	11	0	0	5	7	5	6	4	6	0.545	0.364	0.545	0	0
+"Dihydrothiophenes"	18	0	0	7	14	11	11	4	7	0.611	0.222	0.389	1	0
+"Dioxaborolanes"	7	0	0	0	7	5	7	0	2	1	0	0.286	0	0
+"Dioxanes"	183	3	2	70	122	90	113	61	93	0.617	0.333	0.508	6	0
+"Dioxaphospholanes"	8	0	0	4	5	5	4	3	3	0.5	0.375	0.375	0	0
+"Dioxathiolanes"	3	0	0	0	1	1	3	2	2	1	0.667	0.667	0	0
+"Dioxepanes"	24	0	0	9	13	10	15	11	14	0.625	0.458	0.583	1	0
+"Dioxepines"	1	0	0	0	1	1	1	0	0	1	0	0	0	0
+"Dioxetanes"	3	0	0	0	2	1	3	1	2	1	0.333	0.667	0	0
+"Dioxins"	1	0	0	0	1	1	1	0	0	1	0	0	0	0
+"Dioxolanes"	91	0	0	21	53	37	70	38	54	0.769	0.418	0.593	0	0
+"Dioxoles"	3	0	0	1	2	2	2	1	1	0.667	0.333	0.333	0	0
+"Dioxolopyrans"	14	1	1	5	6	5	9	8	9	0.643	0.571	0.643	0	0
+"Dithianes"	23	0	0	5	19	13	18	4	10	0.783	0.174	0.435	0	0
+"Dithietanes"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Dithiins"	5	0	0	2	3	2	3	2	3	0.6	0.4	0.6	0	0
+"Dithiocarbamic acids and derivatives"	36	0	0	10	17	13	26	19	23	0.722	0.528	0.639	1	0
+"Dithiolanes"	21	2	0	5	15	11	16	6	10	0.762	0.286	0.476	0	0
+"Dithioles"	7	0	0	0	2	1	7	5	6	1	0.714	0.857	0	0
+"Eburnan-type alkaloids"	22	1	0	10	11	10	12	11	12	0.545	0.5	0.545	0	0
+"Emetine alkaloids"	6	1	0	1	5	3	5	1	3	0.833	0.167	0.5	0	0
+"Endocannabinoids"	3	0	0	0	0	0	3	3	3	1	1	1	0	0
+"Epibatidine analogues"	1	0	0	0	1	0	1	0	1	1	0	1	0	0
+"Epoxides"	212	0	0	46	111	83	166	101	129	0.783	0.476	0.608	1	1
+"Ergoline and derivatives"	86	11	4	39	59	44	47	27	42	0.547	0.314	0.488	8	0
+"Erythrina alkaloids"	3	0	0	2	3	2	1	0	1	0.333	0	0.333	0	0
+"Fatty Acyls"	8686	24	39	2829	5139	3895	5857	3547	4791	0.674	0.408	0.552	140	51
+"Flavin nucleotides"	4	0	0	0	4	4	4	0	0	1	0	0	0	0
+"Flavonoids"	825	6	24	279	523	401	546	302	424	0.662	0.366	0.514	6	2
+"Flavonolignans"	10	0	0	3	5	3	7	5	7	0.7	0.5	0.7	0	0
+"Fluorenes"	308	1	6	145	212	172	163	96	136	0.529	0.312	0.442	6	4
+"Furanoid lignans"	49	0	1	18	30	20	31	19	29	0.633	0.388	0.592	0	0
+"Furans"	131	2	1	52	86	61	79	45	70	0.603	0.344	0.534	3	5
+"Furofurans"	40	3	2	18	25	22	22	15	18	0.55	0.375	0.45	1	0
+"Furopyrans"	5	1	1	2	3	2	3	2	3	0.6	0.4	0.6	0	0
+"Furopyridines"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Furopyrroles"	2	0	0	0	1	0	2	1	2	1	0.5	1	0	0
+"Gelsemium alkaloids"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Glycero-3-thiophosphocholines"	1	0	0	0	1	0	1	0	1	1	0	1	0	0
+"Glycerolipids"	362	0	1	85	208	150	277	154	212	0.765	0.425	0.586	4	0
+"Glycerophospholipids"	123	0	0	10	66	48	113	57	75	0.919	0.463	0.61	1	0
+"Glycinamide ribonucleotides"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Haloacetylenes and derivatives"	11	0	0	1	6	4	10	5	7	0.909	0.455	0.636	0	0
+"Halogen organides"	60	1	0	0	2	1	60	58	59	1	0.967	0.983	0	0
+"Halohydrins"	125	1	7	8	83	68	117	42	57	0.936	0.336	0.456	1	2
+"Harmala alkaloids"	36	1	0	13	24	15	23	12	21	0.639	0.333	0.583	1	6
+"Heteroaromatic compounds"	390	0	1	131	261	202	259	129	188	0.664	0.331	0.482	0	10
+"Homogeneous actinide compounds"	22	1	0	0	0	0	22	22	22	1	1	1	0	0
+"Homogeneous alkali metal compounds"	10	1	1	0	0	0	10	10	10	1	1	1	0	0
+"Homogeneous alkaline earth metal compounds"	14	3	0	0	0	0	14	14	14	1	1	1	0	0
+"Homogeneous halogens"	27	2	0	0	0	0	27	27	27	1	1	1	0	0
+"Homogeneous lanthanide compounds"	15	0	0	0	0	0	15	15	15	1	1	1	0	0
+"Homogeneous metalloid compounds"	19	1	0	0	0	0	19	19	19	1	1	1	0	0
+"Homogeneous noble gases"	18	0	0	0	0	0	18	18	18	1	1	1	0	0
+"Homogeneous other non-metal compounds"	48	2	1	0	4	4	48	44	44	1	0.917	0.917	1	0
+"Homogeneous post-transition metal compounds"	16	2	0	0	0	0	16	16	16	1	1	1	0	0
+"Homogeneous transition metal compounds"	62	12	0	0	0	0	62	62	62	1	1	1	0	0
+"Homoisoflavonoids"	22	0	1	7	12	9	15	10	13	0.682	0.455	0.591	0	0
+"Hydroxy acids and derivatives"	278	4	4	62	165	118	216	113	160	0.777	0.406	0.576	5	2
+"Ibogan-type alkaloids"	11	0	0	5	7	5	6	4	6	0.545	0.364	0.545	0	0
+"Imidazo[1,5-a]pyrazines"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Imidazodiazepines"	2	1	1	1	1	1	1	1	1	0.5	0.5	0.5	1	0
+"Imidazole ribonucleosides and ribonucleotides"	9	1	0	3	7	5	6	2	4	0.667	0.222	0.444	0	0
+"Imidazole[4,5-c]pyridine ribonucleosides and ribonucleotides"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Imidazopyrazines"	10	0	0	5	7	7	5	3	3	0.5	0.3	0.3	0	0
+"Imidazopyridines"	56	1	1	27	45	31	29	11	25	0.518	0.196	0.446	2	2
+"Imidazopyrimidines"	494	22	19	227	343	262	267	151	232	0.54	0.306	0.47	8	45
+"Imidazotetrazines"	4	1	0	3	3	3	1	1	1	0.25	0.25	0.25	1	0
+"Imidazothiazoles"	13	1	0	8	12	8	5	1	5	0.385	0.0769	0.385	0	0
+"Imidolactams"	114	0	0	48	84	62	66	30	52	0.579	0.263	0.456	1	1
+"Imidothioesters"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Imidoyl halides"	3	0	0	0	2	1	3	1	2	1	0.333	0.667	0	0
+"Indanes"	349	6	2	155	226	170	194	123	179	0.556	0.352	0.513	5	5
+"Indenes and isoindenes"	48	0	0	22	37	28	26	11	20	0.542	0.229	0.417	0	0
+"Indoles and derivatives"	1613	46	47	713	1091	819	900	522	794	0.558	0.324	0.492	38	20
+"Indolizidines"	71	0	0	17	36	22	54	35	49	0.761	0.493	0.69	0	0
+"Indolonaphthyridine alkaloids"	7	0	0	3	5	3	4	2	4	0.571	0.286	0.571	0	0
+"Inorganic antimony salts"	22	0	0	0	0	0	22	22	22	1	1	1	0	0
+"Inorganic arsenic compounds"	5	0	0	0	0	0	5	5	5	1	1	1	0	0
+"Inorganic oxides"	6	0	0	0	0	0	6	6	6	1	1	1	0	0
+"Inorganic silver salts"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Inorganic tin salts"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Intermetallic alkaline earth metal compounds"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Intermetallic lanthanide compounds"	12	0	0	0	0	0	12	12	12	1	1	1	0	0
+"Intermetallic post-transition metal compounds"	48	0	0	0	0	0	48	48	48	1	1	1	0	0
+"Intermetallic transition metal compounds"	26	0	0	0	0	0	26	26	26	1	1	1	0	0
+"Isoaporphines"	3	0	0	2	2	2	1	1	1	0.333	0.333	0.333	0	0
+"Isobenzofurans"	35	0	0	12	23	13	23	12	22	0.657	0.343	0.629	1	0
+"Isochromanequinones"	3	0	0	0	3	1	3	0	2	1	0	0.667	0	0
+"Isocoumarans"	45	3	2	23	30	25	22	15	20	0.489	0.333	0.444	2	0
+"Isocoumarins and derivatives"	23	0	0	10	17	10	13	6	13	0.565	0.261	0.565	0	0
+"Isoflavonoids"	253	2	4	115	173	127	138	80	126	0.545	0.316	0.498	1	0
+"Isoindoles and derivatives"	312	7	6	125	203	148	187	109	164	0.599	0.349	0.526	9	4
+"Isoquinolines and derivatives"	280	8	7	104	176	123	176	104	157	0.629	0.371	0.561	7	8
+"Isothiocyanates"	51	1	0	15	40	27	36	11	24	0.706	0.216	0.471	0	0
+"Isothioureas"	37	0	0	8	23	21	29	14	16	0.784	0.378	0.432	0	1
+"Kavalactones"	13	1	0	8	11	9	5	2	4	0.385	0.154	0.308	0	0
+"Keto acids and derivatives"	367	0	0	113	225	176	254	142	191	0.692	0.387	0.52	9	7
+"Lactams"	295	53	43	130	191	148	165	104	147	0.559	0.353	0.498	18	0
+"Lactones"	291	2	2	67	156	119	224	135	172	0.77	0.464	0.591	3	1
+"Lanthanide organides"	33	0	0	0	0	0	33	33	33	1	1	1	0	0
+"Lanthanide oxoanionic compounds"	183	0	0	0	0	0	183	183	183	1	1	1	0	0
+"Lanthanide salts"	124	0	0	0	0	0	124	124	124	1	1	1	0	0
+"Lignan glycosides"	15	0	0	4	8	6	11	7	9	0.733	0.467	0.6	0	0
+"Lignan lactones"	21	3	2	8	15	8	13	6	13	0.619	0.286	0.619	0	0
+"Linear 1,3-diarylpropanoids"	220	4	2	81	132	92	139	88	128	0.632	0.4	0.582	5	0
+"Loline alkaloids and derivatives"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Lumicolchicine alkaloids"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Lupin alkaloids"	35	2	0	12	22	13	23	13	22	0.657	0.371	0.629	0	1
+"Macrolactams"	53	6	3	16	28	22	37	25	31	0.698	0.472	0.585	3	0
+"Macrolide lactams"	14	7	5	4	8	5	10	6	9	0.714	0.429	0.643	1	0
+"Macrolides and analogues"	140	4	4	58	84	66	82	56	74	0.586	0.4	0.529	6	0
+"Macroline alkaloids"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Metal acetylides"	5	0	0	0	1	1	5	4	4	1	0.8	0.8	0	0
+"Metal alkyl halides"	28	0	0	0	0	0	28	28	28	1	1	1	0	0
+"Metal alkyls"	6	0	0	0	0	0	6	6	6	1	1	1	0	0
+"Metal allyls"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Metal aryls"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Metalloheterocyclic compounds"	68	1	1	3	24	16	65	44	52	0.956	0.647	0.765	0	0
+"Metalloid organides"	89	0	0	0	0	0	89	89	89	1	1	1	0	0
+"Metalloid oxoanionic compounds"	6	0	0	0	0	0	6	6	6	1	1	1	0	0
+"Metalloid salts"	289	0	0	0	0	0	289	289	289	1	1	1	0	0
+"Miscellaneous mixed metal/non-metals"	394	0	0	0	4	2	394	390	392	1	0.99	0.995	1	0
+"Morphinans"	186	12	7	78	127	88	108	59	98	0.581	0.317	0.527	2	2
+"N-phenylhydroxylamines"	5	0	0	0	2	2	5	3	3	1	0.6	0.6	0	2
+"Naphthacenes"	26	0	0	10	16	14	16	10	12	0.615	0.385	0.462	0	0
+"Naphthalenes"	5295	22	29	1491	3046	2267	3804	2249	3028	0.718	0.425	0.572	160	36
+"Naphthofurans"	51	1	2	12	26	15	39	25	36	0.765	0.49	0.706	1	0
+"Naphthopyrans"	68	1	0	23	39	29	45	29	39	0.662	0.426	0.574	3	0
+"Naphthothiazoles"	84	0	0	33	53	39	51	31	45	0.607	0.369	0.536	0	0
+"Neoflavonoids"	18	0	0	9	13	11	9	5	7	0.5	0.278	0.389	0	0
+"Non-metal oxoanionic compounds"	124	2	0	0	0	0	124	124	124	1	1	1	0	0
+"Nucleoside and nucleotide analogues"	79	7	3	17	35	26	62	44	53	0.785	0.557	0.671	2	0
+"Ochratoxins and related substances"	6	1	1	1	3	3	5	3	3	0.833	0.5	0.5	0	0
+"Organic azides"	2	0	0	0	1	1	2	1	1	1	0.5	0.5	0	0
+"Organic carbonic acids and derivatives"	659	4	4	127	428	333	532	231	326	0.807	0.351	0.495	25	5
+"Organic disulfides"	110	0	0	33	77	53	77	33	57	0.7	0.3	0.518	2	0
+"Organic dithiophosphoric acids and derivatives"	121	1	5	31	64	41	90	57	80	0.744	0.471	0.661	3	0
+"Organic hydroperoxides"	26	0	0	7	20	18	19	6	8	0.731	0.231	0.308	3	4
+"Organic metal salts"	665	1	1	48	288	208	617	377	457	0.928	0.567	0.687	11	1
+"Organic oxides"	180	0	0	54	110	83	126	70	97	0.7	0.389	0.539	9	0
+"Organic oxoanionic compounds"	301	2	1	17	161	117	284	140	184	0.944	0.465	0.611	9	0
+"Organic oxoazanium compounds"	2	0	0	1	2	2	1	0	0	0.5	0	0	0	0
+"Organic phosphines and derivatives"	88	0	0	19	66	48	69	22	40	0.784	0.25	0.455	1	3
+"Organic phosphonic acids and derivatives"	1431	14	14	370	815	619	1061	616	812	0.741	0.43	0.567	24	0
+"Organic phosphoric acids and derivatives"	1210	4	12	287	678	509	923	532	701	0.763	0.44	0.579	13	0
+"Organic sulfate salts"	52	0	0	6	30	24	46	22	28	0.885	0.423	0.538	2	0
+"Organic sulfonic acids and derivatives"	768	6	6	105	461	344	663	307	424	0.863	0.4	0.552	26	2
+"Organic sulfuric acids and derivatives"	590	1	2	151	360	274	439	230	316	0.744	0.39	0.536	8	0
+"Organic thioperoxides"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"Organic thiophosphoric acids and derivatives"	152	5	11	63	107	77	89	45	75	0.586	0.296	0.493	5	0
+"Organic thiosulfate salts"	2	0	0	0	2	1	2	0	1	1	0	0.5	0	0
+"Organic thiosulfuric acids and derivatives"	11	0	0	4	9	8	7	2	3	0.636	0.182	0.273	0	0
+"Organic trisulfides"	32	0	0	4	17	10	28	15	22	0.875	0.469	0.688	2	0
+"Organo-alkali-metal compounds"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Organo-post-transition metal compounds"	210	2	1	0	2	2	210	208	208	1	0.99	0.99	0	0
+"Organoalkaline-earth metal compounds"	19	0	0	0	0	0	19	19	19	1	1	1	0	0
+"Organoarsinous acids"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Organoboroxines"	5	0	0	0	3	3	5	2	2	1	0.4	0.4	1	0
+"Organobromides"	186	0	0	43	135	103	143	51	83	0.769	0.274	0.446	4	1
+"Organochlorides"	356	1	2	90	238	180	266	118	176	0.747	0.331	0.494	12	2
+"Organofluorides"	269	1	5	8	205	154	261	64	115	0.97	0.238	0.428	16	2
+"Organoiodides"	105	0	5	7	80	55	98	25	50	0.933	0.238	0.476	3	0
+"Organometalloid compounds"	1663	1	6	311	1064	776	1352	599	887	0.813	0.36	0.533	41	0
+"Organonitrogen compounds"	5500	48	47	1470	3505	2614	4030	1995	2886	0.733	0.363	0.525	174	237
+"Organooxygen compounds"	8936	115	76	2805	5715	4247	6131	3221	4689	0.686	0.36	0.525	219	101
+"Organophosphinic acids and derivatives"	19	0	0	6	7	6	13	12	13	0.684	0.632	0.684	0	0
+"Organothiophosphorus compounds"	291	2	2	65	157	117	226	134	174	0.777	0.46	0.598	2	0
+"Organotransition metal compounds"	3	0	0	0	0	0	3	3	3	1	1	1	0	0
+"Orthocarboxylic acid derivatives"	30	0	0	3	22	14	27	8	16	0.9	0.267	0.533	0	0
+"Other mixed metal/non-metal oxoanionic compounds"	6	0	0	0	0	0	6	6	6	1	1	1	0	0
+"Other non-metal halides"	59	0	0	0	1	1	59	58	58	1	0.983	0.983	0	0
+"Other non-metal organides"	107	1	0	0	2	2	107	105	105	1	0.981	0.981	0	0
+"Oxacyclic compounds"	24	0	0	3	14	9	21	10	15	0.875	0.417	0.625	1	0
+"Oxadiazines"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Oxanes"	105	0	0	33	59	44	72	46	61	0.686	0.438	0.581	1	0
+"Oxaphospholanes"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Oxathianes"	12	0	0	4	9	8	8	3	4	0.667	0.25	0.333	0	0
+"Oxathietanes"	1	0	0	0	1	1	1	0	0	1	0	0	0	0
+"Oxathiins"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Oxathiolanes"	7	0	0	0	4	2	7	3	5	1	0.429	0.714	1	0
+"Oxazaphosphinanes"	3	0	0	2	2	2	1	1	1	0.333	0.333	0.333	0	0
+"Oxazepines"	2	0	0	1	2	2	1	0	0	0.5	0	0	0	0
+"Oxazinanes"	386	8	10	151	253	192	235	133	194	0.609	0.345	0.503	20	13
+"Oxazines"	4	0	0	0	1	1	4	3	3	1	0.75	0.75	0	0
+"Oxazolopyridines"	12	0	1	3	6	3	9	6	9	0.75	0.5	0.75	0	0
+"Oxepanes"	175	0	0	56	84	66	119	91	109	0.68	0.52	0.623	0	0
+"Oxetanes"	24	0	0	1	17	11	23	7	13	0.958	0.292	0.542	2	0
+"Oxirenes"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Oxocins"	6	0	0	2	4	2	4	2	4	0.667	0.333	0.667	0	0
+"Oxolanes"	66	0	0	21	40	26	45	26	40	0.682	0.394	0.606	1	0
+"Pavine alkaloids"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Pentacenequinones"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Pentacenes"	4	0	0	0	4	4	4	0	0	1	0	0	0	0
+"Peptidomimetics"	212	15	13	60	116	87	152	96	125	0.717	0.453	0.59	4	1
+"Perylenequinones"	7	0	0	3	6	3	4	1	4	0.571	0.143	0.571	1	0
+"Phenalanes"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Phenalenes"	3	0	0	1	2	1	2	1	2	0.667	0.333	0.667	0	0
+"Phenanthrenes and derivatives"	421	12	13	152	291	226	269	130	195	0.639	0.309	0.463	13	2
+"Phenanthrolines"	43	0	0	21	32	23	22	11	20	0.512	0.256	0.465	1	9
+"Phenol esters"	418	1	0	172	281	204	246	137	214	0.589	0.328	0.512	5	0
+"Phenol ethers"	1764	22	24	755	1174	902	1009	590	862	0.572	0.334	0.489	42	16
+"Phenols"	1555	18	52	653	1061	820	902	494	735	0.58	0.318	0.473	44	94
+"Phenylpropanoic acids"	172	5	3	70	120	91	102	52	81	0.593	0.302	0.471	7	6
+"Phosphacyclic compounds"	4	0	0	1	2	2	3	2	2	0.75	0.5	0.5	0	0
+"Phosphorus mustard compounds"	6	0	0	0	2	2	6	4	4	1	0.667	0.667	1	0
+"Phthalide isoquinolines"	15	1	0	7	10	8	8	5	7	0.533	0.333	0.467	0	0
+"Piperazinoazepines"	5	0	0	3	4	4	2	1	1	0.4	0.2	0.2	0	0
+"Piperazinopiperidines"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Piperidines"	1020	22	20	390	655	485	630	365	535	0.618	0.358	0.525	18	20
+"Plumeran-type alkaloids"	5	0	0	1	2	1	4	3	4	0.8	0.6	0.8	0	0
+"Polycyclic hydrocarbons"	68	0	0	20	40	29	48	28	39	0.706	0.412	0.574	2	0
+"Polypeptides"	157	8	5	3	53	38	154	104	119	0.981	0.662	0.758	0	0
+"Polysaccharides"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Post-transition metal organides"	87	0	0	0	0	0	87	87	87	1	1	1	0	0
+"Post-transition metal oxoanionic compounds"	196	0	0	0	0	0	196	196	196	1	1	1	0	0
+"Post-transition metal salts"	155	0	0	0	0	0	155	155	155	1	1	1	0	0
+"Prenol lipids"	4440	40	22	1477	2414	1795	2963	2026	2645	0.667	0.456	0.596	62	10
+"Proaporphines"	1	0	0	0	1	0	1	0	1	1	0	1	0	0
+"Propargyl-type 1,3-dipolar organic compounds"	13	0	0	0	13	11	13	0	2	1	0	0.154	0	0
+"Protoberberine alkaloids and derivatives"	31	0	0	9	15	10	22	16	21	0.71	0.516	0.677	0	0
+"Protopine alkaloids"	5	0	0	1	3	1	4	2	4	0.8	0.4	0.8	0	2
+"Pteridines and derivatives"	112	4	5	41	72	48	71	40	64	0.634	0.357	0.571	0	1
+"Purine nucleosides"	190	7	7	80	115	90	110	75	100	0.579	0.395	0.526	2	2
+"Purine nucleotides"	206	2	1	29	105	78	177	101	128	0.859	0.49	0.621	3	0
+"Pyranodioxins"	16	0	0	6	8	6	10	8	10	0.625	0.5	0.625	0	0
+"Pyranopyridines"	27	0	0	12	18	12	15	9	15	0.556	0.333	0.556	2	0
+"Pyranopyrimidines"	2	0	1	0	1	0	2	1	2	1	0.5	1	0	0
+"Pyrans"	129	1	1	43	79	56	86	50	73	0.667	0.388	0.566	0	2
+"Pyrazolo[3,4-d]pyrimidine glycosides"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Pyrazolopyrazoles"	4	0	0	3	4	3	1	0	1	0.25	0	0.25	0	0
+"Pyrazolopyridines"	34	1	1	19	25	20	15	9	14	0.441	0.265	0.412	1	0
+"Pyrazolopyrimidines"	41	1	1	21	27	22	20	14	19	0.488	0.341	0.463	0	6
+"Pyrazolotriazines"	4	0	0	2	3	3	2	1	1	0.5	0.25	0.25	0	0
+"Pyrenes"	210	3	4	48	148	110	162	62	100	0.771	0.295	0.476	6	0
+"Pyridine nucleotides"	2	0	0	0	1	0	2	1	2	1	0.5	1	0	0
+"Pyridines and derivatives"	2455	53	48	983	1704	1255	1472	751	1200	0.6	0.306	0.489	54	129
+"Pyridodiazepines"	6	0	0	1	2	1	5	4	5	0.833	0.667	0.833	0	0
+"Pyridopyrazines"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Pyridopyrimidines"	56	4	4	26	41	28	30	15	28	0.536	0.268	0.5	4	0
+"Pyrimidine nucleosides"	174	11	7	82	110	90	92	64	84	0.529	0.368	0.483	4	1
+"Pyrimidine nucleotides"	115	0	0	13	56	40	102	59	75	0.887	0.513	0.652	1	0
+"Pyrimidodiazepines"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Pyrroles"	207	6	3	95	147	116	112	60	91	0.541	0.29	0.44	0	8
+"Pyrrolidines"	582	0	4	179	341	265	403	241	317	0.692	0.414	0.545	8	9
+"Pyrrolines"	107	0	1	47	76	60	60	31	47	0.561	0.29	0.439	2	1
+"Pyrrolizidines"	15	0	0	2	6	4	13	9	11	0.867	0.6	0.733	0	1
+"Pyrrolizines"	22	0	0	8	12	9	14	10	13	0.636	0.455	0.591	0	0
+"Pyrrolopyrazines"	20	1	0	6	10	7	14	10	13	0.7	0.5	0.65	0	0
+"Pyrrolopyrazoles"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Pyrrolopyridines"	35	0	0	9	17	11	26	18	24	0.743	0.514	0.686	1	1
+"Pyrrolopyrimidine nucleosides and nucleotides"	8	0	0	2	4	2	6	4	6	0.75	0.5	0.75	1	0
+"Pyrrolopyrimidines"	88	3	1	26	46	34	62	42	54	0.705	0.477	0.614	1	0
+"Pyrrolotriazines"	4	0	0	3	4	3	1	0	1	0.25	0	0.25	0	0
+"Quebrachamine alkaloids"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"Quinodimethanes"	7	0	0	2	6	5	5	1	2	0.714	0.143	0.286	0	0
+"Quinolidines"	5	0	0	2	3	2	3	2	3	0.6	0.4	0.6	0	0
+"Quinolines and derivatives"	1472	47	39	641	992	743	831	480	729	0.565	0.326	0.495	22	86
+"Quinolizidines"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Quinolizines"	4	0	0	0	2	0	4	2	4	1	0.5	1	0	0
+"Quinuclidines"	25	2	0	9	19	15	16	6	10	0.64	0.24	0.4	1	3
+"Rhoeadine alkaloids"	2	0	0	0	1	0	2	1	2	1	0.5	1	0	0
+"Ribonucleoside 3'-phosphates"	22	0	0	4	9	7	18	13	15	0.818	0.591	0.682	1	0
+"Saccharolipids"	36	0	0	8	19	18	28	17	18	0.778	0.472	0.5	0	0
+"Saturated hydrocarbons"	469	2	5	127	344	258	342	125	211	0.729	0.267	0.45	4	0
+"Saxitoxins, gonyautoxins, and derivatives"	10	0	0	2	8	7	8	2	3	0.8	0.2	0.3	0	0
+"Seleninic acids and derivatives"	1	0	0	0	0	0	1	1	1	1	1	1	0	1
+"Selenophenes"	1	0	0	0	1	0	1	0	1	1	0	1	0	0
+"Sphingolipids"	29	0	0	2	13	10	27	16	19	0.931	0.552	0.655	0	0
+"Stemona alkaloids"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Sterigmatocystins"	4	0	0	1	2	2	3	2	2	0.75	0.5	0.5	0	0
+"Steroids and steroid derivatives"	2337	94	64	845	1333	985	1492	1004	1352	0.638	0.43	0.579	102	3
+"Stilbenes"	886	9	14	265	517	395	621	369	491	0.701	0.416	0.554	23	1
+"Strychnos alkaloids"	32	1	1	10	18	11	22	14	21	0.688	0.438	0.656	0	1
+"Sulfamic acid derivatives"	8	0	1	4	7	5	4	1	3	0.5	0.125	0.375	0	0
+"Sulfenyl compounds"	50	0	1	9	31	21	41	19	29	0.82	0.38	0.58	1	0
+"Sulfines"	2	0	0	0	2	2	2	0	0	1	0	0	0	0
+"Sulfinic acids and derivatives"	29	0	0	3	21	16	26	8	13	0.897	0.276	0.448	0	0
+"Sulfonyl halides"	57	0	0	9	44	32	48	13	25	0.842	0.228	0.439	0	0
+"Sulfonyls"	105	0	2	35	79	67	70	26	38	0.667	0.248	0.362	1	0
+"Sulfoxides"	36	0	0	8	17	13	28	19	23	0.778	0.528	0.639	1	0
+"Tannins"	78	1	2	14	39	31	64	39	47	0.821	0.5	0.603	0	1
+"Tetraalkylphosphonium compounds"	38	0	1	0	20	18	38	18	20	1	0.474	0.526	4	0
+"Tetracyclines"	60	11	11	20	33	28	40	27	32	0.667	0.45	0.533	0	0
+"Tetrahydrofurans"	68	0	1	19	40	33	49	28	35	0.721	0.412	0.515	0	0
+"Tetrahydroisoquinolines"	86	3	3	33	55	36	53	31	50	0.616	0.36	0.581	0	1
+"Tetralins"	231	7	4	105	147	115	126	84	116	0.545	0.364	0.502	7	6
+"Tetrapyrroles and derivatives"	138	0	1	20	63	52	118	75	86	0.855	0.543	0.623	0	0
+"Tetrathianes"	6	0	0	0	3	2	6	3	4	1	0.5	0.667	0	0
+"Tetrazines"	4	0	0	1	3	2	3	1	2	0.75	0.25	0.5	0	0
+"Thiadiazinanes"	14	2	2	5	11	8	9	3	6	0.643	0.214	0.429	0	0
+"Thiadiazines"	31	5	3	12	21	14	19	10	17	0.613	0.323	0.548	0	3
+"Thianes"	17	0	0	6	11	10	11	6	7	0.647	0.353	0.412	1	0
+"Thiazinanes"	22	0	0	9	21	14	13	1	8	0.591	0.0455	0.364	0	1
+"Thiazines"	4	0	0	0	0	0	4	4	4	1	1	1	0	0
+"Thienodiazepines"	15	3	2	7	11	8	8	4	7	0.533	0.267	0.467	0	0
+"Thienoimidazoles"	1	0	0	1	1	1	0	0	0	0	0	0	0	0
+"Thienoimidazolidines"	5	0	0	2	2	2	3	3	3	0.6	0.6	0.6	0	0
+"Thienopyrans"	2	0	0	1	2	1	1	0	1	0.5	0	0.5	0	0
+"Thienopyridines"	22	1	1	14	20	16	8	2	6	0.364	0.0909	0.273	1	0
+"Thienopyrimidines"	23	0	2	15	18	15	8	5	8	0.348	0.217	0.348	1	0
+"Thienopyrroles"	5	0	1	2	4	2	3	1	3	0.6	0.2	0.6	0	0
+"Thienothiazines"	4	0	0	2	2	2	2	2	2	0.5	0.5	0.5	1	0
+"Thienothiazoles"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Thienothiophenes"	6	0	0	0	6	5	6	0	1	1	0	0.167	0	0
+"Thiepanes"	5	0	0	0	1	1	5	4	4	1	0.8	0.8	0	0
+"Thietanes"	3	0	0	0	3	2	3	0	1	1	0	0.333	0	0
+"Thiiranes"	7	0	0	0	4	3	7	3	4	1	0.429	0.571	0	0
+"Thioacetals"	57	0	0	19	41	27	38	16	30	0.667	0.281	0.526	3	0
+"Thioamides"	20	0	0	2	17	9	18	3	11	0.9	0.15	0.55	0	2
+"Thiocarbamic acids"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Thiocarbonyl compounds"	63	1	6	20	43	29	43	20	34	0.683	0.317	0.54	1	2
+"Thiocarboxylic acids and derivatives"	31	0	0	6	21	16	25	10	15	0.806	0.323	0.484	0	1
+"Thiochromanes"	22	0	0	10	14	11	12	8	11	0.545	0.364	0.5	0	0
+"Thiochromenes"	47	1	0	21	32	24	26	15	23	0.553	0.319	0.489	3	0
+"Thiocyanates"	50	1	0	5	29	20	45	21	30	0.9	0.42	0.6	1	1
+"Thioethers"	714	4	5	310	529	407	404	185	307	0.566	0.259	0.43	11	14
+"Thiohemiaminal derivatives"	1	0	0	0	0	0	1	1	1	1	1	1	0	0
+"Thiolactams"	1	0	0	0	1	1	1	0	0	1	0	0	0	0
+"Thiolanes"	31	0	0	5	23	16	26	8	15	0.839	0.258	0.484	0	0
+"Thiols"	153	1	0	43	112	81	110	41	72	0.719	0.268	0.471	10	5
+"Thiophenes"	232	3	2	80	162	119	152	70	113	0.655	0.302	0.487	5	8
+"Thiophenol esters"	3	0	0	1	1	1	2	2	2	0.667	0.667	0.667	0	0
+"Thiophenols"	68	0	0	25	47	37	43	21	31	0.632	0.309	0.456	1	9
+"Thiopyrans"	9	0	0	3	7	5	6	2	4	0.667	0.222	0.444	0	0
+"Thioselenides"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Thiosulfinic acid esters"	2	0	0	1	1	1	1	1	1	0.5	0.5	0.5	0	0
+"Thioureas"	73	0	0	20	54	39	53	19	34	0.726	0.26	0.466	1	1
+"Transition metal organides"	263	0	0	0	26	19	263	237	244	1	0.901	0.928	0	0
+"Transition metal oxoanionic compounds"	514	0	0	0	0	0	514	514	514	1	1	1	0	0
+"Transition metal salts"	429	1	0	0	2	0	429	427	429	1	0.995	1	0	0
+"Trialkylphosphites"	69	0	0	22	48	40	47	21	29	0.681	0.304	0.42	0	0
+"Triazinanes"	69	0	1	22	49	39	47	20	30	0.681	0.29	0.435	4	2
+"Triazines"	455	9	17	177	330	259	278	125	196	0.611	0.275	0.431	14	12
+"Triazole ribonucleosides and ribonucleotides"	12	1	2	4	8	7	8	4	5	0.667	0.333	0.417	0	0
+"Triazolopyrazines"	5	0	0	1	3	1	4	2	4	0.8	0.4	0.8	0	0
+"Triazolopyridazines"	5	0	0	2	4	2	3	1	3	0.6	0.2	0.6	0	0
+"Triazolopyridines"	8	0	0	4	6	5	4	2	3	0.5	0.25	0.375	0	0
+"Triazolopyrimidines"	75	4	2	30	50	36	45	25	39	0.6	0.333	0.52	3	3
+"Trioxanes"	14	1	0	9	11	10	5	3	4	0.357	0.214	0.286	0	0
+"Trioxolanes"	3	0	0	0	1	0	3	2	3	1	0.667	1	0	0
+"Triphenyl compounds"	255	1	4	92	170	137	163	85	118	0.639	0.333	0.463	4	2
+"Trithianes"	11	0	0	2	10	7	9	1	4	0.818	0.0909	0.364	0	0
+"Trithiolanes"	8	0	0	3	8	6	5	0	2	0.625	0	0.25	0	0
+"Tropane alkaloids"	53	3	1	18	29	22	35	24	31	0.66	0.453	0.585	1	1
+"Tropones"	31	1	1	16	22	20	15	9	11	0.484	0.29	0.355	1	1
+"Unsaturated hydrocarbons"	946	1	2	272	595	431	674	351	515	0.712	0.371	0.544	9	0
+"Vinca alkaloids"	19	4	3	7	13	8	12	6	11	0.632	0.316	0.579	2	0
+"Vinyl halides"	291	5	4	26	189	133	265	102	158	0.911	0.351	0.543	16	0
+"Vinylogous acids"	18	1	1	5	16	10	13	2	8	0.722	0.111	0.444	0	0
+"Vinylogous amides"	13	0	0	6	9	7	7	4	6	0.538	0.308	0.462	0	0
+"Vinylogous esters"	11	0	0	5	7	5	6	4	6	0.545	0.364	0.545	0	0
+"Vinylogous thioesters"	10	0	0	3	5	5	7	5	5	0.7	0.5	0.5	0	0
+"Vobasan alkaloids"	2	0	0	0	0	0	2	2	2	1	1	1	0	0
+"Yohimbine alkaloids"	46	2	2	16	29	16	30	17	30	0.652	0.37	0.652	3	0

@@ -1,0 +1,42 @@
+"cichem"	"DTXSID"	"CASRN"	"Compound"	"Species"	"Parameter"	"Value"	"Units"	"Reference"	"consumer"	"food"	"industrial"	"agricultural"	"pharmaceutical"	"env_monitoring"	"biomonitoring"	"sector_class"	"Bin"
+"CICHEM000202432"	"DTXSID9020243"	"133-06-2"	"Captan"	"Human"	"halflife"	0.000269	"hours"	"Gordon 2001"	1	1	1	1	0	1	1	"Multiple Inventories"	1
+"CICHEM000202432"	"DTXSID9020243"	"133-06-2"	"Captan"	"Human"	"halflife"	0.0002694	"hours"	"ECHA 2021"	1	1	1	1	0	1	1	"Multiple Inventories"	1
+"CICHEM000213850"	"DTXSID0021385"	"133-07-3"	"Folpet"	"Human"	"halflife"	0.00136	"hours"	"Gordon 2001"	1	1	1	1	0	1	1	"Multiple Inventories"	1
+"CICHEM000213850"	"DTXSID0021385"	"133-07-3"	"Folpet"	"Human"	"halflife"	0.001361	"hours"	"ECHA 2021"	1	1	1	1	0	1	1	"Multiple Inventories"	1
+"CICHEM000525030"	"DTXSID9052503"	"76-19-7"	"Perfluoropropane"	"Human"	"halflife"	0.02	"hours"	"Lombardo 2018"	1	0	1	0	1	0	1	"Multiple Inventories"	1
+"CICHEM002386191"	"DTXSID50238619"	"91541-18-3"	"L 648051"	"Human"	"halflife"	0.04	"hours"	"Lombardo 2018"	0	0	0	0	0	0	1	"Unknown"	1
+"CICHEM000404871"	"DTXSID3040487"	"95058-81-4"	"Gemcitabine"	"Human"	"halflife"	0.05	"hours"	"Schulz 2020"	0	0	1	0	1	0	1	"Multiple Inventories"	1
+"CICHEM007254279"	"DTXSID40725427"	"1354631-26-7"	"STS 135"	"Human"	"halflife"	0.05	"hours"	"Schulz 2020"	0	0	0	0	0	0	1	"Unknown"	1
+"CICHEM010312106"	"DTXSID001031210"	"4037-01-8"	"4-10-Corticotropin"	"Human"	"halflife"	0.06	"hours"	"Lombardo 2018"	0	0	1	0	0	0	0	"Industrial Only"	1
+"CICHEM000467613"	"DTXSID6046761"	"561-27-3"	"3,6-Diacetylmorphine"	"Human"	"halflife"	0.062	"hours"	"Lombardo 2018"	0	0	1	0	1	0	1	"Multiple Inventories"	1
+"CICHEM000231456"	"DTXSID2023145"	"3599-32-4"	"Indocyanine green"	"Human"	"halflife"	0.065	"hours"	"Lombardo 2018"	1	0	1	0	1	0	0	"Multiple Inventories"	1
+"CICHEM000483610"	"DTXSID8048361"	"50-56-6"	"Oxytocin"	"Human"	"halflife"	0.0667	"hours"	"Schulz 2020"	1	0	1	0	1	0	1	"Multiple Inventories"	1
+"CICHEM009046509"	"DTXSID00904650"	"67227-57-0"	"Fenoldopam Mesylate"	"Human"	"halflife"	0.08328	"hours"	"ECHA 2021"	0	0	1	0	1	0	0	"Multiple Inventories"	1
+"CICHEM001774447"	"DTXSID60177444"	"229016-73-3"	"Ceftaroline fosamil"	"Human"	"halflife"	0.09	"hours"	"Lombardo 2018"	0	0	0	0	1	0	1	"Pharmaceutical Only"	1
+"CICHEM000367946"	"DTXSID2036794"	"14402-89-2"	"Sodium nitroprusside"	"Human"	"halflife"	0.1	"hours"	"Schulz 2020"	1	0	1	0	1	0	0	"Multiple Inventories"	1
+"CICHEM010056075"	"DTXSID001005607"	"851627-62-8"	"2-[(2-Bromoethyl){2-[(methanesulfonyl)oxy]ethyl}amino]-3,5-dinitro-N-[2-(phosphonooxy)ethyl]benzene-1-carboximidic acid"	"Human"	"halflife"	0.1	"hours"	"Lombardo 2018"	0	0	0	0	1	0	1	"Pharmaceutical Only"	1
+"CICHEM000741579"	"DTXSID3074157"	"42740-50-1"	"2,2',3,3',4,4',5,6'-Octachlorobiphenyl"	"Human"	"halflife"	101000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000238246"	"DTXSID0023824"	"57653-85-7"	"1,2,3,6,7,8-Hexachlorodibenzo-p-dioxin"	"Human"	"halflife"	114800	"hours"	"Milbrath 2008"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000401505"	"DTXSID7040150"	"355-46-4"	"Perfluorohexanesulfonic acid"	"Human"	"halflife"	118000	"hours"	"Dawson 2023"	1	1	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000383067"	"DTXSID8038306"	"32598-14-4"	"2,3,3',4,4'-Pentachlorobiphenyl"	"Human"	"halflife"	120000	"hours"	"Seegal 2011"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000321166"	"DTXSID4032116"	"31508-00-6"	"2,3',4,4',5-Pentachlorobiphenyl"	"Human"	"halflife"	120900	"hours"	"Seegal 2011"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000742049"	"DTXSID1074204"	"68194-17-2"	"2,2',3,3',4,5,5',6-Octachlorobiphenyl"	"Human"	"halflife"	121000	"hours"	"Brown 1994"	0	0	1	0	0	1	0	"Industrial Only"	14
+"CICHEM000741512"	"DTXSID3074151"	"41411-64-7"	"2,3,3',4,4',5,6-Heptachlorobiphenyl"	"Human"	"halflife"	138000	"hours"	"Brown 1994"	0	0	1	0	0	1	1	"Industrial Only"	14
+"CICHEM000741710"	"DTXSID1074171"	"52663-78-2"	"2,2',3,3',4,4',5,6-Octachlorobiphenyl"	"Human"	"halflife"	138000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000734731"	"DTXSID8073473"	"32690-93-0"	"2,4,4',5-Tetrachlorobiphenyl"	"Human"	"halflife"	139300	"hours"	"Seegal 2011"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000239400"	"DTXSID1023940"	"7440-43-9"	"Cadmium"	"Human"	"halflife"	140000	"hours"	"Schulz 2020"	1	1	1	0	1	1	1	"Multiple Inventories"	14
+"CICHEM000741652"	"DTXSID7074165"	"52663-72-6"	"2,3',4,4',5,5'-Hexachlorobiphenyl"	"Human"	"halflife"	148000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM008925067"	"DTXSID80892506"	"756426-58-1"	"Perfluoro(2-((6-chlorohexyl)oxy)ethanesulfonic acid)"	"Human"	"halflife"	158000	"hours"	"Dawson 2023"	0	0	0	0	0	1	1	"Unknown"	14
+"CICHEM000742411"	"DTXSID2074241"	"74472-53-0"	"2,3,3',4,4',5,5',6-Octachlorobiphenyl"	"Human"	"halflife"	164000	"hours"	"Brown 1994"	0	0	1	0	0	1	1	"Industrial Only"	14
+"CICHEM000742338"	"DTXSID8074233"	"74472-44-9"	"2,3,3',4',5,6-Hexachlorobiphenyl"	"Human"	"halflife"	202000	"hours"	"Brown 1994"	0	0	1	0	0	1	1	"Industrial Only"	14
+"CICHEM000741587"	"DTXSID8074158"	"51908-16-8"	"2,2',3,4',5,5'-Hexachlorobiphenyl"	"Human"	"halflife"	234000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000741389"	"DTXSID0074138"	"35694-06-5"	"2,2',3,4,4',5-Hexachlorobiphenyl"	"Human"	"halflife"	253000	"hours"	"Brown 1994"	0	0	1	0	0	1	1	"Industrial Only"	14
+"CICHEM000741694"	"DTXSID7074169"	"52663-76-0"	"2,2',3,4,4',5,5',6-Octachlorobiphenyl"	"Human"	"halflife"	304000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	14
+"CICHEM000527069"	"DTXSID0052706"	"38380-08-4"	"2,3,3',4,4',5-Hexachlorobiphenyl"	"Human"	"halflife"	359200	"hours"	"Seegal 2011"	1	0	1	0	0	1	1	"Multiple Inventories"	15
+"CICHEM000734814"	"DTXSID2073481"	"35065-30-6"	"2,2',3,3',4,4',5-Heptachlorobiphenyl"	"Human"	"halflife"	379000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	15
+"CICHEM008659898"	"DTXSID50865989"	"40186-72-9"	"2,2',3,3',4,4',5,5',6-Nonachlorobiphenyl"	"Human"	"halflife"	467000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	15
+"CICHEM000527069"	"DTXSID0052706"	"38380-08-4"	"2,3,3',4,4',5-Hexachlorobiphenyl"	"Human"	"halflife"	607000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	15
+"CICHEM000741678"	"DTXSID7074167"	"52663-74-8"	"2,2',3,3',4,5,5'-Heptachlorobiphenyl"	"Human"	"halflife"	675000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	15
+"CICHEM000741447"	"DTXSID4074144"	"39635-31-9"	"2,3,3',4,4',5,5'-Heptachlorobiphenyl"	"Human"	"halflife"	1010000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	16
+"CICHEM000382994"	"DTXSID6038299"	"35065-29-3"	"2,2',3,4,4',5,5'-Heptachlorobiphenyl"	"Human"	"halflife"	2020000	"hours"	"Brown 1994"	1	0	1	0	0	1	1	"Multiple Inventories"	16
+"CICHEM000741488"	"DTXSID4074148"	"40186-71-8"	"2,2',3,3',4,5',6,6'-Octachlorobiphenyl"	"Human"	"halflife"	2020000	"hours"	"Brown 1994"	0	0	1	0	0	1	1	"Industrial Only"	16

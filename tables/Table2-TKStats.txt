@@ -1,0 +1,6 @@
+"Parameter"	"Num.Chems.with.Data"	"Num.Chems.with.Preds"	"Num.Obs"	"Within.Ten"	"Within.Three"	"RMSLE"	"MSD"	"RSquared"
+"Half-Life"	2055	909	1167	0.669	0.357	1.17	-0.253	0.0192
+"Vdist"	1418	644	793	0.787	0.453	0.78	0.0475	-0.00126
+"Cltot"	1472	655	839	0.715	0.406	1.05	0.597	0.0631
+"Foral*"	1030	551	704	0.911	0.768	0.378	-0.128	0.062
+"Css"	545	418	545	0.593	0.314	1.73	-0.937	0.114

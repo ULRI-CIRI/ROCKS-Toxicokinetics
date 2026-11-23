@@ -1,0 +1,409 @@
+"cichem"	"primary_name"	"densmap_1"	"densmap_2"	"HTTKTarget"	"logPTarget"	"pKaTarget"
+"CICHEM000647131"	"Benzenesulfonamide, 4-chloro-N,N-dimethyl-"	10.817999	11.927551	0	1	1
+"CICHEM002075307"	"1-Bromo-4-propylbenzene"	7.730638	12.217259	1	0	0
+"CICHEM000711663"	"Benzenemethanaminium, N,N-dimethyl-3-sulfo-N-(3-sulfophenyl)-, inner salt, calcium salt"	10.854458	11.94789	0	0	1
+"CICHEM002320760"	"Diphenylphosphine"	9.163036	9.4984	0	1	0
+"CICHEM005529052"	"(2,5-Dimethoxy-1,3-phenylene)dimethanol"	9.694065	9.336508	1	0	0
+"CICHEM000583542"	"Ioxynil sodium"	9.525217	9.422142	0	0	1
+"CICHEM000583872"	"Taurine, N-methyl-N-(5-nonylsalicyl)-, monosodium salt (1:1)"	7.81808	12.338992	0	0	1
+"CICHEM000584227"	"2,4-D, dimethyloleylamine salt"	2.7146606	14.3874445	1	1	0
+"CICHEM000586958"	"2,4,6-Tris-(2,4,6-tribromophenoxy)-1,3,5-triazine"	9.4470215	9.54297	0	0	1
+"CICHEM003796422"	"4-Methyl-2-[4-(trifluoromethyl)phenyl]-1,3-thiazole-5-carboxylic acid"	9.095835	9.430974	0	1	0
+"CICHEM001937184"	"1-(Methylsulphonyl)-1H-imidazole"	4.542467	10.694116	0	1	0
+"CICHEM003339074"	"Methyl 4-methyloctanoate"	2.7536097	14.333356	1	1	1
+"CICHEM003346178"	"Nonanoic acid, 7-methyl-, methyl ester"	2.829415	14.329622	0	0	1
+"CICHEM000594630"	"1,5-Naphthalenedisulfonic acid, 3-[[2-(acetylamino)-4-aminophenyl]azo]-"	14.378774	11.506729	0	0	1
+"CICHEM006064547"	"4-Ethyl-4'-pentyl-1,1'-biphenyl"	7.6959896	12.4002695	0	1	0
+"CICHEM002400760"	"1-(1,1-Dimethylpropyl)-4-(2-nitrophenoxy)benzene"	10.87923	11.898144	0	1	0
+"CICHEM000601575"	"Benzenesulfonic acid, sodium salt"	10.732637	11.815983	0	0	1
+"CICHEM003458668"	"Carbamic acid, [[4-(acetylamino)phenyl]sulfonyl]-, methyl ester"	10.7886305	11.921988	1	0	1
+"CICHEM005879713"	"Methyl 3-acetyl-1H-pyrazole-5-carboxylate"	9.669909	9.385802	1	0	0
+"CICHEM001948074"	"1,4-Dichloro-2,5-bis(dichloromethyl)benzene"	9.518668	9.374114	0	0	1
+"CICHEM000609370"	"Benzene, 1-methyl-4-(phenylsulfonyl)-"	10.728312	11.875142	1	0	0
+"CICHEM001949783"	"2-Chloro-6-ethoxypyridine"	9.272692	9.495366	0	1	0
+"CICHEM002409571"	"D-Glucitol 1,5-bis(bromoacetate)"	2.7500541	14.294505	1	0	0
+"CICHEM002409878"	"Bis(cyclohexylammonium) (R)-3,3-diethoxy-2-hydroxypropyl phosphate"	0.4424188	12.355804	1	1	0
+"CICHEM000621268"	"Butanamide, N-(2,5-dichlorophenyl)-3-oxo-"	10.948565	11.923266	0	1	0
+"CICHEM000406603"	"Cholic acid"	3.967597	1.3097081	1	0	0
+"CICHEM001973486"	"1,3-Dihydro-1-oxoisobenzofuran-5-carboxylic acid"	9.221537	9.422434	0	1	0
+"CICHEM001700293"	"o-Phenylenediarsonic acid"	10.724811	11.802278	0	0	1
+"CICHEM000629295"	"Iodobenzene diacetate"	7.6807094	12.31084	0	1	0
+"CICHEM007361868"	"(3alpha,5beta,12alpha)-3,12-Dihydroxy(24-~13~C)cholan-24-oic acid"	3.9033935	1.2991802	1	0	1
+"CICHEM000605279"	"Pentafluorobenzoic acid"	9.641716	9.264354	1	0	0
+"CICHEM001979905"	"2,2,3-Trimethylbutyric acid"	0.5378514	12.436836	1	1	0
+"CICHEM001980184"	"(1alpha,2beta,5alpha)-6,6-Dimethylbicyclo(3.1.1)heptane-2-carbaldehyde"	2.3546133	7.222439	1	0	1
+"CICHEM000642587"	"Acid Red 37"	14.328596	11.557314	1	0	1
+"CICHEM000415000"	"4',5-Dibromosalicylanilide"	10.672925	11.864159	0	0	1
+"CICHEM000644153"	"[1,1'-Biphenyl]-2,2'-disulfonic acid, 4-[(1-hydroxy-4-sulfo-2-naphthalenyl)azo]-5,5'-dimethyl-4'-[[4-[[(4-methylphenyl)sulfonyl]oxy]phenyl]azo]-, trisodium salt"	14.676032	11.656648	0	1	0
+"CICHEM014258198"	"2-(4-Morpholinyl)ethyl (5β)-3,7,12-trioxocholan-24-oate"	3.9691093	1.4645494	1	1	1
+"CICHEM000417295"	"C.I. Direct Yellow 50, tetrasodium salt"	14.632083	11.586376	0	1	0
+"CICHEM001996503"	"Mellitic acid"	9.570428	9.30498	1	0	0
+"CICHEM000656967"	"Zincate(2-), [[N,N'-1,2-ethanediylbis[N-[(carboxy-.kappa.O)methyl]glycinato-.kappa.N,.kappa.O]](4-)]-, sodium (1:2), (OC-6-21)-"	0.6804236	12.490978	0	0	1
+"CICHEM000658302"	"Cobalt (ethylenedinitrilo)tetraacetate"	0.68797463	12.484347	0	1	1
+"CICHEM000658443"	"Benzenesulfonamide, 4-hydroxy-N,N-dimethyl-"	10.923404	11.914161	0	1	0
+"CICHEM000662957"	"1H-Thioxantheno[2,1,9-def]isoquinoline-1,3(2H)-dione, 5-methoxy-2-(3-methoxypropyl)-11-nitro-"	9.664558	9.31124	1	0	0
+"CICHEM000663211"	"Methyl 3-(trichlorosilyl)propionate"	2.7347052	14.3771305	1	0	0
+"CICHEM000664862"	"Ammonium benzenesulphonate"	10.739641	11.826096	0	0	1
+"CICHEM003557741"	"5-Bromo-2-ethoxypyridine"	9.27543	9.4603	0	0	1
+"CICHEM003049947"	"Tetrafluoroisophthalic acid"	9.669036	9.316809	1	0	0
+"CICHEM008599086"	"7-Hydroxy-8-{[4-(phenyldiazenyl)phenyl]diazenyl}-1,3-naphthalenedisulfonic acid"	14.416285	11.568327	0	0	1
+"CICHEM008621682"	"3,7,12-Trihydroxycholestan-26-oic acid"	3.941362	1.2341641	0	1	0
+"CICHEM008648610"	"Cholestane-3,7,12,25-tetrol"	3.9703755	1.2796577	0	1	0
+"CICHEM008649147"	"Cyclohexanemethanol, 4-(acetyloxy)-.alpha.,.alpha.,4-trimethyl-, 1-acetate"	2.7138195	7.0113063	0	1	0
+"CICHEM000421321"	"Metabromsalan"	10.740851	11.9941225	1	0	0
+"CICHEM000674135"	"Benzoyl chloride, 4-butyl-"	7.7627406	12.193763	1	0	0
+"CICHEM000674325"	"Urea, (2-hydroxy-4-methylphenyl)-"	10.98163	11.947042	0	1	0
+"CICHEM008835415"	"2-Naphthalenesulfonic acid, 6-amino-3-[2-[4-[2-(4-aminophenyl)diazenyl]-2-methoxy-5-methylphenyl]diazenyl]-4-hydroxy-, sodium salt (1:1)"	14.620294	11.675636	0	1	0
+"CICHEM008713752"	"1,2,4-Trichloro-5-(dichloromethyl)benzene"	9.603412	9.406851	1	0	0
+"CICHEM000202515"	"Carboxymethylnitrosourea"	0.41963744	12.363647	1	0	0
+"CICHEM004041497"	"Naphthalen-1-yl Decanoate"	7.782729	12.233058	1	0	1
+"CICHEM008900896"	"2-Naphthalenesulfonic acid, 6-amino-5-[2-[4-[(4-chlorobenzoyl)amino]-2-sulfophenyl]diazenyl]-4-hydroxy-, sodium salt (1:2)"	14.328735	11.565566	1	0	1
+"CICHEM008942021"	"EDTA,di-potassium dihydrate"	0.51396155	12.506305	1	0	0
+"CICHEM008898850"	"2-Naphthalenesulfonic acid, 8-[2-[4-[2-[4-(acetylamino)phenyl]diazenyl]-7-sulfo-1-naphthalenyl]diazenyl]-5-[2-(2-hydroxy-6-sulfo-1-naphthalenyl)diazenyl]-, sodium salt (1:3)"	14.276356	11.498153	1	0	0
+"CICHEM008977225"	"Petromyzonol sulfate"	3.9882376	1.3802412	1	0	0
+"CICHEM000685206"	"Benzoyl chloride, 4-pentyl-"	7.79303	12.2604475	1	0	1
+"CICHEM000685743"	"Benzoic acid, 5-(acetylamino)-2-amino-"	10.683473	11.995052	1	0	0
+"CICHEM000686220"	"5H-Tetrazole-5-thione, 1,2-dihydro-1-methyl-, sodium salt"	6.0222754	6.0799446	1	0	0
+"CICHEM004468641"	"1-(1,1-DIETHOXYETHYL)-2,4-DIMETHYL-BENZOL"	10.713736	11.902107	1	0	1
+"CICHEM007567977"	"N-{3-[(1-Hydroxypropan-2-yl)oxy]phenyl}-2-(trifluoromethyl)benzamide"	10.934371	11.807626	0	1	0
+"CICHEM004471728"	"2,6-Difluorobenzylazide"	9.6858015	9.3172245	1	0	0
+"CICHEM009163544"	"Disodium 2,2'-[ethane-1,2-diylbis({3-[bis(2-hydroxyethyl)amino]-2-hydroxypropyl}azanediyl)]diacetate"	0.62490284	12.344273	1	0	0
+"CICHEM009168279"	"Sodium 3-carboxy-N-(4-chloro-2,5-dimethoxyphenyl)-3-oxopropanimidate"	10.884755	11.986882	0	1	0
+"CICHEM009172990"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--histidine (1/1)"	4.4682	10.698832	0	1	0
+"CICHEM009173857"	"Disodium 4-({1-[(1-oxidanidyldodecylidene)amino]propan-2-yl}oxy)-4-oxo-2-sulfobutanoate"	2.7811856	14.344646	1	1	1
+"CICHEM009174574"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--quinolin-8-ol (1/1)"	4.784357	10.681419	1	0	1
+"CICHEM003073566"	"N'-(2,4-Dichlorophenyl)-N,N-dimethylurea"	10.692603	12.030837	1	0	0
+"CICHEM000616169"	"Benzaldehyde, 4-butyl-"	7.8161135	12.16702	1	0	0
+"CICHEM002262996"	"2,6-Dichlorobenzyl thiocyanate"	9.721764	9.262848	1	0	0
+"CICHEM003082062"	"4-(2-chloroethylsulfonyl)aniline"	10.811637	11.893453	0	0	1
+"CICHEM009330895"	"Iron(2+) sodium 2,2',2'',2'''-(ethane-1,2-diyldinitrilo)tetraacetate (1/2/1)"	0.6824056	12.496346	0	1	1
+"CICHEM009334392"	"2-Phenylethyl hexopyranoside"	5.8314285	6.120022	1	1	1
+"CICHEM009349663"	"N,N'-(1,3-Phenylene)dioctadecanimidic acid"	7.634802	12.367738	0	1	0
+"CICHEM001770338"	"Pentafluorobenzoyl chloride"	9.719912	9.336679	1	0	0
+"CICHEM009432642"	"Galacto-N-biose"	5.848474	5.7437425	0	1	1
+"CICHEM002041275"	"2,2-Diphenylpropiononitrile"	7.7679577	12.176573	1	0	0
+"CICHEM000699660"	"Nickelate(3-), [N,N-bis[(phosphono-.kappa.O)methyl]glycinato(5-)-.kappa.N,.kappa.O]-, tripotassium, (T-4)-"	0.44098687	12.266363	1	0	0
+"CICHEM009480831"	"N,N,N-Trimethyl-2-(octadecanoyloxy)ethan-1-aminium chloride"	2.7937038	14.457113	0	1	0
+"CICHEM009480849"	"2-(Dodecanoyloxy)-N,N,N-trimethylethan-1-aminium chloride"	2.7954867	14.470945	0	1	0
+"CICHEM000701243"	"2-Naphthalenesulfonic acid, 7,7'-(carbonyldiimino)bis[4-hydroxy-3-[(6-sulfo-2-naphthalenyl)azo]-, compd. with 2,2',2''-[nitrilotris(2,1-ethanediyloxy)]tris[ethanol] (1:3)"	14.376977	11.514553	0	0	1
+"CICHEM002048106"	"N-((4-(Acetylamino)phenyl)sulphonyl)acetamide"	10.762545	11.975904	1	0	1
+"CICHEM009587122"	"Sodium 5-oxido-3,4-dihydro-2H-pyrrole-2-carboxylate--5-hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid (2/1/1)"	4.7077208	10.739912	0	1	1
+"CICHEM009587734"	"Potassium 5-oxido-3,4-dihydro-2H-pyrrole-2-carboxylate--5-hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid (2/1/1)"	4.7886667	10.677036	1	0	0
+"CICHEM000707398"	".beta.-Alanine, N,N'-1,2-ethanediylbis[N-(2-carboxyethyl)-, tetrasodium salt"	0.6591206	12.419584	1	0	1
+"CICHEM009671652"	"Ethyl 3,7,12-trioxocholan-24-oate"	3.9326437	1.5490805	1	1	0
+"CICHEM001796325"	"4-Nonyl-N-(4-nonylphenyl)benzenamine"	7.727365	12.324491	0	1	1
+"CICHEM000711069"	"Benzenesulfonic acid, 3-dodecyl-, compd. with 2-aminoethanol (1:1)"	7.8085933	12.125416	1	0	0
+"CICHEM000711168"	"1,4-Benzenediamine, N,N'-bis(1-methylheptylidene)-"	7.7617064	12.159046	1	0	0
+"CICHEM002056307"	"N-(4-(Piperidin-1-ylsulphonyl)phenyl)acetamide"	10.700072	11.929342	1	0	0
+"CICHEM000711846"	"Phenol, 4-chloro-3,5-dimethyl-, triester with boric acid (H3BO3)"	9.752545	9.403427	1	0	0
+"CICHEM001792944"	"3,4,5-Tribromosalicylanilide"	10.763426	12.003557	1	0	0
+"CICHEM001793959"	"Aramchol"	3.951174	1.327402	1	0	1
+"CICHEM000714774"	"Cuprate(1-), [N-[2-[bis[(carboxy-.kappa.O)methyl]amino-.kappa.N]ethyl]-N-[2-(hydroxy-.kappa.O)ethyl]glycinato(3-)-.kappa.N,.kappa.O]-, sodium"	0.67467433	12.509593	0	0	1
+"CICHEM000714964"	"2-Naphthalenesulfonic acid, 7-amino-4-hydroxy-3-[[4-[2-(sulfooxy)ethoxy]phenyl]azo]-"	14.37781	11.631898	0	0	1
+"CICHEM006974778"	"N-(2,4-Difluorophenyl)propane-1-sulfonamide"	9.49829	9.429986	0	0	1
+"CICHEM000715177"	"Diammonium ((N,N'-ethylenebis(N-(carboxymethyl)glycinato))(4-)-N,N',O,O',ON,ON')hydroxyferrate(2-)"	0.6819228	12.514481	0	0	1
+"CICHEM007242290"	"(3beta,5beta)-Pregnane-3,20-diol"	3.9725332	1.4680598	1	0	1
+"CICHEM009864786"	"2-(2-Chloro-3,4-dimethoxyphenyl)ethan-1-amine"	9.135188	9.477104	0	1	0
+"CICHEM009872730"	"Nickel(2+) potassium 2,2',2'',2'''-(ethane-1,2-diyldinitrilo)tetraacetate (1/2/1)"	0.6698296	12.507185	0	1	1
+"CICHEM005916028"	"1-Ethenyl-4-octylbenzene"	7.708593	12.191654	1	0	0
+"CICHEM006744262"	"N-(5-Fluoro-2-methoxyphenyl)acetamide"	11.039894	11.917008	0	1	0
+"CICHEM006730543"	"2,6-Difluoro-3-[(propane-1-sulfonyl)amino]benzoic acid"	9.490662	9.383301	0	0	1
+"CICHEM001813864"	"Pyridine-2,5-diamine dihydrochloride"	9.441914	9.402579	0	0	1
+"CICHEM010049211"	"Eurycomanone"	5.8899484	5.7819805	1	1	1
+"CICHEM010052496"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--glutamic acid (1/1)"	4.7321706	10.692244	1	1	1
+"CICHEM010150522"	"Decanoic acid, ester with 2,2'-(oxybis(methylene))bis(2-(hydroxymethyl)-1,3-propanediol) octanoate pentanoate"	2.8866444	14.379239	0	1	0
+"CICHEM002313674"	"Enkephalin-met, tyr-O-sulfate"	4.8147554	10.668051	1	0	0
+"CICHEM010205532"	"Cadinane"	2.6495285	7.148694	0	1	0
+"CICHEM010219343"	"Tetrasodium dicarboxymethyl aspartate"	0.6642711	12.292123	1	1	0
+"CICHEM010240422"	"5beta-Estrane-3,17-dione"	3.718232	1.2617149	0	0	1
+"CICHEM002087641"	"Glycine, N,N-bis(carboxymethyl)-, calcium sodium salt (1:1:1)"	0.6753115	12.486664	0	0	1
+"CICHEM010256105"	"3-Ingenyl angelate"	2.2823062	7.160526	1	0	1
+"CICHEM000746180"	"Octaneperoxoic acid"	2.7547448	14.285283	1	0	0
+"CICHEM003391620"	"Methyl 10-methylundecanoate"	2.831392	14.303292	0	0	1
+"CICHEM003662368"	"4-(4-pentylphenyl)benzoic acid"	7.8338237	12.250051	1	0	1
+"CICHEM010243699"	"1,3-Propanediol, 2,2-bis(hydroxymethyl)-, tetra-C4-9 carboxylates"	2.7625432	14.441664	0	1	1
+"CICHEM002130821"	"(1S-(1alpha,2beta,5alpha))-6,6-Dimethylbicyclo(3.1.1)heptan-2-amine"	2.5004027	7.210799	1	0	1
+"CICHEM002342020"	"Methyl 3-chloro-2,5-dimethyl-6-hydroxy-p-anisate"	9.315817	9.364018	0	0	1
+"CICHEM011109881"	"7-Amino-4-hydroxy-3-[2-[2-sulfo-4-[2-(4-sulfophenyl)diazenyl]phenyl]diazenyl]-2-naphthalenesulfonic acid"	14.550525	11.540415	0	1	0
+"CICHEM011173341"	"Oxiranecarboxylic acid, 3-methyl-3-[2-(2,6,6-trimethyl-2-cyclohexen-1-yl)ethenyl]-, ethyl ester"	2.3963103	6.869572	0	1	0
+"CICHEM003440930"	"4-(p-Tolyl)-1H-1,2,3-triazole"	9.439405	9.43488	0	0	1
+"CICHEM011203551"	"9-Octadecenoic acid (9Z)-, 2-[2-(8Z)-8-heptadecenyl-4,5-dihydro-1H-imidazol-1-yl]ethyl ester"	2.6914341	14.362891	1	0	0
+"CICHEM002353670"	"Gadopentetate dimeglumine [USAN:USP]"	0.6420063	12.5385895	0	0	1
+"CICHEM004654117"	"Tert-butyl 2-hydroxybenzoate"	7.8074	12.2575035	1	0	1
+"CICHEM006230130"	"2-(Hexadecanoyloxy)-N,N,N-trimethylethan-1-aminium chloride"	2.7751906	14.457654	0	1	0
+"CICHEM001622125"	"2-Acetyl-4-isopropylpyridine"	9.307769	9.44165	0	0	1
+"CICHEM001885482"	"Monoperoxysuccinic acid"	2.7215552	14.290745	1	0	0
+"CICHEM003705597"	"5-Bromo-2-methoxypyridine"	9.284274	9.400306	0	0	1
+"CICHEM006787352"	"(4R)-4-[(3R,5S,7S,8R,9S,10S,13R,17R)-3,7-dihydroxy-10,13-dimethyl-2,3,4,5,6,7,8,9,11,12,14,15,16,17-tetradecahydro-1H-cyclopenta[a]phenanthren-17-yl](113C)pentanoic acid"	3.9558842	1.271917	0	1	0
+"CICHEM008616526"	"Murideoxycholic acid"	3.8853698	1.3579719	1	1	1
+"CICHEM002155109"	"2,3,5,6-Tetrafluoroterephthalic acid"	9.712793	9.240676	1	0	0
+"CICHEM000265496"	"Gluconolactone"	5.8691006	6.1383333	1	0	0
+"CICHEM011942554"	"4-Hexylbenzaldehyde 2-[(4-propylphenyl)methylene]hydrazone"	7.764629	12.471119	0	1	0
+"CICHEM000522334"	"(1R,2S,5R,8S)-4,4,8-trimethyltricyclo[6.3.1.02,5]dodec-1-yl acetate"	2.440629	7.246005	1	0	0
+"CICHEM001915206"	"Succinylsulfacetamide"	10.765806	12.004378	1	0	0
+"CICHEM003994498"	"Naphthalen-1-yl Dodecanoate"	7.7426744	12.284038	1	0	1
+"CICHEM003490695"	"3-Amino-6-bromopyridine"	9.403692	9.326864	0	0	1
+"CICHEM000721191"	"1,3-Naphthalenedisulfonic acid, 7-hydroxy-8-[[4-(phenylazo)phenyl]azo]-, compd. with N-octyl-1-octanamine (1:2)"	14.3176	11.567745	1	0	1
+"CICHEM000643593"	"2-Naphthalenesulfonic acid, 6-amino-4-hydroxy-5-[(4-nitro-2-sulfophenyl)azo]-, disodium salt"	14.271937	11.600342	1	0	0
+"CICHEM001819978"	"1-(Tributylstannyl)-1H-imidazole"	4.4814196	10.912165	0	1	0
+"CICHEM001837954"	"Sodium 3,5-dibromo-4-hydroxyphenylcyanide"	9.748034	9.393837	1	0	0
+"CICHEM002339869"	"N-(2-Hydroxyethyl)-2-nitrobenzamide"	10.94298	11.88561	0	1	0
+"CICHEM001689371"	"2-(Methylsulfonyl)pyridine"	9.585008	9.392924	1	0	0
+"CICHEM006306336"	"4-[(Butan-2-yl)oxy]-3,5-dimethoxybenzaldehyde"	9.224793	9.597342	0	1	0
+"CICHEM006026025"	"4-Nitro-3-(octanoyloxy)benzoic acid"	7.6991	12.515735	0	1	0
+"CICHEM002087179"	"Methyl 3-chloropropionate"	2.8045251	14.403156	0	0	1
+"CICHEM008877086"	"Benzenediazonium, 4,4'-iminobis-, trichlorozincate(1-) (1:2)"	10.655102	11.98827	1	0	0
+"CICHEM002361244"	"2-(tert-Butyl)-3-methyl-2-buten-1-ol"	0.38675573	12.312594	1	0	0
+"CICHEM006932180"	"4-Bromo-2-chloro-6-fluorobenzoic acid"	9.630009	9.442057	1	0	0
+"CICHEM003052628"	"4-Bromo-2,3,5,6-tetrafluorobenzoic acid"	9.689088	9.382412	1	0	0
+"CICHEM003793783"	"1-Bromo-4-heptylbenzene"	7.7144656	12.31359	0	0	1
+"CICHEM009178765"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--6-methyl-N-(3-methylbutyl)heptan-2-amine (1/1)"	4.750191	10.744221	0	0	1
+"CICHEM002232882"	"Ammonium sulphanilate"	10.791044	11.850839	0	1	1
+"CICHEM008624447"	"Cholestane-3,7,12,26-tetrol"	3.955874	1.3074003	1	1	1
+"CICHEM002418267"	"Alanyl-alanyl-alanyl-seryl-phenylalanyl-lysyl-alanyl-lysyl-lysinamide"	4.7831893	10.723181	1	0	1
+"CICHEM003190873"	"methyl 5-iodopentanoate"	2.6943552	14.316552	1	0	0
+"CICHEM008731184"	"Methyl sterculate"	2.7549295	14.317404	1	1	1
+"CICHEM008587743"	"alpha-Retinoic acid"	2.3654025	6.9105587	0	1	1
+"CICHEM003338837"	"2-Fluoro-3-methylbenzyl bromide"	9.320989	9.446148	0	0	1
+"CICHEM008797862"	"Direct Black 51"	14.369827	11.517099	0	0	1
+"CICHEM003691862"	"1-butyl-4-iodobenzene"	7.738469	12.299423	0	0	1
+"CICHEM003791431"	"2-Fluoro-5-methylpyridine"	9.413293	9.450893	0	0	1
+"CICHEM008809337"	"cyclopropanepentanoic acid, 2-undecyl-, methyl ester, trans-"	2.7420695	14.307626	1	0	1
+"CICHEM008593899"	"Glycoallocholic acid"	3.9289246	1.2688884	0	1	1
+"CICHEM009166802"	"2-(3-Fluoro[1,1'-biphenyl]-4-yl)propanimidic acid"	9.044373	9.535525	0	1	0
+"CICHEM009196114"	"Benzyl hydrogen [1-(2-formylpyrrolidin-1-yl)-3-methyl-1-oxobutan-2-yl]carbonimidate"	4.784464	10.587031	1	0	0
+"CICHEM005130091"	"Methyl 7-oxododecanoate"	2.7299488	14.293625	1	0	0
+"CICHEM009178732"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--adamantan-1-amine (1/1)"	4.75855	10.722064	1	0	1
+"CICHEM003969839"	"BIGCHAP"	3.9595032	1.3795487	1	0	0
+"CICHEM008900938"	"2,7-Naphthalenedisulfonic acid, 5-(acetylamino)-4-hydroxy-3-[2-(3-phosphonophenyl)diazenyl]-, ammonium sodium salt (1:2:1)"	14.3466	11.5428295	1	0	1
+"CICHEM008898306"	"1,3-Naphthalenedisulfonic acid, 7-hydroxy-8-[2-(4'-hydroxy-3,3'-dimethyl[1,1'-biphenyl]-4-yl)diazenyl]-, sodium salt (1:2)"	14.574765	11.555751	0	1	0
+"CICHEM009602830"	"N-(1-Hydroxy-2-methylpropan-2-yl)-5-methyl-2-(propan-2-yl)cyclohexane-1-carboximidic acid"	2.5394166	7.0013795	1	1	1
+"CICHEM009225806"	"N-(4-Methylbenzene-1-sulfonyl)glycyl-N-{5-carbamimidamido-1-hydroxy-2-[(4-methyl-2-oxo-2H-1-benzopyran-7-yl)amino]pentylidene}prolinamide"	4.5654707	10.599873	0	1	0
+"CICHEM006574628"	"Disodium [(2-amino-2-oxoethyl)(carboxylatomethyl)amino]acetate"	0.596977	12.484808	1	1	0
+"CICHEM009291162"	"Magnesium 5-oxido-3,4-dihydro-2H-pyrrole-2-carboxylate--5-hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid (1/1/1)"	4.5241394	10.898514	0	1	0
+"CICHEM007287436"	"Methyl 4-bromo-2-chloro-6-fluorobenzoate"	9.186756	9.674675	0	1	0
+"CICHEM009178070"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--N-(propan-2-yl)propan-2-amine (1/1)"	4.744445	10.730387	0	1	1
+"CICHEM009405507"	"2-Methyl-3-[4-(propan-2-yl)cyclohex-1-en-1-yl]propanal"	2.6170468	7.1755333	1	1	1
+"CICHEM008699258"	"2-Methylsulfonyl-4-trifluoromethylbenzoic acid"	10.957138	11.939282	0	1	0
+"CICHEM005070040"	"(2,6-Dichlorophenyl)ethanimidamide--hydrogen chloride (1/1)"	9.403055	9.305192	0	0	1
+"CICHEM008912214"	"4-Butylbiphenyl"	7.7433634	12.378866	0	1	0
+"CICHEM004799953"	"1-Methylimidazolium chloride"	4.680188	10.6864395	0	1	1
+"CICHEM008900540"	"Trisodium 4-((2,4-dihydroxy-3-((4-methoxyphenyl)diazenyl)-5-((4-(4-nitro-2-sulfonatoanilino)phenyl)diazenyl)phenyl)diazenyl)-5-hydroxynaphthalene-2,7-disulfonate"	14.305685	11.5733795	1	0	1
+"CICHEM008904773"	"Tetrasodium 3-{[4-({4,6-bis[(3-sulfonatopropyl)sulfanyl]-1,3,5-triazin-2-yl}amino)-5-methoxy-2-methylphenyl]diazenyl}naphthalene-1,5-disulfonate"	14.565909	11.579632	0	1	0
+"CICHEM009247685"	"Iron(3+) potassium 2,2',2'',2'''-(propane-1,3-diyldinitrilo)tetraacetate (1/1/1)"	0.647112	12.506528	0	1	1
+"CICHEM009178096"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--2-amino-2-deoxyhexose (1/1)"	4.6910863	10.67197	0	1	1
+"CICHEM009674326"	"7-(Methoxymethyl)bicyclo[2.2.1]hept-5-en-2-one"	2.605817	6.9908214	0	1	1
+"CICHEM009651175"	"Dimethyl pentanedioate--N~1~-(2-aminoethyl)ethane-1,2-diamine (1/1)"	2.7275994	14.381609	1	1	1
+"CICHEM009451287"	"Sodium 2,3,4,5,6-pentachlorobenzene-1-carbothioate"	9.599532	9.263154	1	0	0
+"CICHEM009707472"	"Glucoiberin"	6.1188545	5.8990006	1	1	1
+"CICHEM009292210"	"Copper(2+) 2,2'-[(2-hydroxyethyl)azanediyl]diacetate"	0.6843908	12.4932575	0	1	1
+"CICHEM009202565"	"2-(Cyclohex-3-en-1-yl)propan-2-ol"	2.2404325	6.8421197	0	1	0
+"CICHEM009609660"	"Estra-1,5(10)-diene-3,4,17-trione"	3.6907265	1.4293139	0	0	1
+"CICHEM013627872"	"Benzenesulfonic acid, cobalt(2+) salt (2:1)"	10.7703	11.841906	0	0	1
+"CICHEM009935487"	"4-Hydroxy-2-(4-hydroxyphenyl)-1,5-dimethyl-1,2-dihydro-3H-pyrazol-3-one"	9.596603	9.394208	1	0	0
+"CICHEM013656012"	"Sodium (4-sulfamoylanilino)methanesulfonate"	10.687983	11.884813	1	0	1
+"CICHEM013674817"	"Magnesate(2-), [[N,N'-1,2-ethanediylbis[N-(carboxymethyl)glycinato]](4-)-N,N',O,O',O(N)-,O(N')-]-, magnesium(2+) (1:1), (OC-6-21)-"	2.3356519	7.0019674	1	1	1
+"CICHEM009970336"	"1-(Benzylamino)-3-chloropropan-2-ol"	7.7409496	12.304036	0	0	1
+"CICHEM009835000"	"3,3'-(1,4-Phenylene)bis[N-(4-chloro-2-methoxy-5-methylphenyl)-3-oxopropanimidic acid]"	10.747359	11.892335	1	0	1
+"CICHEM009643537"	"Rhododendrin"	5.7980666	6.121713	0	0	1
+"CICHEM010028215"	"Oxiran-2-yl hydrogen carbonimidate"	4.4571996	10.651927	0	1	0
+"CICHEM010065373"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--cadmium (2/1)"	4.7978272	10.652335	1	0	0
+"CICHEM009685751"	"N-(1-Hydroxynaphthalen-2-yl)heptadecanimidic acid"	7.7208323	12.425926	0	1	0
+"CICHEM010160141"	"(S)-12-Methyltetradecanoic acid methyl ester"	2.8100092	14.316993	0	0	1
+"CICHEM008898348"	"1,3-Naphthalenedisulfonic acid, 7-[2-[4-[2-[4-[2-[4-[(4-aminobenzoyl)amino]-2-methylphenyl]diazenyl]-7-sulfo-1-naphthalenyl]diazenyl]-2-methylphenyl]diazenyl]-, sodium salt (1:3)"	14.272088	11.518422	1	0	0
+"CICHEM008901993"	"Benzoic acid, 5-[2-[4-[2-[4-[2-(6-amino-1-hydroxy-3-sulfo-2-naphthalenyl)diazenyl]-7-sulfo-1-naphthalenyl]diazenyl]phenyl]diazenyl]-2-hydroxy-, sodium salt (1:3)"	14.4403	11.590065	0	0	1
+"CICHEM010210391"	"Carbonic acid, 2-​[(benzoyldioxy)​carbonyl]​phenyl 1-​methylethyl ester"	7.847506	12.454627	0	1	0
+"CICHEM010163814"	"Naphthalene, decahydro-1,6-dimethyl-4-(1-methylethyl)-"	2.61702	7.1279297	1	1	1
+"CICHEM006474837"	"4-Fluoropyridine--hydrogen chloride (1/1)"	9.1715975	9.582506	0	1	0
+"CICHEM009173006"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--N-ethylethanamine (1/1)"	4.7587385	10.75057	0	0	1
+"CICHEM009174616"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--2-(1H-imidazol-5-yl)ethan-1-amine (2/1)"	4.6096087	10.873117	0	1	0
+"CICHEM009339433"	"2-[(tert-Butylperoxy)carbonyl]benzoic acid"	7.6324563	12.444992	0	1	0
+"CICHEM009644014"	"Cadmium potassium 2,2',2''-nitrilotriacetate (1/1/1)"	0.68349594	12.500979	0	1	1
+"CICHEM007570237"	"2-{3-[2-(Trifluoromethyl)benzamido]phenoxy}propanoic acid"	10.807653	11.898078	0	0	1
+"CICHEM009174566"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--N-butyltriimidodicarbonic diamide (1/1)"	4.597997	10.924362	0	1	0
+"CICHEM009981150"	"Methyl 2,4,6-trioxo-6-phenylhexanoate"	7.7201567	12.267692	1	0	1
+"CICHEM009155714"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--aniline (1/1)"	4.769505	10.715584	1	0	1
+"CICHEM009168410"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--1-phenylpropan-2-amine (1/1)"	4.787733	10.707487	1	0	1
+"CICHEM008842395"	"2-Naphthalenesulfonic acid, 6-amino-4-hydroxy-5-[2-[2-(phenylsulfonyl)phenyl]diazenyl]-, sodium salt (1:1)"	14.274685	11.584608	1	0	0
+"CICHEM008895674"	"Disodium 4-((2,4-dihydroxy-5-((2-hydroxy-3,5-dinitrophenyl)azo)-3-((4-nitrophenyl)azo)phenyl)azo)-5-hydroxynaphthalene-2,7-disulphonate"	14.589947	11.535445	0	1	0
+"CICHEM008652752"	"Cyclohexanol, 1-methyl-4-(1-methylethyl)-, 1-acetate"	2.4133031	6.705381	0	1	0
+"CICHEM009042995"	"3,6-Dichloro-2-pyridinecarboxylic acid - 1-amino-2-propanol (1:1)"	9.232747	9.67567	0	1	0
+"CICHEM008625642"	"5-Chloro-N-(4-chlorophenyl)-2-hydroxybenzamide"	10.703666	11.870018	1	0	1
+"CICHEM009919556"	"Ethyl 3,3,6-trimethyl-5-heptenoate"	2.6988776	14.303571	1	0	0
+"CICHEM010277382"	"Methyl 16-methylheptadecanoate"	2.824833	14.326607	0	1	1
+"CICHEM010219277"	"Ponceau 6R"	14.285219	11.583485	1	0	0
+"CICHEM008894925"	"Disodium 4-amino-5-hydroxy-3-((4-nitrophenyl)azo)-6-((2-phenoxyphenyl)azo)naphthalene-2,7-disulphonate"	14.358552	11.621319	0	0	1
+"CICHEM010056422"	"(5-Hydroxy-3,4-dihydro-2H-pyrrol-2-yl)(pyrrolidin-1-yl)methanone"	4.771274	10.682367	1	0	1
+"CICHEM008832750"	"Benzenediazonium, 4-(phenylamino)-, chloride (1:1)"	10.649379	11.921662	1	0	0
+"CICHEM009878927"	"4,4'-Azanediyldi(benzene-1-diazonium) zinc chloride (1/1/4)"	10.680174	11.999118	1	0	0
+"CICHEM008899759"	"Acetic acid, 2-[[4-[2-[4-[2-[4-[2-(1-hydroxy-4-sulfo-2-naphthalenyl)diazenyl]-7-sulfo-1-naphthalenyl]diazenyl]-7-sulfo-1-naphthalenyl]diazenyl]phenyl]amino]-2-oxo-, sodium salt (1:3)"	14.325231	11.500645	1	0	0
+"CICHEM008898280"	"1,5-Naphthalenedisulfonic acid, 3-[2-[4-[2-(6-amino-1-hydroxy-3-sulfo-2-naphthalenyl)diazenyl]-5-methoxy-2-methylphenyl]diazenyl]-, sodium salt (1:3)"	14.608391	11.506866	0	1	0
+"CICHEM009358524"	"Naphthalen-1-yl hexadecanoate"	7.757253	12.281326	1	0	1
+"CICHEM009387895"	"Iron(3+) sodium 2,2',2''-nitrilotriacetate--water (1/3/2/1)"	0.67770416	12.5044565	0	1	1
+"CICHEM009168451"	"N~1~,N~2~-Bis(2-{[(2-chlorophenyl)methyl](diethyl)azaniumyl}ethyl)ethanediimidate--5-hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid (1/2)"	4.68799	10.856632	0	1	0
+"CICHEM009871955"	"2-Benzyl-3-phenylpyridine"	9.216497	9.5382185	0	1	0
+"CICHEM009876343"	"Formaldehyde--2-amino-2-(hydroxymethyl)propane-1,3-diol (1/1)"	0.6407966	12.271623	1	1	0
+"CICHEM013797741"	"Potassium 4,4'-(phenylphosphanediyl)dibenzenesulfonate hydrate (2:1:2)"	10.877225	11.758276	0	1	0
+"CICHEM010055960"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--methionine (1/1)"	4.64932	10.822974	0	1	0
+"CICHEM010238350"	"C.I. Direct Brown 51, trisodium salt"	14.310694	11.537647	1	0	0
+"CICHEM008895054"	"C.I. Acid Red 115"	14.271759	11.58148	1	0	0
+"CICHEM010145746"	"Cerium oxalate (Ce2(C2O4)3)"	5.774967	6.084971	1	0	1
+"CICHEM008596348"	"2-Acetamido-2-deoxyhexopyranose"	5.7961454	5.932466	1	1	1
+"CICHEM008619330"	"7,8-Didehydrocholesterol"	3.9153588	1.3039404	1	1	1
+"CICHEM010169399"	"Clopyralid, triethylamine salt"	9.229275	9.532665	0	1	0
+"CICHEM009409582"	"4-Amino-2,6-dihydroxypyrimidin-5-yl hexopyranoside"	6.0165277	5.9401665	1	1	1
+"CICHEM008867012"	"Ethanol, 2,2'-[(2-hydroxyethyl)imino]bis-, 1,1'-diacetate"	2.8606908	14.410136	0	1	1
+"CICHEM010153419"	"Bis(benzoylacetonato)oxovanadium"	7.736894	12.2888	0	0	1
+"CICHEM010154425"	"C.I. Direct Black 9"	14.694497	11.596817	0	1	0
+"CICHEM010236800"	"C.I. Direct Red 53"	14.405381	11.632019	0	0	1
+"CICHEM010238707"	"C.I. Direct Green 8"	14.663594	11.5685835	0	1	0
+"CICHEM009405473"	"1-Deoxy-5-O-phosphonopent-2-ulose"	0.5490139	12.465564	1	1	1
+"CICHEM009172958"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--ethanamine (1/1)"	4.7631083	10.683991	1	0	1
+"CICHEM010065720"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--iron (3/1)"	4.789407	10.63702	1	0	0
+"CICHEM008785925"	"Allotetrahydrocortisone"	3.8349345	1.5665009	1	0	1
+"CICHEM009518606"	"3-Hydroxy-2,2-dimethylbutanoic acid"	0.48724353	12.225247	1	1	0
+"CICHEM008595993"	"Clopyralid dimethylamine salt"	9.263379	9.477925	0	1	0
+"CICHEM010237147"	"C.I. Direct Brown 56"	14.63563	11.496411	0	1	0
+"CICHEM009174558"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--pyridine-4-carbohydrazide (1/1)"	4.789139	10.719109	1	0	0
+"CICHEM009666983"	"2-Hydroxypropyl 5-hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylate"	4.504901	10.846702	0	1	0
+"CICHEM008785974"	"Allopregnane-3b,17a-diol-20-one"	3.9784517	1.4965267	1	1	0
+"CICHEM008591588"	"L-Glucono-1,5-lactone"	5.8732605	6.1174746	1	1	1
+"CICHEM008968083"	"Deltaline"	2.5986264	7.2040906	1	0	1
+"CICHEM009042573"	"2-Bromo-4-(2,4,6-tribromophenoxy)phenol"	9.778705	9.326342	1	0	0
+"CICHEM009879552"	"1-(4-Dodecylphenyl)-4,4,4-trifluorobutane-1,3-dione"	7.702159	12.180931	1	0	0
+"CICHEM009206467"	"Neodymium, [μ-[ethanedioato(2-)-κO1,κO2′:κO1′,κO2]]bis[ethanedioato(2-)-κO1,κO2]di-"	6.127259	6.01163	1	1	1
+"CICHEM008856874"	"Acetic acid, 2-(3,3-dimethylcyclohexylidene)-, ethyl ester, (2Z)-"	2.425782	7.275409	1	0	1
+"CICHEM011772043"	"Methyl 2-[(2,6,10-trimethyl-9-undecen-1-ylidene)amino]benzoate"	7.704993	12.416423	0	1	0
+"CICHEM009576109"	"3-Amino-N-hydroxypropanimidic acid"	2.8648777	14.430329	0	1	0
+"CICHEM009499294"	"17-Hydroxyandrostan-3-yl hexopyranuronate"	3.7011979	1.290491	0	0	1
+"CICHEM009720129"	"N-Carbamimidoyl-N-ethylglycine"	0.50139856	12.233986	1	1	0
+"CICHEM009506171"	"4,4'-Bipyridine--hydrogen chloride (1/2)"	9.119287	9.50589	0	1	0
+"CICHEM009305939"	"2-Methyl-3-[4-(propan-2-yl)cyclohex-1-en-1-yl]propan-1-ol"	2.409547	7.2836685	1	0	1
+"CICHEM008892069"	"Methanaminium, N,N,N-trimethyl-, hypochlorite (1:1)"	0.47089526	12.473791	1	0	0
+"CICHEM008894602"	"Direct Red 75"	14.3310795	11.519882	1	0	0
+"CICHEM008898488"	"1,3-Naphthalenedisulfonic acid, 7-hydroxy-8-[2-[4'-[2-(4-hydroxyphenyl)diazenyl]-3,3'-dimethyl[1,1'-biphenyl]-4-yl]diazenyl]-, sodium salt (1:2)"	14.633765	11.51728	0	1	0
+"CICHEM009790049"	"1-[Dichloro(phenyl)methyl]-4-nitrobenzene"	11.028757	11.885742	0	1	0
+"CICHEM009173014"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--methanamine (1/1)"	4.783205	10.692362	1	0	1
+"CICHEM009483983"	"5-Hydroxy-3,4-dihydro-2H-pyrrole-2-carboxylic acid--ammonia (1/1)"	4.7621374	10.65546	1	0	1
+"CICHEM009839473"	"3,5-Dimethoxy-4-(2-methoxyethoxy)benzaldehyde"	9.217546	9.569029	0	1	0
+"CICHEM009445438"	"2-(Methanesulfinyl)pyridine"	9.491432	9.345325	0	0	1
+"CICHEM009567108"	"4,4'-Bipyridine--hydrogen chloride (1/1)"	9.106492	9.458909	0	1	0
+"CICHEM009166778"	"2-Ethylundecyl formate"	2.7534068	14.295788	1	0	0
+"CICHEM009429960"	"Cholestan-3-yl octadec-9-enoate"	3.9428859	1.2419604	0	1	0
+"CICHEM009192717"	"N-[1-Hydroxy-2-(4-hydroxybenzamido)ethylidene]phenylalanine"	4.7277584	10.637164	1	0	1
+"CICHEM009441940"	"1,2,11,12,14,15-Hexahydroxy-13,20-epoxypicras-3-en-16-one"	6.0554633	5.7022405	0	1	0
+"CICHEM009757469"	"Sodium N-(4-sulfophenyl)ethanimidate"	10.735217	11.953039	1	0	1
+"CICHEM010057263"	"5-Methyl-2-(4-methylphenyl)pyridine"	9.3189335	9.377951	0	0	1
+"CICHEM009542960"	"2-Methyl-3-(methylsulfanyl)-5-(prop-1-en-2-yl)cyclohexan-1-one"	2.3655174	7.3270955	1	0	0
+"CICHEM009441833"	"Di-tert-butyl benzene-1,4-dicarboperoxoate"	7.6589055	12.372453	0	1	0
+"CICHEM010189454"	"Tetrahydro-11-deoxycortisol"	3.9244995	1.5457714	1	1	0
+"CICHEM009464595"	"2-Hydroxy-4-[(1H-imidazol-5-yl)methyl]-1,3-oxazol-5(4H)-one"	4.55056	10.874338	0	1	0
+"CICHEM011912375"	"4-Hexylbenzaldehyde 2-[(4-methylphenyl)methylene]hydrazone"	7.6645203	12.411739	0	1	0
+"CICHEM009568502"	"Methyl 6-chloro-6-oxohexanoate"	2.720508	14.401571	1	1	1
+"CICHEM010999324"	"3-[2-[4-[2-[4-[(4-Amino-6-chloro-1,3,5-triazin-2-yl)amino]-5-sulfo-1-naphthalenyl]diazenyl]-6-sulfo-1-naphthalenyl]diazenyl]-1,5-naphthalenedisulfonic acid"	14.655818	11.591389	0	1	0
+"CICHEM010181154"	"Sodium N,N-dimethylglycinate"	0.60104686	12.4939995	1	1	1
+"CICHEM010477545"	"3,6-Bis[2-(2-arsonophenyl)diazenyl]-4,5-dihydroxy-2,7-naphthalenedisulfonic acid sodium salt (1:2)"	14.315465	11.576847	1	0	1
+"CICHEM010009504"	"Trisodium 3-{[4-({4-[(4-amino-5-methoxy-2-methylphenyl)diazenyl]-6-sulfonatonaphthalen-1-yl}diazenyl)naphthalen-1-yl]diazenyl}naphthalene-1,5-disulfonate"	14.347803	11.575948	1	0	1
+"CICHEM011490844"	"rel-(3E)-4-[(1R,3R)-2,2,3-Trimethyl-6-methylenecyclohexyl]-3-buten-2-one"	2.2423189	7.0764785	1	0	0
+"CICHEM010150027"	"Ferrate(2-), (5-((2,4-dihydroxy-5-((2-hydroxy-4,6-dinitrophenyl)azo)phenyl)azo)-4-hydroxy-3-((4-nitrophenyl)azo)-2,7-naphthalenedisulfonato(4-))-, disodium"	14.33122	11.577731	1	0	1
+"CICHEM010989523"	"4-Amino-3-[2-[4′-[2-(8-amino-1-hydroxy-3,6-disulfo-2-naphthalenyl)diazenyl][1,1′-biphenyl]-4-yl]diazenyl]-5-hydroxy-6-[2-(4-sulfophenyl)diazenyl]-2,7-naphthalenedisulfonic acid"	14.611101	11.612063	0	1	0
+"CICHEM010064475"	"Ethyl 1-butylpiperidine-2-carboxylate"	4.740073	10.643287	1	0	1
+"CICHEM012938130"	"Benzyl N-acetyl-α-D-galactosaminide"	6.1705613	6.0818334	0	1	0
+"CICHEM013142179"	"7-Ketodeoxycholic acid"	3.9109669	1.2886108	1	1	1
+"CICHEM010237022"	"C.I. Direct Violet 1"	14.367304	11.584196	0	0	1
+"CICHEM014034987"	"(3α,5β,7β)-3,7-Bis(formyloxy)cholan-24-oic acid"	3.8810432	1.3568985	1	1	1
+"CICHEM010035764"	"N-{1-[(Benzyloxy)carbonyl]prolyl}-5-{[hydroxy(imino)methyl]amino}-2-(4-nitroanilino)pentanimidic acid"	4.6070952	10.648425	0	1	0
+"CICHEM010146769"	"2-Buten-1-ol, 1-acetate, (2E)-"	2.821781	14.452155	0	1	1
+"CICHEM014048540"	"2-(4′-Ethyl[1,1′-biphenyl]-4-yl)-5-hexylpyrimidine"	7.725085	12.450208	0	1	0
+"CICHEM011828571"	"(2E)-1-[(1S)-2,6,6-Trimethyl-2-cyclohexen-1-yl]-2-buten-1-one"	2.4895144	6.921115	0	1	1
+"CICHEM013410725"	"Cobaltate(3-), [N,N-bis(phosphonomethyl)glycinato(5-)]-, triammonium, (T-4)-"	0.3834857	12.270673	1	0	0
+"CICHEM010373173"	"(1S,2R,5S)-2,6,6-Trimethylbicyclo(3.1.1)heptane"	2.515719	7.096306	1	1	1
+"CICHEM013490313"	"Glycocholate sodium"	3.9343314	1.2675594	0	1	1
+"CICHEM013539226"	"4'-Methyl-4-propyl-1,1'-biphenyl"	7.8146896	12.291232	0	0	1
+"CICHEM014077929"	"4-(Diphenylamino)-2-methylbenzaldehyde 2,2-diphenylhydrazone"	10.800042	11.847066	0	1	1
+"CICHEM013612767"	"Glycine, N,N′-(iminodi-2,1-ethanediyl)bis[N-(carboxymethyl)-, sodium salt (1:4)"	0.5748712	12.524229	0	0	1
+"CICHEM014139828"	"O-[2-(Acetylamino)-2-deoxy-α-D-galactopyranosyl]-L-serine"	6.068224	6.127141	1	1	0
+"CICHEM012148516"	"D-Mannose, [[4-(acetylamino)phenyl]sulfonyl]hydrazone"	10.662317	11.907799	1	0	0
+"CICHEM013179692"	"Rosolic acid"	10.710209	11.996959	1	0	0
+"CICHEM014178909"	"(5Z,9α,11α)-16,16-Difluoro-9,15-dihydroxy-11-[(tetrahydro-2H-pyran-2-yl)oxy]prost-5-en-1-oic acid"	2.7064352	14.336316	1	0	0
+"CICHEM013414008"	"C.I. Direct Brown 100"	14.328292	11.500875	1	0	0
+"CICHEM012303822"	"5-Bromo-6-chloro-1H-indol-3-yl β-D-glucopyranoside"	5.8391004	5.8201113	1	1	1
+"CICHEM012431292"	"(1S,2R,5S)-2,6,6-Trimethylbicyclo[3.1.1]heptane"	2.511721	7.103007	1	1	1
+"CICHEM012459558"	"5-Bromo-4-chloro-3-indolyl β-D-glucopyranoside"	5.958018	5.8364935	1	1	1
+"CICHEM012490900"	"6,7-Dihydro-1,5,8-trimethylnaphtho[2,1-b]furan"	5.904337	6.0071807	1	1	1
+"CICHEM012552097"	"2-(Hydroxyimino)-N-(2-methylphenyl)acetamide"	10.917149	11.814418	0	1	0
+"CICHEM012660098"	"(3β,5β,7α)-3,7-Dihydroxycholan-24-oic acid"	3.9433272	1.2863369	0	1	1
+"CICHEM013657366"	"Benzenesulfonamide, 4-methyl-, compd. with formaldehyde (1:1)"	10.6996155	11.825469	0	0	1
+"CICHEM012580254"	"(3α,5β,12β)-3,12-Dihydroxycholan-24-oic acid"	3.9075406	1.2942158	1	1	1
+"CICHEM014223846"	"3H-3a,6-Methano-2,1-benzisothiazole, 4,5,6,7-tetrahydro-8,8-dimethyl-, 2,2-dioxide, (3aS,6R)-"	5.9443583	6.0312195	1	1	1
+"CICHEM013179981"	"(-)-alpha-Ionone"	2.4436166	6.721803	0	1	0
+"CICHEM014000897"	"Triphenylstannyl 2-nitrobenzoate"	11.033483	11.844954	0	1	0
+"CICHEM012723466"	"1,1′-(Dibutylstannylene)bis[1H-imidazole]"	4.645842	10.89539	0	1	0
+"CICHEM012743423"	"1,3-Butanediol, 3-methyl-, 1,3-diacetate"	2.7416031	14.412494	1	1	1
+"CICHEM014100176"	"2-Propenenitrile, 2-chloro-3-(phenylsulfonyl)-, (E)-"	10.868586	11.817653	0	1	0
+"CICHEM013617519"	"2,7-Naphthalenedisulfonic acid, 4-amino-3-[2-[4′-[2-(2,4-diaminophenyl)diazenyl]-3,3′-dimethoxy[1,1′-biphenyl]-4-yl]diazenyl]-5-hydroxy-6-[2-(4-sulfophenyl)diazenyl]-, sodium salt (1:3)"	14.659109	11.50937	0	1	0
+"CICHEM014216089"	"(2R,4aS,8aS)-Decahydro-2-naphthalenol"	2.340852	6.987673	1	1	1
+"CICHEM013583943"	"1-Methyl-4-nonylbenzene"	7.6991854	12.276333	0	0	1
+"CICHEM014012462"	"(2S,4aR,8aR)-Decahydro-2-naphthalenol"	2.3389893	6.9775367	1	1	1
+"CICHEM014225536"	"1,6-Anhydro-3-deoxy-2-O-methyl-4-O-(2,3,4,6-tetra-O-acetyl-β-D-glucopyranosyl)-β-D-ribo-hexopyranose"	6.0266843	5.894195	1	1	1
+"CICHEM013083746"	"Tetrahydrodeoxycorticosterone"	3.7598264	1.4190434	1	0	1
+"CICHEM013155379"	"Isolithocholic acid"	3.8814085	1.3669367	1	1	1
+"CICHEM013184874"	"Erinacin C"	5.9266105	6.1855083	1	1	1
+"CICHEM013184544"	"Volemolide"	3.8826764	1.5462885	1	1	1
+"CICHEM013188750"	"Isoursodeoxycholic acid"	3.9580882	1.2710135	0	1	0
+"CICHEM014228845"	"2-Chloro-5-(4-nitrophenoxy)benzenesulfonyl chloride"	10.887637	11.841382	0	1	0
+"CICHEM014129613"	"4-[(2S)-2-Methylbutyl]benzoic acid"	7.691694	12.202995	1	0	0
+"CICHEM013466396"	"(2R)-2-Hydroxy-2-phenethylglucosinolate"	6.08514	6.1606774	0	0	1
+"CICHEM013393962"	"Methylglycinediacetic acid trisodium salt"	0.62972826	12.5205555	0	0	1
+"CICHEM013372016"	"Clopyralid-tris(2-hydroxypropyl)ammonium"	9.131848	9.533623	0	1	0
+"CICHEM013349287"	"N,N,N-Tripropyl-1-propanaminium 2,2′-dithiobis[benzoate] (1:1)"	7.761268	12.490303	0	1	0
+"CICHEM013387063"	"2,7-Naphthalenedisulfonic acid, 4-amino-3-[2-[4-[[4-[2-(2-amino-4-hydroxyphenyl)diazenyl]phenyl]amino]-3-sulfophenyl]diazenyl]-5-hydroxy-6-(2-phenyldiazenyl)-, lithium salt (1:3)"	14.636757	11.49534	0	1	0
+"CICHEM014184774"	"N,N′-[1,3-Phenylenebis(methylene)]bis[octadecanamide]"	7.7910705	12.350696	0	1	1
+"CICHEM013615455"	"2,7-Naphthalenedisulfonic acid, 4-amino-3-[2-[4-[[4-[2-(2,4-dihydroxyphenyl)diazenyl]phenyl]amino]-3-sulfophenyl]diazenyl]-5-hydroxy-6-(2-phenyldiazenyl)-, sodium salt (1:3)"	14.713208	11.572011	0	1	0
+"CICHEM014030266"	"Methyl (1S)-2,6,6-trimethyl-2-cyclohexene-1-carboxylate"	2.4229271	6.886575	0	1	0
+"CICHEM013672456"	"1,3-Dodecanedione, 1-(2-hydroxyphenyl)-"	7.8240323	12.242599	1	0	1
+"CICHEM014118038"	"(4S)-4-(1-Methylethyl)-1-cyclohexene-1-carboxaldehyde"	2.5698073	7.2031302	1	0	1
+"CICHEM013610951"	"2-Naphthalenesulfonic acid, 5-[2-(6-amino-1-hydroxy-3-sulfo-2-naphthalenyl)diazenyl]-8-[2-[4-[[4-[2-(6-amino-1-hydroxy-3-sulfo-2-naphthalenyl)diazenyl]phenyl]amino]-3-sulfophenyl]diazenyl]-, sodium salt (1:4)"	14.703577	11.552019	0	1	0
+"CICHEM013616677"	"2,7-Naphthalenedisulfonic acid, 5-[2-[2,6-dihydroxy-3-[2-(4-nitrophenyl)diazenyl]-5-[2-(4-sulfo-1-naphthalenyl)diazenyl]phenyl]diazenyl]-4-hydroxy-3-[2-(4-nitrophenyl)diazenyl]-, sodium salt (1:3)"	14.389316	11.521616	0	0	1
+"CICHEM013610969"	"1,5-Naphthalenedisulfonic acid, 3,3′-[carbonylbis[imino(5-methoxy-2-methyl-4,1-phenylene)-2,1-diazenediyl]]bis-, lithium salt (1:4)"	14.360086	11.554599	1	0	0
+"CICHEM013721550"	"1,3-Diaminopropane-N,N,N',N'-tetraacetic acid ferric sodium salt"	0.6844566	12.482093	0	1	1
+"CICHEM013728357"	"C.I. Direct Red 144, disodium salt"	14.641506	11.596367	0	1	0
+"CICHEM013745419"	"2-Naphthalenesulfonic acid, 6-amino-5-[2-(4-chloro-2-sulfophenyl)diazenyl]-4-hydroxy-, sodium salt (1:2)"	14.377224	11.619406	0	0	1
+"CICHEM013752142"	"2-Naphthalenesulfonic acid, 5-[2-[4-(acetylamino)-2-sulfophenyl]diazenyl]-6-amino-4-hydroxy-, ammonium salt (1:2)"	14.262432	11.509732	1	0	0
+"CICHEM013758057"	"2,7-Naphthalenedisulfonic acid, 4-hydroxy-3-[2-(1-naphthalenyl)diazenyl]-, sodium salt (1:2)"	14.372696	11.57251	0	0	1
+"CICHEM013759550"	"2-Naphthalenesulfonic acid, 7-amino-4-hydroxy-3-[2-[3-methyl-4-[2-(4-sulfophenyl)diazenyl]phenyl]diazenyl]-, sodium salt (1:2)"	14.632953	11.549308	0	1	0
+"CICHEM013760913"	"Glycine, N-(carboxymethyl)-N-methyl-, sodium salt (1:2)"	0.64219975	12.38673	1	0	0
+"CICHEM014200992"	"N2-(3-Amino-2,6-dimethylphenyl)-2,5-pyridinediamine"	9.690184	9.289235	1	0	0
+"CICHEM013847074"	"(Z)-2,3-Dimethylpent-2-enoic acid"	0.58953476	12.52006	0	0	1
+"CICHEM014001093"	"2,2,3-Trimethylbutanediamide"	0.49795094	12.523151	0	1	0
+"CICHEM014017438"	"L-Leucine, N-[4-[[(2R)-2-amino-3-mercaptopropyl]amino]-2-(1-naphthalenyl)benzoyl]-, methyl ester, monohydrochloride"	4.7257214	10.733571	0	1	1
+"CICHEM013868971"	"Bis(2,4,6-trimethylbenzoyl)octylphosphine oxide"	0.41989595	12.318969	1	1	0
+"CICHEM014000954"	"Docosanamide, N,N′-[1,3-phenylenebis(methylene)]bis-"	7.806456	12.345868	0	1	1
+"CICHEM014012769"	"Benzoic acid, 2-methyl-, 2,2-bis[[(2-methylbenzoyl)oxy]methyl]-1,3-propanediyl ester"	7.7425394	12.449213	0	1	0
+"CICHEM014023501"	"4-[2-[Methyl(phenylmethyl)amino]ethoxy]-3-oxobutanal"	7.8405538	12.239662	1	0	1
+"CICHEM014035760"	"N-(1-Oxo-10-undecen-1-yl)-L-alanine dodecyl ester"	2.8252146	14.359165	0	1	1
+"CICHEM014125504"	"(4-Nitrophenyl)triphenylphosphonium"	10.818732	11.890736	0	1	1
+"CICHEM014139612"	"Peroxyheptanoic acid"	2.7623901	14.308848	1	1	1
+"CICHEM014060024"	"1-Amino-3-[(1-methylethyl)(phenylmethyl)amino]-2-propanol"	7.6978025	12.177837	1	0	0
+"CICHEM014081087"	"Methyl 6-oxododecanoate"	2.745872	14.341355	1	1	1
+"CICHEM014153191"	"Dihexyl sulfosuccinate"	2.7890966	14.2961445	0	0	1
+"CICHEM014081319"	"Tridecanamide, N,N′-[1,3-phenylenebis(methylene)]bis-"	7.8477535	12.385453	0	1	0
+"CICHEM014089734"	"1-Thio-β-D-glucopyranose 1-[N-(sulfooxy)-4-pentenimidate] potassium salt (1:1)"	6.134705	6.052642	1	1	1
+"CICHEM014099261"	"2-Methyl-5-(4-nitrophenoxy)benzenesulfonyl chloride"	10.943352	11.763593	0	1	0
+"CICHEM014116404"	"N-([1,1′-Biphenyl]-4-ylsulfonyl)[1,1′-biphenyl]-4-sulfonamide"	10.707276	12.033604	1	0	0
+"CICHEM014118624"	"Ethyl 2-(acetylamino)-2-deoxy-D-glucopyranoside"	6.0024896	6.001841	1	1	1
+"CICHEM014136642"	"5-Bromo-4-chloro-1H-indol-3-yl α-D-galactopyranoside"	5.969453	5.8740716	1	1	1
+"CICHEM014154652"	"Hexadecanamide, N,N′-(m-phenylenedimethylene)bis-"	7.7864656	12.3476	0	1	1
+"CICHEM014163893"	"1H-Imidazole, 1-methyl-, hydrobromide (1:1)"	4.768543	10.70258	1	0	1
+"CICHEM014173892"	"(1R)-3,3′-Bis[2,4,6-tris(1-methylethyl)phenyl][1,1′-binaphthalene]-2,2′-diol"	9.303378	9.568361	0	1	0
+"CICHEM014195192"	"4-(1-Methylethyl)-1-cyclohexene-1-methanol"	2.3056223	7.0744476	1	1	1
+"CICHEM014200570"	"N-(1-Methylpropyl)-N-pentylbenzenamine"	7.7885222	12.13201	1	0	0
+"CICHEM014206247"	"(2S,4aS,8aS)-Decahydro-2-naphthalenol"	2.3443024	6.9952035	1	1	1
+"CICHEM014229785"	"Formic acid, compd. with 1-methyl-1H-imidazole (1:1)"	4.7576427	10.724752	1	0	0
+"CICHEM006091193"	"Methyl 8-methylnonanoate"	2.847545	14.327855	0	1	1
+"CICHEM002413508"	"Strontium hydrogen 3,4,5,6-tetrachlorophthalate (1:2)"	9.405079	9.510698	0	0	1
+"CICHEM001957653"	"Pyridine, 2,5-diamino-"	9.412675	9.339293	0	0	1
+"CICHEM006789739"	"4-{[6-Chloro-2-(4-cyanoanilino)pyrimidin-4-yl]oxy}-3,5-dimethylbenzonitrile"	9.251828	9.573243	0	1	0
+"CICHEM014263669"	"Formic acid, compd. with 1,2-ethanediamine (1:?)"	0.5604904	12.411106	1	1	1
+"CICHEM014274138"	"2-Hydroxy-2-methyl-1-[2,3,5,6-tetrahydro-3-[4-(2-hydroxy-2-methyl-1-oxopropyl)phenyl]-1,1,3-trimethyl-1H-inden-5-yl]-1-propanone"	9.211833	9.5226145	0	1	0
+"CICHEM014280275"	"2-Pyridinecarboxylic acid, 3,6-dichloro-, sodium salt (1:1)"	9.299438	9.458565	0	0	1

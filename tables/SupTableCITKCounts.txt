@@ -1,0 +1,8 @@
+"Parameter"	"Num.ROCKS.Meas.Chems"	"Num.Total.Meas.Chems"	"Num.Obs"	"Num.Human.Meas.Chems"	"Num.NonHuman.Meas.Chems"	"Num.Pred.Chems"	"Num.Eval.Chems"	"Num.Eval.Obs"
+"halflife"	1843	2406	3195	2055	510	48686	909	1167
+"Foral"	989	1088	1914	1030	248	48756	551	754
+"Rblood2plasma"	613	750	980	649	206	0	0	0
+"Cltot"	1277	1534	1963	1472	79	48730	655	839
+"kgutabs"	2	229	254	2	227	3876	0	0
+"Vdist"	1230	1479	1810	1418	78	48712	644	793
+"Css"	730	760	1810	760	0	48756	418	545

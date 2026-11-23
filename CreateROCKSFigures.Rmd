@@ -1,0 +1,4089 @@
+---
+title: "CreateROCKSFigures"
+author: "john wambaugh"
+date: "2026-09-11"
+output: html_document
+---
+
+# Setup
+```{r setup_figures}
+knitr::opts_chunk$set(echo = TRUE)
+library(DT)
+library(duckdb)
+library(bslib)
+library(httk)
+library(DBI)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggpubr)
+library(readxl)
+library(scales)
+library(ggsankeyfier)
+library(patchwork)
+library(ggtext)
+library(arrow)
+```
+
+## clear memory:
+```{r clear_memory}
+  rm(list=ls())
+```
+
+## Define UL Color Scheme
+```{r set_ul_colors}
+  UL.cols <- c("#0A32FF",
+               "#000095",
+               "#E5DDCA",
+               "#BCE4F7",
+               "#939698",
+               "#577E9E",
+               "#58595B",
+               "#003C52", 
+               "#007C80", 
+               "#6E0C0C", 
+               "#C62828",
+               "#007788",
+                 "#00696B",
+                 "#C95400",
+                 "#1F3329",
+                 "#AF074C",
+                 "#422C6D",
+                 "#3F6F57",
+                 "#84063A"
+               )
+```
+
+## define helper functions
+```{r define_functions}
+PERCENTILE.SIG.FIGS <- 2
+  get_cheminfo_from_search <- function(search_list)
+  {
+    cheminfo <- ctxR::chemical_equal_batch(word_list=search_list)
+    cheminfo <- subset(cheminfo, !is.na(searchValue))[,c("searchValue", "dtxsid", "casrn", "preferredName")]
+    colnames(cheminfo) <- c("searchValue","DTXSID", "CAS", "Compound")
+    return(cheminfo)
+  }
+  
+  tkstats.log <- function(this.data, 
+                          label, 
+                          num.chems.with.data=NULL,
+                          epsilon = 1e-7)
+  {
+    this.data <- subset(this.data, 
+                        !is.infinite(Observed) &
+                          !is.na(Observed) & 
+                          !is.nan(log10(Observed + epsilon)))
+    # Limit to chemicals with predictions:
+    this.data <- subset(this.data, 
+                          !is.na(Predicted) &
+                          !is.nan(log10(Predicted + epsilon))
+    )
+    this.data <- subset(this.data,
+                        !duplicated(this.data))
+    if (nrow(this.data)>0)
+    {
+      this.fit <- lm(log10(this.data$Observed + epsilon) ~ 
+                       log10(this.data$Predicted + epsilon), 
+                     this.data)
+      
+      num.chems.with.preds <- length(unique(this.data$cichem))
+      num.points <- nrow(this.data)
+      frac.ten <- signif(sum(abs(log10(this.data$Observed/this.data$Predicted)) <
+                               1, na.rm=TRUE) /
+                           num.points, 3) 
+      frac.three <- signif(sum(abs(log10(this.data$Observed/this.data$Predicted)) <
+                                 log10(3), na.rm=TRUE) /
+                             num.points, 3) 
+      rmsle <- signif(mean(log10((this.data$Observed + epsilon) /
+                                   (this.data$Predicted + epsilon))^2,
+                           na.rm=TRUE)^(1/2),
+                      3)
+      msd <- signif(mean(log10((this.data$Observed + epsilon) /
+                                   (this.data$Predicted + epsilon)),
+                           na.rm=TRUE),
+                      3)
+      mod.summary <- summary(this.fit)
+      rsquared <- signif(mod.summary$adj.r.squared, 3)
+      f.stats <- mod.summary$fstatistic
+      p.value <- signif(pf(f.stats[1], f.stats[2], f.stats[3], lower.tail = FALSE),
+                        3)
+      if (p.value < 1e-6) p.value <- "<10-6"
+      
+      return(data.frame(Parameter = label,
+                        Num.Chems.with.Data = ifelse(is.null(num.chems.with.data),
+                                                     num.chems.with.preds,
+                                                     num.chems.with.data),
+                        Num.Chems.with.Preds = num.chems.with.preds,
+                        Num.Obs = num.points,
+                        Within.Ten = frac.ten,
+                        Within.Three = frac.three,
+                        RMSLE = rmsle,
+                        MSD = msd,
+                        RSquared = rsquared
+                        ))
+    } else return(
+      data.frame(Parameter = label,
+                        Num.Chems.with.Data = ifelse(is.null(num.chems.with.data),
+                                                     num.chems.with.preds,
+                                                     num.chems.with.data),
+                        Num.Chems.with.Preds = num.chems.with.preds,
+                        Num.Obs = num.points,
+                 Within.Ten = 0,
+                 Within.Three = 0,
+                 RMSLE = NA,
+                 MSD = NA,
+                 RSquared = NA)
+    )
+  }
+  
+  tkstats.alg <- function(this.data, label,
+                          num.chems.with.data=NULL)
+  {
+    this.data <- subset(this.data, 
+                        !is.infinite(Observed) &
+                          !is.na(Observed) & 
+                          !is.nan(Observed))
+    # Limit to chemicals with predictions:
+    this.data <- subset(this.data, 
+                          !is.na(Predicted) &
+                          !is.nan(Predicted))
+    this.data <- subset(this.data,
+                    !duplicated(this.data))
+    this.fit <- lm(Observed ~ Predicted, 
+                   this.data)
+    
+    num.chems.with.preds <- length(unique(this.data$cichem))
+    num.points <- nrow(this.data)
+    frac.ten <- signif(sum(abs(log10(this.data$Observed/this.data$Predicted)) <
+                             1, na.rm=TRUE) /
+                         num.points, 3) 
+    frac.three <- signif(sum(abs(log10(this.data$Observed/this.data$Predicted)) <
+                               log10(3), na.rm=TRUE) /
+                           num.points, 3) 
+    rmse <- signif(mean((this.data$Observed - this.data$Predicted)^2,
+                        na.rm=TRUE)^(1/2),
+                   3)
+    msd <- signif(mean((this.data$Observed - this.data$Predicted),
+                        na.rm=TRUE),
+                   3)
+    mod.summary <- summary(this.fit)
+    rsquared <- signif(mod.summary$adj.r.squared, 3)
+    f.stats <- mod.summary$fstatistic
+    p.value <- signif(pf(f.stats[1], f.stats[2], f.stats[3], lower.tail = FALSE),
+                      3)
+    if (p.value < 1e-6) p.value <- "<10-6"
+    
+    return(data.frame(Parameter = label,
+                        Num.Chems.with.Data = ifelse(is.null(num.chems.with.data),
+                                                     num.chems.with.preds,
+                                                     num.chems.with.data),
+                        Num.Chems.with.Preds = num.chems.with.preds,
+                      Num.Obs = num.points,
+                      Within.Ten = frac.ten,
+                      Within.Three = frac.three,
+                      RMSE = rmse,
+                      MSD = msd,
+                      RSquared = rsquared))
+  }
+```
+
+## Define paths to CITK
+```{r citk_path}
+  root <- getwd()
+  data_dir <- "data"
+  db_path <- "db"
+  ivivedb <- normalizePath(file.path(root, paste0(db_path,"/ivive.db")))
+```
+
+## Load CITK functions
+```{r citk_functions}
+source("ivivedb_funcs.R")
+```
+
+# Load ROCKS collection
+```{r load_rocks}
+  # load ROCKS inventory
+# write_parquet(all.pipeline.httk, "pipeline/all_pipeline_httk.parquet")
+  all.pipeline.httk <- read_parquet("pipeline/all_pipeline_httk.parquet")
+  cat(nrow(all.pipeline.httk), "chemicals retrieved from pipeline.\n")
+
+  # Restrict to just ROCKS:
+# write_parquet(rocks, "pipeline/rocksmerge.parquet")
+  rocks <- read_parquet("pipeline/rocksmerge.parquet")
+  all.rocks.chems <- rocks$cichem_id
+  all.rocks.dtxsid <- subset(all.pipeline.httk,cichem %in% all.rocks.chems)$dtxsid
+```
+
+# Load CITK data
+```{r load_citk}
+  # Get list of chemicals with invivo data:
+  # All chemicals with invivo data:
+  con <- duckdb::dbConnect(
+    duckdb::duckdb(),
+    dbdir = ivivedb,
+    read_only = TRUE
+  )
+  
+  # Load unique in vivo chems:
+  qry <- paste0("
+      SELECT DISTINCT cichem
+  	  FROM CITK.invivo
+  	  INNER JOIN CITK.chemicals ON invivo.chem_id_fk=chemicals.chem_id
+  	  WHERE species = 'Human';
+      ")
+  invivo.table.cichems <- dbGetQuery(con, qry)  
+  qry <- paste0("
+      SELECT DISTINCT cichem
+  	  FROM CITK.invivo
+  	  INNER JOIN CITK.chemicals ON invivo.chem_id_fk=chemicals.chem_id
+  	  WHERE species <> 'Human';
+      ")
+  invivo.table.cichems.nonhuman <- dbGetQuery(con, qry)  
+  # Load unique in vivo chems:
+  qry <- paste0("
+      SELECT DISTINCT cichem
+  	  FROM CITK.invivo
+  	  INNER JOIN CITK.chemicals ON invivo.chem_id_fk=chemicals.chem_id;
+      ")
+  invivo.table.cichems.anyspecies <- dbGetQuery(con, qry)  
+
+ qry <- paste0("
+      SELECT DISTINCT Species
+  	  FROM CITK.invivo
+  	  INNER JOIN CITK.chemicals ON invivo.chem_id_fk=chemicals.chem_id;
+      ")
+  invivo.table.species <- dbGetQuery(con, qry)  
+num.species <- length(unique(unlist(invivo.table.species)))
+  
+qry <- paste0("
+      SELECT DISTINCT cichem
+  	  FROM CITK.ivive
+  	  INNER JOIN CITK.chemicals ON ivive.chem_id_fk=chemicals.chem_id
+  	  WHERE Type = 'Measured';
+      ")
+  css.table.cichems <- dbGetQuery(con, qry)  
+  
+  duckdb::dbDisconnect(con, shutdown = TRUE)
+  all.human.invivo.chems <- sort(unique(c(unlist(invivo.table.cichems),
+                                    unlist(css.table.cichems))))
+  all.invivo.chems.anyspecies <- sort(unique(c(unlist(invivo.table.cichems),
+                                    unlist(css.table.cichems),
+                                    unlist(invivo.table.cichems.anyspecies))))
+  all.nonhuman.invivo.chems <- sort(unique(
+    unlist(invivo.table.cichems.nonhuman)))
+    # Start analyzing database
+  db.coverage <- query_invitrotkdb(chem.list=rocks$cichem_id, search.col="cichem")
+  db.invivo <- query_invivodb(chem.list=rocks$cichem_id, search.col="cichem")
+  # Retrieve in vivo TK data for all chemicals:
+  invivodata <- unique(query_invivodb(all.rocks.chems, search.col="cichem")$cichem)
+  # Retrieve all in vitro TK data for all chemicals:
+  httkdata <- query_invitrotkdb(chem.list=all.rocks.chems, search.col="cichem")
+  # Retrieve IVIVE factors for all chemicals:
+  ivivedata <- query_ivivedb(chem.list=all.rocks.chems, 
+                             search.col="cichem",
+                             uncertainty=NULL,
+                             variability = NULL)
+  duckdb::dbDisconnect(con)
+```
+
+# Key ROCKS subsets
+```{r calc_key_subsets}
+  rocks.httk <- subset(all.pipeline.httk, cichem %in% rocks$cichem_id)
+ # rocks.structures <- nrow(rocks.httk)
+  
+  rocks.httk.success <- subset(rocks.httk, clint_successful == TRUE &
+                         fup_successful == TRUE)
+  
+  rocks.httk.withinAD <- subset(rocks.httk, 
+                       clint_outlier %in% 0.0 & 
+                         fup_outlier %in% 0.0)
+  
+  rocks.opera.withinAD <- subset(rocks.httk, logp_ad_flag == TRUE & pka_ad_flag == TRUE)
+  rocks.opera.logP.withinAD <- subset(rocks.httk, logp_ad_flag == TRUE)
+  rocks.opera.pKa.withinAD <- subset(rocks.httk, pka_ad_flag == TRUE)
+  
+  rocks.clint.withinAD <- subset(rocks.opera.withinAD, 
+                                clint_outlier %in% 0.0)
+  rocks.fup.withinAD <- subset(rocks.opera.withinAD, 
+                                 fup_outlier %in% 0.0)
+  rocks.caco2.withinAD <- subset(rocks.opera.withinAD, 
+                                 papp_outlier %in% 0.0)
+  
+  rocks.httk.allgoodqspr <- subset(rocks.httk,
+                                   logp_ad_flag == TRUE & 
+                                    pka_ad_flag == TRUE &
+                                    clint_outlier == FALSE & 
+                                   fup_outlier == FALSE)
+  
+  all.httk.allgoodqspr <- subset(all.pipeline.httk,
+                                   logp_ad_flag == TRUE & 
+                                    pka_ad_flag == TRUE &
+                                    clint_outlier == FALSE & 
+                                   fup_outlier == FALSE)
+
+  all.httk.pfas <- unique(subset(all.pipeline.httk, dtxsid %in% get_cheminfo(info="dtxsid",model="pfas1compartment"))$cichem)
+  
+
+    rocks.httk.pfas <- unique(subset(subset(all.pipeline.httk, cichem %in% all.rocks.chems), 
+                            dtxsid %in% get_cheminfo(info="dtxsid",model="pfas1compartment"))$cichem)
+  
+  rocks.httk.meas <- unlist(httkdata |>
+    filter(Type %in% "Measured") |>
+    group_by(cichem) |>
+    filter(all(c("Clint","Fup","Caco2.Pab") %in% Parameter)) |>
+    distinct(cichem))
+
+  rocks.httk.measandqspr <- unlist(httkdata |>
+    filter(cichem %in% rocks.httk.allgoodqspr$cichem) |>
+    group_by(cichem) |>
+    filter(all(c("Clint","Fup","Caco2.Pab") %in% Parameter)) |>
+    distinct(cichem))
+
+  rocks.httk.any <- unique(c(rocks.httk.measandqspr, rocks.httk.pfas))
+
+  ivivedata <- subset(ivivedata, cichem %in% rocks.httk.any 
+                      | Type %in% "Measured")
+  
+  rocks.httk.predictions <- unique(subset(ivivedata, cichem %in% all.rocks.chems)$cichem)
+  invivocss <- rocks.httk.predictions[!(rocks.httk.predictions %in% rocks.httk.any)]
+```
+
+```{r query_db_for_numbers}
+  con <- duckdb::dbConnect(
+    duckdb::duckdb(),
+    dbdir = ivivedb,
+    read_only = TRUE
+  )
+  qry <- paste0("
+      SELECT DISTINCT Reference, PMID, DOI
+      FROM CITK.invivo
+  	  INNER JOIN CITK.refs ON invivo.ref_id_fk=refs.ref_id;
+      ")
+  invivo.refs <- dbGetQuery(con, qry)  
+  qry <- paste0("
+      SELECT DISTINCT Reference, PMID, DOI
+      FROM CITK.ivive
+  	  INNER JOIN CITK.refs ON ivive.ref_id_fk=refs.ref_id
+  	  WHERE Type = 'Measured';
+      ")
+  css.invivo.refs <- dbGetQuery(con, qry)  
+
+invivo.refs <- rbind(invivo.refs,css.invivo.refs)
+invivo.refs <- invivo.refs[!duplicated(invivo.refs),]
+invivo.refs <- invivo.refs[order(invivo.refs$Reference),]
+write.table(invivo.refs,
+            file="tables/SupTableX-RefsForInVivoData.txt",
+            row.names=FALSE,
+          sep="\t")
+
+qry <- paste0("
+      SELECT DISTINCT cichem
+      FROM CITK.invitroTK
+  	  INNER JOIN CITK.chemicals ON invitroTK.chem_id_fk=chemicals.chem_id
+      WHERE Parameter = 'Clint'
+        AND Type = 'Measured';
+      ")
+clint.chems <- dbGetQuery(con, qry)  
+qry <- paste0("
+      SELECT DISTINCT cichem
+      FROM CITK.invitroTK
+  	  INNER JOIN CITK.chemicals ON invitroTK.chem_id_fk=chemicals.chem_id
+      WHERE Parameter = 'Fup'
+        AND Type = 'Measured';
+      ")
+fup.chems <- dbGetQuery(con, qry)  
+qry <- paste0("
+      SELECT DISTINCT cichem
+      FROM CITK.invitroTK
+  	  INNER JOIN CITK.chemicals ON invitroTK.chem_id_fk=chemicals.chem_id
+      WHERE Parameter = 'Caco2.Pab'
+        AND Type = 'Measured';
+      ")
+caco.chems <- dbGetQuery(con, qry)
+
+num.all.invitro <- length(unique(c(clint.chems$cichem,
+                                 fup.chems$cichem,
+                                 caco.chems$cichem)))
+clint.chems <- unlist(subset(clint.chems, cichem %in% all.rocks.chems))
+fup.chems <- unlist(subset(fup.chems, cichem %in% all.rocks.chems))
+caco.chems <- unlist(subset(caco.chems, cichem %in% all.rocks.chems))
+num.rocks.invitro <- length(unique(c(clint.chems,
+                                 fup.chems,
+                                 caco.chems)))
+  
+qry <- paste0("
+SELECT COUNT(DISTINCT chem_id_fk) AS unique_count 
+FROM CITK.ivive;
+              ")
+num.chems <- dbGetQuery(con, qry)  
+
+qry <- paste0("
+SELECT DISTINCT cichem
+FROM CITK.ivive
+LEFT JOIN CITK.chemicals on CITK.ivive.chem_id_fk = CITK.chemicals.chem_id;
+              ")
+citk.cichem <- unlist(dbGetQuery(con, qry))  
+qry <- paste0("
+SELECT COUNT(DISTINCT chem_id_fk) AS unique_count 
+FROM CITK.invivo;
+              ")
+num_citk_invivo <- dbGetQuery(con, qry)  
+  
+duckdb::dbDisconnect(con, shutdown = TRUE)
+
+num.ivive <- sum(all.rocks.chems %in% unique(ivivedata$cichem))
+num.ivive.rocks <- num.ivive
+num.rocks <- length(all.rocks.chems)
+num.invivo.rocks.human <- sum(unique(all.human.invivo.chems) %in% all.rocks.chems)
+num.invivo.human <- length(unique(all.human.invivo.chems))
+num.invivo.rocks.anyspecies <- sum(unique(all.invivo.chems.anyspecies ) %in% all.rocks.chems)
+num.invivo.nonhuman <- length(unique(all.nonhuman.invivo.chems))
+num.invivo.anyspecies <- length(unique(all.invivo.chems.anyspecies ))
+num.invitro.rocks <- length(unique(subset(httkdata, Type=="Measured" & 
+                                     cichem %in% all.rocks.chems)$cichem))
+insilicotk.chems <- subset(httkdata, Type=="Predicted" & 
+                                     cichem %in% rocks.httk.allgoodqspr$cichem)
+num.insilico.rocks <- length(unique(subset(httkdata, Type=="Predicted" & 
+                                     cichem %in% rocks.httk.allgoodqspr$cichem)$cichem))
+
+```
+
+# TK Data Landscape
+## Landscape Matrix
+```{r create_landscape_matrix}
+  NA.vec <- rep(NA, length(rocks$cichem_id))
+  NA.mat <- NA.vec
+  for (i in 2:length(unique(db.coverage$Parameter)))
+  {
+    NA.mat <- cbind(NA.mat, NA.vec)
+  }
+  
+  httk.params.mat <- data.frame(NA.mat)
+  colnames(httk.params.mat) <- unique(db.coverage$Parameter)
+  rownames(httk.params.mat) <- rocks$cichem_id
+  
+  for (this.param in unique(db.coverage$Parameter))
+  {
+    httk.params.mat[,this.param] <- 3 # "OutOfDomain"
+    httk.params.mat[rocks$cichem_id %in% subset(db.coverage,
+                                          Parameter == this.param &
+                                            Type == "Predicted" &
+                                            !is.na(Value))$cichem,
+                    this.param] <- 2 # "QSPR"
+    httk.params.mat[all.rocks.chems %in% subset(db.coverage,
+                                          Parameter == this.param &
+                                            Type == "Measured" &
+                                            !is.na(Value))$cichem,
+                    this.param] <- 1 # "Measured"
+  }
+
+  tk.landscape.mat <- cbind(NA.vec,NA.vec,NA.vec,NA.vec)
+  tk.landscape.mat[] <- 0
+  colnames(tk.landscape.mat) <- c("In Vivo",
+                                  "In Vitro",
+                                  "QSPR",
+                                  "IVIVE")
+  rownames(tk.landscape.mat) <- rocks$cichem_id
+  # In vivo TK data (for example, human half-life) are available:
+  tk.landscape.mat[invivodata, "In Vivo"] <- 1
+  # QSPR predicted in vitro TK parameters (fup, Clint, etc.) are available:
+  tk.landscape.mat[subset(httkdata,
+                          Type == "Predicted" &
+                            !is.na(Value))$cichem,
+                   "QSPR"] <- 1
+  # Measured In vitro TK parameters (for example, Wetmore 2015) are available:
+  tk.landscape.mat[subset(httkdata,
+                          Type == "Measured" &
+                            !is.na(Value))$cichem,
+                   "In Vitro"] <- 1
+  # A Css value is available:
+  tk.landscape.mat[subset(ivivedata,
+                          !is.na(Value) &
+                            Parameter == "Css")$cichem,
+                   "IVIVE"] <- 1
+  # Dawson (2023) ML model used:
+  tk.landscape.mat[subset(ivivedata,
+                          Model == "pfas1compartment" &
+                            Parameter == "Css" &
+                            !is.na(Value))$cichem,
+                   "QSPR"] <- 1
+```
+
+## Create landscape heatmap
+Superheat doesn't work with 238000 chemicals, need to find alternative
+```{r create_landscape_figure, eval = FALSE}
+    SupFig1 <- superheat(as.matrix(tk.landscape.mat),
+            pretty.order.rows=TRUE,
+            heat.pal = UL.cols,
+            heat.pal.values = c(0,0.33,0.66,1),
+            legend=FALSE)
+  png("figs/SupFig1.png", height = 900, width = 800)
+  SupFig1 <- superheat(as.matrix(tk.landscape.mat),
+                    pretty.order.rows=TRUE,
+                    heat.pal = UL.cols,
+                    heat.pal.values = c(0,0.33,0.66,1),
+                    legend=FALSE)
+  dev.off()
+```
+
+# Figure 4, Half-life Sources
+```{r create_halflife_by_source_figure}
+  use.table <- read.csv("data/rocks_sector_table_2026-08-27.csv")
+  cheminfo <- read.csv("data/rocks_sector_table_2026-08-27.csv")
+  # Check for chemicals with no known use:
+  any(apply(cheminfo, 1, function(x) all(x[c("consumer","food","industrial","agricultural","pharmaceutical")]==0)))
+  cheminfo$unknown <- 0
+  cheminfo[cheminfo$sector_class %in% "Unknown","unknown"] <- 1
+  
+  cheminfo <- pivot_longer(cheminfo, cols=c("consumer","food","industrial","agricultural","pharmaceutical", "unknown"))
+  cheminfo <- subset(cheminfo, value == 1)
+  
+  cheminfo$TK <- "No Predictions"
+  cheminfo[cheminfo$cichem_id %in% rownames(subset(tk.landscape.mat,
+                                                   tk.landscape.mat[,"QSPR"]==1)),
+           "TK"] <- "QSPR"
+  cheminfo[cheminfo$cichem_id %in% rownames(subset(tk.landscape.mat,
+                                       tk.landscape.mat[,"In Vitro"]==1)),
+           "TK"] <- "In Vitro"
+  cheminfo[cheminfo$cichem_id %in% rownames(subset(tk.landscape.mat,
+                                                   tk.landscape.mat[,"In Vivo"]==1)),
+           "TK"] <- "In Vivo"
+  cheminfo$Use <- factor(cheminfo$name)
+  cheminfo$TK <- factor(cheminfo$TK, levels=c("In Vivo","In Vitro","QSPR","No Predictions"))
+  Fig4 <- ggplot(cheminfo, aes(x=Use, fill=TK))+
+    geom_bar(position="dodge")+
+    scale_fill_manual(values = UL.cols) +
+    scale_y_log10(labels = label_log()) +
+    labs(y= "Number of Chemicals", x="Use Sector")+
+    theme_pubr()
+  print(Fig4)
+  
+  png("figs/Fig4.png", height = 600, width = 1000)
+  print(Fig4 + theme_pubr(base_size = 24))
+  dev.off()
+```
+
+# Table of measured in vivo human TK parameters
+```{r human_invivo_hl_table}
+  usesectors<- read.csv("data/rocks_sector_table_2026-08-27.csv")
+  all.invivo.data <- query_invivodb(all.human.invivo.chems, search.col="cichem")
+  
+  
+  css.invivo.data <- query_ivivedb(all.human.invivo.chems, search.col="cichem",
+                                      uncertainty = NA,
+                                      variability = NA)
+  css.invivo.data <- subset(css.invivo.data, Route %in% "oral")
+  css.invivo.data <- subset(css.invivo.data, Species %in% "Human")
+  css.invivo.data <- subset(css.invivo.data, Model %in% "in vivo")
+  
+  all.invivo.data <- all.invivo.data[,c("cichem", 
+  "Parameter", "Value", "Units", "DTXSID", "CASRN", "Compound", 
+  "Reference", "PMID", "Species")]
+  all.invivo.data <- rbind(all.invivo.data,
+                           css.invivo.data[,colnames(all.invivo.data)])
+  all.invivo.data <- subset(all.invivo.data, Species %in% "Human")
+  all.invivo.data <- merge(all.invivo.data, usesectors, by.x="cichem", by.y="cichem_id")
+  all.invivo.data$Value <- signif(as.numeric(all.invivo.data$Value), 4)
+  all.invivo.data <- subset(all.invivo.data,
+                            !is.infinite(Value) &
+                              Value > 0)
+  
+  hl.invivo.data <- subset(all.invivo.data, Parameter=="halflife")
+  
+```
+
+# Supplemental Table Use Sector Trends with TK Stats
+```{r create_use_sector_trends_table}
+tk.and.use.table <- NULL  
+tk.and.use.trend.table <- NULL
+all.invivo.data$Bin <- NA
+for (this.param in c("halflife", "Vdist", "Cltot", "Css", "Foral"))
+{
+  these.rows <- all.invivo.data$Parameter == this.param
+    if (this.param != "Foral")
+    {
+      all.invivo.data[these.rows, "Bin"] <- cut(
+        log10(all.invivo.data[these.rows, "Value"]),
+        10, labels=FALSE)
+    } else {
+      all.invivo.data[these.rows, "Bin"] <- cut(
+        all.invivo.data[these.rows, "Value"],
+        10, labels=FALSE)
+    } 
+    for (this.bin in 1:10)
+    {
+      these.data <- subset(all.invivo.data,
+                           these.rows &
+                             Bin == this.bin)
+      N.tot <- nrow(these.data)
+      this.row <- data.frame(Parameter = this.param,
+                             N.tot = N.tot,
+                             Bin.Median = median(these.data$Value),
+                             Frac_Consumer = 
+                               nrow(subset(these.data, consumer==1))/N.tot,
+                             Frac_Food = 
+                               nrow(subset(these.data, food==1))/N.tot,
+                             Frac_Industrial = 
+                               nrow(subset(these.data, industrial==1))/N.tot,
+                             Frac_Agricultural = 
+                               nrow(subset(these.data, agricultural==1))/N.tot,
+                             Frac_Pharmaceutical = 
+                               nrow(subset(these.data, pharmaceutical==1))/N.tot
+      )
+      tk.and.use.table <- rbind(tk.and.use.table, this.row)
+    }
+
+  for (this.use in c("Consumer", "Food", "Industrial", "Agricultural", "Pharmaceutical"))
+  {
+    if (this.param != "Foral")
+    {
+      this.stats <- summary(lm(as.formula(paste0("Frac_", this.use," ~ log10(Bin.Median)")), 
+                        weights=N.tot, 
+                        data=subset(tk.and.use.table,
+                                    Parameter == this.param)
+        ))
+    } else {
+      this.stats <- summary(lm(as.formula(paste0("Frac_", this.use," ~ Bin.Median")), 
+                        weights=N.tot, 
+                        data=subset(tk.and.use.table,
+                                    Parameter == this.param)
+        ))
+    }
+    this.row <- data.frame(
+      Parameter = this.param,
+      Use = this.use,
+      Trend = ifelse(this.stats$coefficients[2,1]>0,
+                     "Increases",
+                     "Decreases"),
+      Fold.Change = subset(tk.and.use.table,
+                                    Parameter == this.param)$Bin.Median[10]/
+        subset(tk.and.use.table,
+                                    Parameter == this.param)$Bin.Median[1],
+      Rsquared = signif(this.stats$r.squared,3),
+      pValue = signif(this.stats$coefficients[2,4],3)
+      )
+    tk.and.use.trend.table <- rbind(tk.and.use.trend.table, this.row)
+  }
+}
+
+write.table(tk.and.use.trend.table[order(tk.and.use.trend.table[,"pValue"]),],
+            file="tables/SupTableX-UseTrends.txt",
+            sep="\t",
+            row.names=FALSE)
+```
+
+```{r use_cdf}
+all.invivo.data.long <- all.invivo.data |>
+  pivot_longer(
+    cols=c("consumer","food","industrial","agricultural","pharmaceutical"),
+    names_to = "Use",
+    values_to = "Has.Use"
+  )
+
+for (this.param in unique(all.invivo.data.long$Parameter))
+{
+  max.val <- max(subset(all.invivo.data.long, Parameter==this.param)$Value,
+                 na.rm=TRUE)
+  min.val <- min(subset(all.invivo.data.long, Parameter==this.param)$Value,
+                 na.rm=TRUE)
+  all.invivo.data.long[all.invivo.data.long$Parameter == this.param,
+                       "PercentMax"] <-
+      (all.invivo.data.long[all.invivo.data.long$Parameter == this.param,
+                       "Value"] - min.val)/max.val*100
+}
+
+all.invivo.data.long[all.invivo.data.long$Parameter == "Foral",
+                     "PercentMax"] <- log10(
+  all.invivo.data.long[all.invivo.data.long$Parameter == "Foral",
+                     "PercentMax"])
+tk.and.use.cdf <-
+  ggplot(
+    subset(all.invivo.data.long,
+           Has.Use == 1 &
+           !Parameter %in% c("kgutabs", "Rblood2plasma")),
+    aes(x = as.numeric(PercentMax), color = Use, group = Use)
+  ) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  scale_color_manual(values = UL.cols[1:5]) +
+  scale_x_log10(labels = scales::label_log(), limits=c(1e-3,10)) +
+  facet_wrap(~Parameter, ncol = 1) +
+  labs(
+    y = "Cumulative Fraction of Chemicals",
+    x = "Percent of Max Value",
+    color = "Use"
+  ) +
+  theme_pubr()
+
+print(tk.and.use.cdf)
+png("figs/SupFigInVivoDataUseCDF.png", height = 600, width = 800)
+print(tk.and.use.cdf + theme_pubr(base_size = 24))
+dev.off()
+```
+
+
+# Half-life data provenance:
+```{r hl_data_provenance}
+con <- duckdb::dbConnect(
+  duckdb::duckdb(), 
+  dbdir = ivivedb, 
+  read_only = FALSE)
+invivo.ref.table <- DBI::dbGetQuery(con,       
+  "
+  SELECT * 
+  FROM CITK.invivo
+  LEFT JOIN CITK.chemicals ON CITK.invivo.chem_id_fk = CITK.chemicals.chem_id
+  LEFT JOIN CITK.refs on CITK.invivo.ref_id_fk = CITK.refs.ref_id
+  WHERE Species IN ('Human');
+  "
+  )
+  DBI::dbDisconnect(con)
+
+invivo.ref.table$Reference <- factor(
+  invivo.ref.table$Reference,
+  levels=names(sort(table(invivo.ref.table$Reference),decreasing=TRUE)))
+supfighl <- ggplot(invivo.ref.table, 
+                   aes(x=Reference, fill=Reference)) + 
+    geom_bar()+
+    scale_y_log10(labels = scales::label_log())+
+    scale_fill_manual(name="Reference",
+    values=c(UL.cols,UL.cols))+
+      theme(
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+print(supfighl)
+
+  png("figs/SupFigInVivoData.png", height = 600, width = 1000)
+  print(supfighl + theme_pubr(base_size = 24)+
+      theme(
+        plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+      legend.position = "none"))
+  dev.off()
+```
+
+# Half-life and Use Figure
+```{r create_use_with_halflife_Figure}
+  time.points <- c(0,10^(seq(-1,6.5,0.5)))
+  hl.invivo.data$Bin <- cut(as.numeric(hl.invivo.data$Value), 
+                            breaks=time.points, labels=FALSE)
+  BinLimits <- sort(unique(cut(as.numeric(hl.invivo.data$Value), 
+                               breaks=time.points)))
+  BinCenter <- lapply(strsplit(gsub("]","",
+                                    gsub("\\(","",as.character(BinLimits))),","), 
+                      function(x) mean(as.numeric(x)))
+  BinLeft <- lapply(strsplit(gsub("]","",
+                                  gsub("\\(","",as.character(BinLimits))),","), 
+                    function(x) as.numeric(x[1]))
+  BinRight <- lapply(strsplit(gsub("]","",
+                                   gsub("\\(","",as.character(BinLimits))),","), 
+                     function(x) as.numeric(x[2]))
+
+  hl.and.use <- NULL
+  for (this.bin in sort(unique(hl.invivo.data$Bin)))
+  {
+    these.chems <- subset(hl.invivo.data, Bin %in% this.bin)
+    N.tot <- nrow(these.chems)
+    this.row <- data.frame(Bin = this.bin,
+                           N.tot = N.tot,
+                           "Half-Life" = BinCenter[[this.bin]],
+                           Frac_Consumer = nrow(subset(these.chems, consumer==1))/N.tot,
+                           Frac_Food = nrow(subset(these.chems, food==1))/N.tot,
+                           Frac_Industrial = nrow(subset(these.chems, industrial==1))/N.tot,
+                           Frac_Agricultural = nrow(subset(these.chems, agricultural==1))/N.tot,
+                           Frac_Pharmaceutical = nrow(subset(these.chems, pharmaceutical==1))/N.tot
+    )
+    hl.and.use <- rbind(hl.and.use, this.row)
+  }
+  hl.and.use[hl.and.use$Bin == 1, "Half.Life"] <- min(hl.invivo.data$Value)
+    
+  hl.and.use <- pivot_longer(hl.and.use, cols=c("Frac_Consumer","Frac_Food","Frac_Industrial","Frac_Agricultural","Frac_Pharmaceutical"))
+
+
+```
+  
+
+# Create figure analyzing half-life by data source
+```{r create_halflife_multipanel_source_figure}
+  hl.data <- query_httkdb(all.rocks.chems, search.col="cichem")
+  hl.data <- subset(hl.data,
+                    Parameter=="halflife" & 
+                      Species == "Human" & 
+                      !is.nan(as.numeric(Value)))
+  # Chemicals with largest value:
+  hl.data[as.numeric(hl.data$Value)==max(as.numeric(hl.data$Value)),]
+  #hl.data <- subset(hl.data, Model %in% c("sumclearancesplus",
+  #"pfas1compartment"))
+  hl.data.1comp <- subset(hl.data, Model == "pfas1compartment")
+  hl.data.httk <- subset(hl.data, Model == "sumclearancesplus")
+  hl.data.1comp <- subset(hl.data.1comp, !(cichem %in% hl.data.httk$cichem))
+  hl.data.invivo <- query_invivodb(all.rocks.chems, search.col="cichem")
+  hl.data.invivo <- subset(hl.data.invivo,Parameter=="halflife" & 
+                             Species == "Human" & 
+                             !is.nan(as.numeric(Value)))
+  # Chemicals with largest value:
+  hl.data.invivo[as.numeric(hl.data.invivo$Value)==max(as.numeric(hl.data.invivo$Value)),]
+  hl.data.1comp <- subset(hl.data.1comp, !(cichem %in% hl.data.invivo$cichem))
+  hl.data.httk <- subset(hl.data.httk, !(cichem %in% hl.data.invivo$cichem))
+  hl.data.invivo$Model <- NA
+  hl.data.invivo$Type <- "In Vivo"
+  
+  # Assign type of HTTK:
+  hl.data.httk$Type <- "QSPR"
+  hl.data.httk[hl.data.httk$cichem %in% rownames(subset(tk.landscape.mat, 
+                                                        tk.landscape.mat[,"In Vivo"] == 1)),"Type"] <- "In Vivo"
+  hl.data.httk[hl.data.httk$cichem %in% rownames(subset(tk.landscape.mat, 
+                                              tk.landscape.mat[,"In Vitro"] == 1)),"Type"] <- "In Vitro"
+  hl.data.1comp$Type <- "QSPR"
+  
+  # Combine In Vivo and HTTK values:
+  hl.data <- rbind(hl.data.invivo, 
+                   hl.data.httk[,colnames(hl.data.invivo)], 
+                   hl.data.1comp[,colnames(hl.data.invivo)])
+  hl.data$Value <- as.numeric(hl.data$Value)
+  
+  hl.time.limits <-c(1/120/60, 365*24*100)
+  hl.time.breaks <- c(1/60/60,1/60,1,24,7*24,30*24,365*24,365*24*10)
+  hl.time.labels <- c("Second","Minute", "Hour", "Day", "Week", "Month", "Year","Decade")
+  
+  halflife.hist <-
+    ggplot(hl.data, aes(x = as.numeric(Value))) +
+    geom_histogram(color = "black", fill = UL.cols[1], boundary = 0) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    scale_y_log10(labels = scales::label_log())+
+    labs(x = "Human TK Half-life", y = "All Chemicals") +
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  print(halflife.hist)
+
+  halflife.invivo.hist <-
+    ggplot(subset(hl.data,Type=="In Vivo"), aes(x = (as.numeric(Value)))) +
+    geom_histogram(color = "black", fill = UL.cols[1], boundary = 0) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    #scale_y_log10(labels = scales::label_log())+
+      scale_y_continuous(
+    trans = pseudo_log_trans(base = 10),
+    breaks = c(0, 1, 10, 100, 1000),
+    labels = c("", "1", "10", "100", "")#,
+#    labels = scales::label_log()
+  )+
+    labs(x = "Human TK Half-life", y = "In Vivo") +
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  print(halflife.invivo.hist)
+  
+  halflife.invitro.hist <-
+    ggplot(subset(hl.data,Type=="In Vitro"), aes(x = as.numeric(Value))) +
+    geom_histogram(color = "black", fill = UL.cols[2], boundary = 0) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    scale_y_log10(labels = scales::label_log())+
+    labs(x = "Human TK Half-life", y = "In Vitro") +
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  print(halflife.invitro.hist)
+  
+  halflife.qspr.hist <-
+    ggplot(subset(hl.data,Type=="QSPR"), aes(x = as.numeric(Value))) +
+    geom_histogram(color = "black", fill = UL.cols[3], boundary = 0) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    scale_y_log10(labels = scales::label_log())+
+    labs(x = "Human TK Half-life", y = "QSPR") +
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  print(halflife.qspr.hist)
+  
+  halflife.source.combo <- ggarrange(
+    halflife.invivo.hist + theme_bw(base_size = 22) + 
+      rremove("x.text")+rremove("xlab")+
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    halflife.invitro.hist + theme_bw(base_size = 22) + 
+      rremove("x.text")+rremove("xlab")+
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    halflife.qspr.hist + theme_bw(base_size = 22) +
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    ncol = 1, nrow = 3,
+    heights=c(1,1,1.2))
+  print(halflife.source.combo)
+  
+
+  halflife.source.combo <- ggarrange(
+    halflife.invivo.hist + theme_bw(base_size = 22) + 
+      rremove("x.text")+rremove("xlab")+
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    halflife.invitro.hist + theme_bw(base_size = 22) + 
+      rremove("x.text")+rremove("xlab")+
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    halflife.qspr.hist + theme_bw(base_size = 22) +
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)),
+    ncol = 1, nrow = 3,
+  heights=c(1,1,1.2))
+  print(halflife.source.combo)
+  
+  hl.data$Type <- factor(hl.data$Type, levels=c("QSPR","In Vitro","In Vivo"))
+  halflife.source.hist <-
+    ggplot(hl.data, aes(x=as.numeric(Value), fill=Type)) +
+    geom_histogram(color = "black", boundary = 0) +
+    scale_fill_manual(values = c(UL.cols[1], UL.cols[2], UL.cols[3])) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    facet_wrap(~Type, ncol=1)+
+    scale_y_log10(labels = scales::label_log())+
+    labs(x = "Human TK Half-life", y = "Chemicals") +
+    theme_pubr()+
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  print(halflife.source.hist)
+  
+  FigHalfLifeSource <- halflife.source.hist
+  print(FigHalfLifeSource)
+  png("figs/FigSX-HalfLifePredbySource.png", height = 800, width = 800)
+  print(FigHalfLifeSource+ theme_pubr(base_size = 24)+
+          theme(
+                            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)
+        ))
+  dev.off()
+```
+  
+```{r create_use_with_halflife_Figure}
+#  time.points <- c(0,1/60,1,4,8,12,24,7*24,30*24,365*24,3*365*24,10*365*24,30*365*24,100*365*24)
+  time.points <- c(0,10^(seq(-1,6.5,0.5)))
+  hl.invivo.data$Bin <- cut(as.numeric(hl.invivo.data$Value), 
+                            breaks=time.points, labels=FALSE)
+  BinLimits <- sort(unique(cut(as.numeric(hl.invivo.data$Value), 
+                               breaks=time.points)))
+  BinCenter <- lapply(strsplit(gsub("]","",
+                                    gsub("\\(","",as.character(BinLimits))),","), 
+                      function(x) mean(as.numeric(x)))
+  BinLeft <- lapply(strsplit(gsub("]","",
+                                  gsub("\\(","",as.character(BinLimits))),","), 
+                    function(x) as.numeric(x[1]))
+  BinRight <- lapply(strsplit(gsub("]","",
+                                   gsub("\\(","",as.character(BinLimits))),","), 
+                     function(x) as.numeric(x[2]))
+  
+  hl.time.limits <-c(1/120/60, 365*24*100)
+  hl.time.breaks <- c(1/60/60,1/60,1,24,7*24,30*24,365*24,365*24*10)
+  hl.time.labels <- c("Second","Minute", "Hour", "Day", "Week", "Month", "Year","Decade")
+  
+  # Normalize bins to reduce confusion:
+  for (this.bin in unique(hl.and.use$Bin))
+  {
+    bin.norm <- sum(subset(hl.and.use, Bin%in% this.bin)$value)
+    hl.and.use[hl.and.use$Bin %in% this.bin,"value.norm"] <-
+      signif(hl.and.use[hl.and.use$Bin %in% this.bin,"value"] / bin.norm, 3)
+    # Clean up rounding errors:
+    bin.total <- sum(subset(hl.and.use, Bin%in% this.bin)$value.norm)
+    hl.and.use[hl.and.use$Bin %in% this.bin & 
+                 hl.and.use$name %in% "Frac_Industrial", "value.norm"] <-
+    hl.and.use[hl.and.use$Bin %in% this.bin & 
+                 hl.and.use$name %in% "Frac_Industrial", "value.norm"] +
+      1-bin.total
+  }
+  
+  Fig2old <- ggplot(hl.and.use, aes(x=Half.Life, y=value.norm, fill=name)) + 
+    geom_area()+
+    scale_fill_manual(name="Use Sector",
+    values=UL.cols,
+    labels = c("Agriculture", "Consumer", "Food", "Industrial", "Pharmaceutical"))+
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+    labs(x = expression(Human ~ TK ~ Half-life ~ (log[10] ~ time)), 
+         y = "Use Sector\nShare") +
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+            axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  
+  
+  Fig2 <- ggarrange(
+    halflife.invivo.hist + 
+      geom_histogram(color = "black", fill = UL.cols[8], boundary = 0)+
+      theme_bw(base_size = 22) + 
+      rremove("x.text")+rremove("xlab")+
+      ylab("Count")+
+      theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 50)),
+    Fig2old+
+        theme_bw(base_size = 22) +
+        theme(legend.position = "bottom",
+                 plot.margin = margin(t = 5, r = 5, b = 5, l = 50),
+              axis.text.x = element_text(angle = 45, 
+                                         vjust = 1, 
+                                         hjust = 1),
+              axis.ticks.y = element_blank()
+              ),
+    nrow=2,
+    align = "v",
+    labels = "AUTO",
+    heights = c(1,3))
+            
+  
+  print(Fig2)
+
+  png("figs/FigX-InVivoHalfLife.png", height = 600, width = 900)
+  print(Fig2+ theme_pubr(base_size = 24)+
+          rremove("x.axis") + rremove("x.text") + 
+          rremove("x.ticks") + rremove("xlab") +
+          rremove("y.axis") + rremove("y.text") + 
+          rremove("y.ticks") + rremove("ylab")
+  )
+  dev.off()
+```
+
+# Supplemental Table: Unknowns with In Vivo Data
+```{r create_unkwowns_with_data_table}
+invivo.unknown <- subset(cheminfo, name == "unknown" & TK == "In Vivo")
+dim(invivo.unknown)
+write.table(query_invivodb(invivo.unknown$dtxsid),
+            file="tables/SupTableX-UnknownsWithInVivo.txt",
+            row.names=FALSE,
+            sep="\t")
+
+cat(paste0("There are ",
+    length(unique(invivo.unknown$dtxsid)),
+    " chemicals in Figure 3 with unknown current use that have in vivo TK data (see Table SX in Supporting information).\n"))
+```
+
+# Supplemental Longest and Shortest Half-Lives
+```{r create_shortlong_halflife_table}
+  hl.sup.table <- subset(hl.invivo.data, 
+                         Bin %in% c(min(hl.invivo.data$Bin, na.rm = TRUE),
+                                    max(hl.invivo.data$Bin, na.rm = TRUE)-2,
+                                    max(hl.invivo.data$Bin, na.rm = TRUE)-1,
+                                    max(hl.invivo.data$Bin, na.rm = TRUE)))
+  hl.sup.table <- hl.sup.table[order(hl.sup.table$Value),]
+  write.table(hl.sup.table[,c("cichem", "DTXSID", "CASRN", "Compound",
+                              "Species", "Parameter", "Value", "Units",
+                              "Reference", "consumer",
+                              "food", "industrial", "agricultural",
+                              "pharmaceutical", "env_monitoring",
+                              "biomonitoring", "sector_class", "Bin")],
+              file="tables/SupTableX-FastestandLongestHL.txt",
+              row.names=FALSE,
+              sep="\t"
+  )
+  
+  max.hl <- subset(hl.invivo.data, Bin %in% c(max(hl.invivo.data$Bin),
+                                              max(hl.invivo.data$Bin)-1,
+                                              max(hl.invivo.data$Bin)-2))
+  num.max <- nrow(max.hl)
+  cat(paste0("On the far right of Figure 2, a total of ",
+    num.max,
+    " chemicals with the longest half-lives (>",
+             signif(unlist(BinLeft)[length(BinLeft)-2]/24/365,2),
+      " years) are represented.\n"))
+  
+  cat(paste0(signif(sum(max.hl$biomonitoring)/nrow(max.hl)*100,
+                    PERCENTILE.SIG.FIGS),
+             "% of these chemicals have been detected in human biomonitoring. [REF ISAACS]\n"))
+  
+  cat(paste0("The chemical with the longest half-life that has pharmaceutical use is ",
+             subset(max.hl, pharmaceutical==1)$Compound,
+             ".\n"))
+  cat(paste0("The chemicals with the longest half-lives with food use are ",
+             paste(subset(max.hl, food==1)$Compound, collapse=" and "),
+             ".\n"))
+```
+
+
+```{r determine_valid_httk_chems}
+con <- duckdb::dbConnect(
+  duckdb::duckdb(), 
+  dbdir = ivivedb, 
+  read_only = FALSE)
+qry <- paste0("
+      SELECT DISTINCT cichem
+      FROM CITK.invitroTK
+  	  INNER JOIN CITK.chemicals ON invitroTK.chem_id_fk=chemicals.chem_id
+      WHERE Parameter = 'Clint'
+        AND Type = 'Measured';
+      ")
+clint.chems <- dbGetQuery(con, qry)  
+qry <- paste0("
+      SELECT DISTINCT cichem
+      FROM CITK.invitroTK
+  	  INNER JOIN CITK.chemicals ON invitroTK.chem_id_fk=chemicals.chem_id
+      WHERE Parameter = 'Fup'
+        AND Type = 'Measured';
+      ")
+fup.chems <- dbGetQuery(con, qry)  
+duckdb::dbDisconnect(con)
+
+all.httk.meas <- intersect(clint.chems, fup.chems)
+any.httk.meas <- union(clint.chems, fup.chems)
+valid.httk.chems <- unique(c(all.httk.allgoodqspr$cichem, all.httk.meas, all.httk.pfas))
+```
+
+# Supplemental table of invivo stats:
+```{r invivo_table_stats}
+con <- duckdb::dbConnect(
+  duckdb::duckdb(), 
+  dbdir = ivivedb, 
+  read_only = FALSE)
+invivo.table <- DBI::dbGetQuery(con,       
+  "
+  SELECT * 
+  FROM CITK.invivo
+  LEFT JOIN CITK.chemicals ON CITK.invivo.chem_id_fk = CITK.chemicals.chem_id;
+  "
+  )
+invivo.table <- subset(invivo.table,
+                       !is.na(Value) & 
+                       !is.infinite(Value) &
+                       !is.nan(log10(as.numeric(Value) + 1e-6)))
+
+  httk.table <- DBI::dbGetQuery(con,       
+  "
+  SELECT *,
+         Model
+  FROM CITK.httk
+  LEFT JOIN CITK.chemicals ON CITK.httk.chem_id_fk = CITK.chemicals.chem_id
+  LEFT JOIN CITK.models ON CITK.httk.model_id_fk = CITK.models.model_id
+  WHERE Model IN ('pfas1compartment', 'sumclearancesplus');
+  "
+  )                          
+  httk.table <- subset(httk.table,
+                       !is.na(Value) & 
+                       !is.infinite(Value) &
+                       !is.nan(log10(as.numeric(Value) + 1e-6)))
+
+  css.table <- DBI::dbGetQuery(con,       
+  "
+  SELECT * 
+  FROM CITK.ivive
+  LEFT JOIN CITK.chemicals ON CITK.ivive.chem_id_fk = CITK.chemicals.chem_id
+  LEFT JOIN CITK.models ON CITK.ivive.model_id_fk = CITK.models.model_id
+  WHERE Model IN ('pfas1compartment', 'sumclearancesplus', 'in vivo');
+  "
+  )
+  css.table <- subset(css.table,
+                       !is.na(Value) & 
+                       !is.infinite(Value) &
+                       !is.nan(log10(as.numeric(Value) + 1e-6)))
+  duckdb::dbDisconnect(con)
+  
+CITK.summary.table <- NULL
+for (this.param in unique(invivo.table$Parameter))
+{
+  this.invivo.subset <- subset(invivo.table, Parameter %in% this.param)
+  this.human.subset <- subset(this.invivo.subset, Species %in% "Human")
+  this.nonhuman.subset <- subset(this.invivo.subset, !(Species %in% "Human"))
+  this.pred.subset <- subset(httk.table, Parameter %in% this.param &
+                               Type %in% "Predicted" &
+                     cichem %in% valid.httk.chems)
+  this.eval.chems <- unique(intersect(
+                          this.human.subset$cichem,
+                          this.pred.subset$cichem))
+  this.eval.subset <- subset(this.human.subset, cichem %in% this.eval.chems)
+  CITK.summary.table <-
+    rbind(CITK.summary.table,
+          data.frame(Parameter = this.param,
+                         Num.ROCKS.Meas.Chems = sum(unique(
+                           this.human.subset$cichem) %in% all.rocks.chems),
+                        Num.Total.Meas.Chems = length(unique(
+                           this.invivo.subset$cichem)),
+                        Num.Obs = nrow(this.invivo.subset),
+                        Num.Human.Meas.Chems = length(unique(
+                           this.human.subset$cichem)),
+                        Num.NonHuman.Meas.Chems = length(unique(
+                          this.nonhuman.subset$cichem)),
+                        Num.Pred.Chems = length(unique(
+                           this.pred.subset$cichem)),
+                        Num.Eval.Chems = length(this.eval.chems),
+                        Num.Eval.Obs = nrow(this.eval.subset)
+  ))
+}
+css.meas <- subset(css.table, Type %in% "Measured")
+css.human <- subset(css.meas, Species %in% "Human")
+css.nonhuman <- subset(css.meas, !(Species %in% "Human"))
+css.pred <- subset(css.table, !is.na(Value) & Type %in% "Predicted" &
+                     cichem %in% valid.httk.chems)
+css.eval.chems <- unique(intersect(css.human$cichem, css.pred$cichem))
+css.eval <- subset(css.meas, cichem %in% css.eval.chems)
+css.row <- data.frame(Parameter = "Css",
+                      Num.ROCKS.Meas.Chems = sum(unique(css.meas$cichem)
+                                                 %in% all.rocks.chems),
+                      Num.Total.Meas.Chems = length(unique(
+                           css.meas$cichem)),
+                      Num.Obs = nrow(this.invivo.subset),
+                      Num.Human.Meas.Chems = length(unique(
+                           css.human$cichem)),
+                        Num.NonHuman.Meas.Chems = length(unique(
+                          css.nonhuman$cichem)),
+                        Num.Pred.Chems = length(unique(
+                           css.pred$cichem)),
+                        Num.Eval.Chems = length(css.eval.chems),
+                        Num.Eval.Obs = nrow(css.eval)
+) 
+CITK.summary.table <- rbind(CITK.summary.table, css.row)
+
+write.table(CITK.summary.table, file="tables/SupTableCITKCounts.txt", 
+            row.names=FALSE,
+            sep="\t")
+```
+# Make Sankey Plot for QSPRs
+```{r create_sankey}
+con <- duckdb::dbConnect(
+  duckdb::duckdb(),
+  dbdir = ivivedb,
+  read_only = TRUE
+)
+
+qry <- paste0("
+SELECT DISTINCT cichem 
+FROM CITK.invitrotk
+LEFT JOIN CITK.chemicals ON CITK.invitrotk.chem_id_fk = CITK.chemicals.chem_id
+WHERE CITK.invitrotk.Parameter IN ('Clint', 'Fup', 'Caco2.Pab') AND
+  Species IN ('Human') AND
+  Type IN ('Measured');
+              ")
+invitrotk.chems <-dbGetQuery(con, qry)  
+
+qry <- paste0("
+SELECT DISTINCT cichem 
+FROM CITK.ivive
+LEFT JOIN CITK.chemicals ON CITK.ivive.chem_id_fk = CITK.chemicals.chem_id
+WHERE CITK.ivive.HTTKBasis IN ('QSPR', 'Mixed') AND
+  Species IN ('Human');
+              ")
+insilicotk.chems <-dbGetQuery(con, qry)  
+
+qry <- paste0("
+SELECT DISTINCT cichem 
+FROM CITK.invivo
+LEFT JOIN CITK.chemicals ON CITK.invivo.chem_id_fk = CITK.chemicals.chem_id
+WHERE Species IN ('Human');
+              ")
+invivo.chems <-dbGetQuery(con, qry)  
+
+duckdb::dbDisconnect(con)
+```
+
+```{r pipeline_data}
+#write_parquet(all.pipeline.padel, "pipeline/all_pipeline_padel.parquet")
+all.pipeline.padel <- read_parquet("pipeline/all_pipeline_padel.parquet")
+```
+
+```{r prep_sankey_data}
+#nostructure.chems <- subset(all.pipeline, is.na(molfile))$cichem
+#write_parquet(as.data.frame(nostructure.chems), "pipeline/nostructure.parquet")
+nostructure.chems <-read_parquet("pipeline/nostructure.parquet")$nostructure.chems
+rocks.invivo <- subset(invivo.chems, cichem %in% rocks$cichem_id)
+rocks.invitro <- subset(invitrotk.chems, cichem %in% rocks$cichem_id)
+legacy.invitro <- subset(invitrotk.chems, !(cichem %in% rocks$cichem_id))
+legacy.invivo <- subset(invivo.chems, !(cichem %in% rocks$cichem_id))
+legacy <- rbind(legacy.invitro, legacy.invivo)
+legacy.nostructure <- subset(legacy, cichem %in% nostructure.chems) 
+legacy.structure <- subset(legacy, !(cichem %in% nostructure.chems))
+rocks.nostructure <- subset(rocks, cichem_id %in% nostructure.chems)
+rocks.structure <- subset(rocks, !(cichem_id %in% nostructure.chems))
+num.rocks.structure <- length(rocks.structure$cichem_id)
+num.rocks.nostructure <- length(rocks.nostructure$cichem_id)
+
+legacy.invivo.nostructure <- subset(legacy.invivo, cichem %in% nostructure.chems) 
+cat(paste0("\nIn vivo TK parameters are currently available for ",
+           nrow(legacy.invivo.nostructure),
+           " chemicals without structure descriptors.\n"))
+legacy.invitro.nostructure <- subset(legacy.invitro, cichem %in% nostructure.chems) 
+cat(paste0("\nIn vitro TK parameters are currently available for ",
+           nrow(legacy.invitro.nostructure),
+           " chemicals without structure descriptors.\n"))
+
+
+
+
+all.httk.ad <- intersect(
+  intersect(rocks.clint.withinAD$cichem,
+                         rocks.fup.withinAD$cichem),
+  rocks.caco2.withinAD$cichem)
+
+#rocks <- merge(rocks, all.pipeline[,c("cichem","dtxsid")],
+#               all.x=TRUE,
+#               by.x = "cichem_id",
+#               by.y = "cichem")
+#write_parquet(rocks, "pipeline/rocksmerge.parquet")
+
+rocks.pfas.ml <- subset(rocks, 
+  !(cichem_id %in% invitrotk.chems) & 
+    dtxsid %in% dawson2023$DTXSID)
+any(rocks.pfas.ml$cichem_id %in% rocks.opera.withinAD$cichem)
+
+citk.no.rocks <- subset(chem.physical_and_invitro.data$chemicals, !(DTXSID %in% rocks$dtxsid))
+no.rocks.ids <- subset(all.pipeline.httk, dtxsid %in% citk.no.rocks$DTXSID)[,c("dtxsid","cichem")]
+chem.physical_and_invitro.data <- add_chemtable(no.rocks.ids,
+                                                current.table = chem.physical_and_invitro.data,
+                                                data.list=c(DTXSID = "dtxsid",
+                                                            CICHEM = "cichem"),
+                                                reference="Pipelines")
+write.table(citk.no.rocks,
+  file="tables/CITK-outside-ROCKS.txt")
+```
+
+```{r create_sankey_table}
+sankey.plot <- data.frame()
+sankey.nodes <- c(
+  "ROCKS Collection",
+  paste0("Structure Descriptors (",
+         signif(num.rocks.structure/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  paste0("No Structure Descriptors (",
+         signif(num.rocks.nostructure/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  paste0("Within PC AD (",
+         signif(nrow(rocks.opera.withinAD)/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  paste0("Outside PC AD (",
+         signif((num.rocks.structure-nrow(rocks.opera.withinAD))/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  paste0("Within HQ AD (",
+         signif(length(all.httk.ad)/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  paste0("Outside HQ AD (",
+         signif((nrow(rocks.opera.withinAD)-length(all.httk.ad))/num.rocks*100, PERCENTILE.SIG.FIGS),
+         "%)"),
+  "Predictions"
+)
+names(sankey.nodes) <- c("ROCKS",
+                         "StructDesc", 
+                         "NoStructDesc", 
+                         "PChemAD", 
+                         "NoPChemAD",
+                         "HTTKAD", 
+                         "NoHTTKAD", "TKPreds")
+  
+#sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Database",
+#              Chemicals=nrow(rocks.invivo),
+#              edge_id=1,
+#              connector="from",
+#              node="CITK In Vivo",
+#              Outcome="TK Predictions"
+#              ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Chemical List",
+#              Chemicals=nrow(rocks.invivo),
+#              edge_id=1,
+#              connector="to",
+#              node="ROCKS Collection",
+#              Outcome="TK Predictions"
+#              ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Database",
+#              Chemicals=nrow(legacy.invivo),
+#              edge_id=2,
+#              connector="from",
+#              node="CITK In Vivo",
+#              Outcome="TK Predictions"
+#              ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Chemical List",
+#              Chemicals=nrow(legacy.invivo),
+#              edge_id=2,
+#              connector="to",
+#              node="Legacy Chemicals with Data",
+#              Outcome="TK Predictions"
+#              ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Database",
+#              Chemicals=nrow(rocks.invitro),
+#              edge_id=3,
+#              connector="from",
+#              node="CITK Measured In Vitro",
+#              Outcome="TK Predictions"
+#              ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(Step="Chemical List",
+#              Chemicals=nrow(rocks.invitro),
+#              edge_id=3,
+#              connector="to",
+#              node="ROCKS Collection",
+#              Outcome="TK Predictions"
+#   ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(
+#     Step="Database",
+#     Chemicals=nrow(legacy.invitro),
+#     edge_id=4,
+#     connector="from",
+#     node="CITK Measured In Vitro",
+#     Outcome="TK Predictions"
+#   ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(
+#     Step="Chemical List",
+#     Chemicals=nrow(legacy.invitro),
+#     edge_id=4,
+#     connector="to",
+#     node="Legacy Chemicals with Data",
+#     Outcome="TK Predictions"
+#   ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(
+#     Step="Chemical List",
+#     Chemicals=nrow(legacy.nostructure),
+#     edge_id=5,
+#     connector="from",
+#     node="Legacy Chemicals with Data",
+#     Outcome="TK Predictions"
+#   ))
+# sankey.plot <- rbind(sankey.plot,
+#   data.frame(
+#     Step="Structure Descriptors",
+#     Chemicals=nrow(legacy.nostructure),
+#     edge_id=5,
+#     connector="to",
+#     node="Chemicals without Structure Descriptors",
+#     Outcome="TK Predictions"
+#     ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Chemical List",
+    Chemicals=num.rocks.structure,
+    edge_id=6,
+    connector="from",
+    node=sankey.nodes["ROCKS"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Structure Descriptors",
+    Chemicals=num.rocks.structure,
+    edge_id=6,
+    connector="to",
+    node=sankey.nodes["StructDesc"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Chemical List",
+    Chemicals=num.rocks.nostructure,
+    edge_id=7,
+    connector="from",
+    node=sankey.nodes["ROCKS"],
+    Outcome="No Structure Descriptors"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Structure Descriptors",
+    Chemicals=num.rocks.nostructure,
+    edge_id=7,
+    connector="to",
+    node=sankey.nodes["NoStructDesc"],
+    Outcome="No Structure Descriptors"
+  ))
+#sankey.plot <- rbind(sankey.plot,
+#  data.frame(
+#    Step="Chemical List",
+#    Chemicals=nrow(legacy.structure),
+#    edge_id=8,
+#    connector="from",
+#    node="Legacy Chemicals with Data",
+#    Outcome="TK Predictions"
+#  ))
+#sankey.plot <- rbind(sankey.plot,
+#  data.frame(
+#    Step="Structure Descriptors",
+#    Chemicals=nrow(legacy.structure),
+#    edge_id=8,
+#    connector="to",
+#    node="Chemicals with Structure Descriptors",
+#    Outcome="TK Predictions"
+#  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Structure Descriptors",
+    Chemicals=nrow(rocks.opera.withinAD),
+    edge_id=9,
+    connector="from",
+    node=sankey.nodes["StructDesc"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Phys-Chem QSPR",
+    Chemicals=nrow(rocks.opera.withinAD),
+    edge_id=9,
+    connector="to",
+    node=sankey.nodes["PChemAD"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Structure Descriptors",
+    Chemicals=num.rocks.structure  - nrow(rocks.opera.withinAD),
+    edge_id=10,
+    connector="from",
+    node=sankey.nodes["StructDesc"],
+    Outcome="Outside Phys-Chem QSPR AD"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Phys-Chem QSPR",
+    Chemicals=num.rocks.structure  - nrow(rocks.opera.withinAD),
+    edge_id=10,
+    connector="to",
+    node=sankey.nodes["NoPChemAD"],
+    Outcome="Outside Phys-Chem QSPR AD"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Phys-Chem QSPR",
+    Chemicals=length(all.httk.ad),
+    edge_id=11,
+    connector="from",
+    node=sankey.nodes["PChemAD"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="HTTK QSPR",
+    Chemicals=length(all.httk.ad),
+    edge_id=11,
+    connector="to",
+    node=sankey.nodes["HTTKAD"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="HTTK QSPR",
+    Chemicals=length(all.httk.ad),
+    edge_id=12,
+    connector="from",
+    node=sankey.nodes["HTTKAD"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="HTTK",
+    Chemicals=length(all.httk.ad),
+    edge_id=12,
+    connector="to",
+    node=sankey.nodes["TKPreds"],
+    Outcome="TK Predictions"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="Phys-Chem QSPR",
+    Chemicals=nrow(rocks.opera.withinAD) - length(all.httk.ad),
+    edge_id=13,
+    connector="from",
+    node=sankey.nodes["PChemAD"],
+    Outcome="Outside HTTK QSPR AD"
+  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="HTTK QSPR",
+    Chemicals=nrow(rocks.opera.withinAD) - length(all.httk.ad),
+    edge_id=13,
+    connector="to",
+    node=sankey.nodes["NoHTTKAD"],
+    Outcome="Outside HTTK QSPR AD"
+  ))
+#sankey.plot <- rbind(sankey.plot,
+#  data.frame(
+#    Step="Database",
+#    Chemicals=nrow(invitrotk.chems),
+#    edge_id=14,
+#    connector="from",
+#    node="CITK Measured In Vitro",
+#    Outcome="TK Predictions"
+#  ))
+sankey.plot <- rbind(sankey.plot,
+  data.frame(
+    Step="HTTK",
+    Chemicals=nrow(invitrotk.chems),
+    edge_id=14,
+    connector="to",
+    node=sankey.nodes["TKPreds"],
+    Outcome="TK Predictions"
+  ))
+#sankey.plot <- rbind(sankey.plot,
+#  data.frame(
+#    Step="Phys-Chem QSPR",
+#    Chemicals=nrow(rocks.pfas.ml),
+#    edge_id=15,
+#    connector="from",
+#    node="Chemicals outside AD",
+#    Outcome="PFAS ML Model"
+#  ))
+#sankey.plot <- rbind(sankey.plot,
+#  data.frame(
+#    Step="HTTK",
+#    Chemicals=nrow(rocks.pfas.ml),
+#    edge_id=15,
+#    connector="to",
+#    node="TK Predictions",
+#    Outcome="PFAS ML Model"
+#  ))
+# Set order using factors/levels:
+sankey.plot$Step <- factor(
+  sankey.plot$Step,
+  levels=c(
+    "Database",
+    "Chemical List",
+    "Structure Descriptors",
+    "Phys-Chem QSPR",
+    "HTTK QSPR",
+    "HTTK"))
+sankey.plot$Outcome <- factor(
+  sankey.plot$Outcome,
+  levels=c(
+    "TK Predictions",
+    "PFAS ML Model",   
+    "No Structure Descriptors",
+    "Outside Phys-Chem QSPR AD",
+    "Outside HTTK QSPR AD"
+    ))
+sankey.plot$node <- factor(
+  sankey.plot$node,
+  levels=sankey.nodes)
+
+# Remove CITK nodes because they break the plot:
+sankey.plot <- subset(sankey.plot, !(edge_id %in% c(1:5,8,14,15)))
+```
+
+```{r make_sankey_plot}
+p <- ggplot(sankey.plot,
+            aes(x = Step, 
+                y = Chemicals, 
+                group = node, 
+                connector = connector,
+                edge_id = edge_id))
+pos <- position_sankey(v_space = "auto", order = "as_is",
+                       align="center")
+pos_text <- position_sankey(
+  v_space = "auto", 
+                            order = "as_is",
+                            align="center",
+                            nudge_x = 0.1)
+sankey.fig <- p + geom_sankeyedge(alpha=0.9,
+                                  aes(fill = Outcome), 
+                                  position = pos) +
+  geom_sankeynode(position = pos, 
+                  color=UL.cols[11],
+                  fill=UL.cols[11]) +
+  scale_fill_manual(values = UL.cols[c(3,4,8,9,10)]) +
+  geom_text(
+            aes(label = node), 
+            stat = "sankeynode", 
+            position = pos_text, hjust = 0, cex = 14) +
+  scale_x_discrete(expand = expansion(add = c(0.2, .6)))+ 
+  theme_pubr(base_size = 24) 
+print(sankey.fig) 
+
+  
+png("figs/Fig3-SankeyDiagram.png", height = 1000, width = 2200)
+print(sankey.fig + 
+        theme_pubr(base_size = 32)#+
+#        theme(panel.widths = unit(4, "in"))
+)
+dev.off()
+```
+```{r graphical_abstract_fig}
+toc.fig <- p + geom_sankeyedge(alpha=0.9,
+                                  aes(fill = Outcome), 
+                                  position = pos) +
+  geom_sankeynode(position = pos) +
+  scale_fill_manual(values = UL.cols[c(4,1,2,3,5)]) +
+  theme_pubr(base_size = 24)+
+  theme(
+       #      axis.text.x = element_text(angle = 45, hjust = 1),
+             axis.title.x = element_blank(),
+             axis.text.x = element_blank(),
+             axis.title.y = element_blank(),
+             axis.text.y = element_blank(),
+             legend.position = "none")
+print(toc.fig) 
+  png("figs/TOC-Fig.png", height = round(1.75*400), width = round(3.25*400))
+  print(toc.fig)
+  dev.off()
+```
+
+  
+# Supplemental Table Use and Predictions
+```{r create_use_and_coverage_table}
+  rocks.with.structure <- subset(rocks, 
+                                 !(cichem_id %in% nostructure.chems))$dtxsid
+
+  use.and.preds.table <- NULL
+  for (this.use in unique(cheminfo$name))
+  {
+    this.subset <- subset(cheminfo, name %in% this.use)
+    this.structure.subset <- subset(cheminfo, name %in% this.use & 
+                                      dtxsid %in% rocks.with.structure)
+    num.no.preds <- nrow(subset(this.subset, TK %in% "No Predictions"))
+    num.no.preds.with.struct <- nrow(subset(this.structure.subset,
+                                            TK %in% "No Predictions"))
+    num.chems <- nrow(this.subset)
+    num.struct.chems <- nrow(this.structure.subset)
+    frac.no.structure <- signif((num.chems - num.struct.chems)/num.chems,
+                                3)
+    frac.no.pred <- signif(num.no.preds/num.chems,
+      3)
+    frac.struct.no.pred <- signif(num.no.preds.with.struct / num.struct.chems,
+                                  3) 
+    use.and.preds.table <- rbind(use.and.preds.table,
+      data.frame(Use = this.use,
+                 Num.Chems = num.chems,
+                 Num.Chems.with.Structure = num.struct.chems,
+                 Frac.No.Structure = frac.no.structure,
+                 Frac.No.Pred = frac.no.pred,
+                 Frac.with.Struct.but.No.Pred = frac.struct.no.pred)
+    )
+  }
+
+  write.table(use.and.preds.table,
+              file="tables/SupTableX-UseandPredCoverage.txt",
+              row.names=FALSE,
+              sep="\t")
+  
+  
+cat(paste0(
+  use.and.preds.table[which(use.and.preds.table$Num.Chems == max(use.and.preds.table$Num.Chems)),"Use"],
+  " chemicals are the largest overall category and also have the fewest chemicals with HTTK predictions (",
+  use.and.preds.table[which(use.and.preds.table$Num.Chems == max(use.and.preds.table$Num.Chems)),"Frac.No.Pred"]*100,
+  " percent).\n"))
+
+cat(paste0(
+  signif(use.and.preds.table[use.and.preds.table=="industrial", "Frac.No.Structure"]*100, 
+         PERCENTILE.SIG.FIGS),
+  "% of industrial chemicals have no structure and so could not be used with QSPR models.\n"))
+
+cat(paste0("Among the industrial chemicals with structures, ",
+  signif(use.and.preds.table[use.and.preds.table=="industrial", "Frac.with.Struct.but.No.Pred"]*100, PERCENTILE.SIG.FIGS),
+  "% of have no prediction (that is, were outside the AD of at least one QSPR model).\n"))
+
+
+cat(paste0(
+  use.and.preds.table[which(use.and.preds.table$Frac.No.Pred == min(use.and.preds.table$Frac.No.Pred)),"Use"],
+    " chemicals are the best covered, with ",
+    use.and.preds.table[which(use.and.preds.table$Frac.No.Pred == min(use.and.preds.table$Frac.No.Pred)),"Frac.No.Pred"]*100,
+    " percent lacking predictions.\n"))
+```
+
+# Analyze chemical class
+```{r chemical_class_analysis}
+#  rocks.classy <- subset(all.pipeline.classy, cichem %in% rocks$cichem_id)
+#  write_parquet(rocks.classy, "pipeline/rocks_classy.parquet")
+  rocks.classy <- read_parquet("pipeline/rocks_classy.parquet")
+  
+  rocks.classy$TK <- "No Predictions"
+  rocks.classy[rocks.classy$cichem %in% 
+                 rownames(subset(tk.landscape.mat,
+                                 tk.landscape.mat[,"QSPR"]==1)),
+           "TK"] <- "QSPR"
+  rocks.classy[rocks.classy$cichem %in% 
+                 rownames(subset(tk.landscape.mat,
+                                 tk.landscape.mat[,"In Vitro"]==1)),
+           "TK"] <- "In Vitro"
+  rocks.classy[rocks.classy$cichem %in% 
+                 rownames(subset(tk.landscape.mat,
+                                 tk.landscape.mat[,"In Vivo"]==1)),
+           "TK"] <- "In Vivo"
+  
+  rocks.prevalence <- rocks.classy |> 
+    group_by(class) |> 
+    summarise(Num.Chems = n(), Prevalence = n()/nrow(rocks.classy)) |>
+    arrange(desc(Prevalence))
+  rocks.invitroTK.prevalence <- rocks.classy |> 
+    filter(TK == "In Vitro") |>
+    group_by(class) |> 
+    summarise(Num.Chems = n(), Prevalence = n()/nrow(rocks.classy)) |>
+    arrange(desc(Prevalence))
+  rocks.noTK.prevalence <- rocks.classy |> 
+    filter(TK == "No Predictions") |>
+    group_by(class) |> 
+    summarise(Num.Chems = n(), Prevalence = n()/nrow(rocks.classy)) |>
+    arrange(desc(Prevalence))
+  rocks.TK.prevalence <- rocks.classy |> 
+    filter(TK != "No Predictions") |>
+    group_by(class) |> 
+    summarise(Num.Chems = n(), Prevalence = n()/nrow(rocks.classy)) |>
+    arrange(desc(Prevalence))
+  nrow(rocks.TK.prevalence)
+  nrow(rocks.noTK.prevalence)
+  # First seven the same in both
+  # But many more classes with no TK
+  TK.class <- rocks.TK.prevalence$class[1:10]
+  TK.class <- TK.class[TK.class!=""]
+  noTK.class <- rocks.noTK.prevalence$class[1:10]
+  noTK.class <- noTK.class[noTK.class!=""]
+  class.dif <- which(TK.class!=noTK.class)[1]
+cat(paste0("The first ", class.dif-1,
+    " most prevalent chemical classes are consistent between the chemicals\
+with and without TK predictions: ",
+    paste(TK.class[1:(class.dif-1)],collapse=", "),
+    ".\n"))
+cat(paste0("However, there are ",
+           dim(rocks.noTK.prevalence)[1] - dim(rocks.TK.prevalence)[1],
+           " more classes present among the chemicals with no TK predictions (see Supplemental Table X).\n"))
+missing.TK.prevalance <- subset(rocks.noTK.prevalence,
+                               !(class %in% rocks.TK.prevalence$class))
+cat(paste0("The most prevalent classes not present are various classes of metallic compounds. The TK of metals may be very different from the organic and PFAS chemicals covered by the QSPRs [KENTUCKY REF].\n"))  
+```
+
+```{R class_table2}
+opera.logp.training <- read.csv("data/LogP_2.9_update.csv")
+opera.logp.training <- opera.logp.training$DSSTOX_SUBSTANCE_ID
+library(ChemmineR)
+opera.pka.training <- read.SDFset("data/pKa_QR.sdf")
+opera.pka.training <- unlist(lapply(datablock(opera.pka.training),
+                                    function(x) x[["DSSTox_Substance_Id"]]))
+
+new.class.table <- subset(rocks.classy, !(class %in% "")) %>%
+  group_by(class) %>%
+  summarise(
+    n = n(),
+    n.invivo = sum(cichem %in% all.invivo.chems.anyspecies),
+    n.invitro = sum(cichem %in% invitrotk.chems$cichem),
+    n.inside.HTTKQSPR.AD = sum(cichem %in% all.httk.ad),
+    n.inside.OPERAlogP.AD = sum(cichem %in% rocks.opera.logP.withinAD$cichem),
+    n.inside.OPERApKa.AD = sum(cichem %in% rocks.opera.pKa.withinAD$cichem),
+    n.outside.HTTKQSPR.AD = n-n.inside.HTTKQSPR.AD,
+    n.outside.OPERAlogP.AD = n-n.inside.OPERAlogP.AD,
+    n.outside.OPERApKa.AD = n-n.inside.OPERApKa.AD,
+    F.outside.HTTKQSPR.AD = signif(n.outside.HTTKQSPR.AD/n,3),
+    F.outside.OPERAlogP.AD = signif(n.outside.OPERAlogP.AD/n,3),
+    F.outside.OPERApKa.AD = signif(n.outside.OPERApKa.AD/n,3),
+    n.OPERAlogP.training = sum(dtxsid %in%
+                                 opera.logp.training),
+    n.OPERApKa.training = sum(dtxsid %in%
+                                 opera.pka.training),
+    .groups = "drop"
+  )
+
+httk.possible <- subset(new.class.table, n.invitro>0)
+httk.targets <- httk.possible[order(httk.possible$n.outside.HTTKQSPR.AD, decreasing=TRUE),]
+logP.possible <- subset(new.class.table, n.OPERAlogP.training>0)
+logP.targets <- logP.possible[order(logP.possible$n.outside.OPERAlogP.AD, decreasing=TRUE),]
+pKa.possible <- subset(new.class.table, n.OPERApKa.training>0)
+pKa.targets <- pKa.possible[order(pKa.possible$n.outside.OPERApKa.AD, decreasing=TRUE),]
+NUM.EACH <- 10
+meas.targets <- sort(unique(c(
+  httk.targets$class[1:NUM.EACH],
+  logP.targets$class[1:NUM.EACH],
+  pKa.targets$class[1:NUM.EACH])))
+rocks.meas.targets <- subset(rocks.classy, 
+                             class %in% meas.targets &
+  !(cichem %in% invitrotk.chems$cichem) &
+  !(dtxsid %in% c(opera.logp.training,
+                  opera.pka.training)))$cichem
+length(rocks.meas.targets)
+
+
+
+write.table(new.class.table,
+          row.names=FALSE,
+          sep="\t",
+          file="tables/SupTableX-ChemicalClassPrevalence2.txt")
+cat("Table SX identifies the chemical classes for which measurements have previously been successful (HTTK, logP, or pKa) with the largest number of out of domain chemicals for the HTTK, logP, and pKa QSPRs. These chemical classes are targets for new measurements that are both likely to be successful and broaden the AD of the QSPR models. The chemical classes are generally large classes with many previous measurments:\n")
+
+if (length(meas.targets) == NUM.EACH)
+{
+  cat(paste0("The top ",NUM.EACH, " classes are shared among the three types of QSPRs, though in different order of priority.\n"))
+} else {
+  cat(paste0("There are ",length(meas.targets)," classes among the top ",NUM.EACH, " classes for the three types of QSPRs.\n"))
+}
+
+cat(paste0("The classes are: ", paste(meas.targets[1:(length(meas.targets)-1)], collapse=", "),", and ",
+           meas.targets[length(meas.targets)],".\n"))
+```
+
+```{R httk_classyfier}
+#httk.classy <- subset(all.pipeline.classy, dtxsid %in% 
+#                        unlist(chem.physical_and_invitro.data$invitrotk |>
+#                        dplyr::left_join(
+#                          chem.physical_and_invitro.data$chemicals,
+#                          c("chem_id_fk" = "chem_id")) |>
+#                        dplyr::distinct(DTXSID)))
+#save(httk.classy, file="pipeline/httkclassy.RData")
+write_parquet(httk.classy, "pipeline/httk_classy.parquet")
+htkk.classy <- read_parquet("pipeline/httk_classy.parquet")
+httk.physchem <- chem.physical_and_invitro.data$chemprop |>
+  dplyr::group_by(chem_id_fk) |>
+  dplyr::filter(all(c("logP","pKa_Donor","pKa_Accept") %in% property)) |>
+  dplyr::left_join(
+    chem.physical_and_invitro.data$chemicals,
+    c("chem_id_fk" = "chem_id")) |>
+  dplyr::distinct(DTXSID)
+httk.physchem.classy <- subset(all.pipeline.classy, dtxsid %in% 
+                                   unlist(httk.physchem))
+httk.physchem.prevalence <- httk.physchem.classy |> 
+  group_by(class) |> 
+  summarise(Prevalence = n()/nrow(httk.physchem.classy)) |>
+  arrange(desc(Prevalence))
+
+httk.nophyschem <- subset(chem.physical_and_invitro.data$invitrotk,
+                          !(chem_id_fk %in% httk.physchem$chem_id_fk)) |>
+  dplyr::left_join(
+    chem.physical_and_invitro.data$chemicals,
+    c("chem_id_fk" = "chem_id")) |>
+  dplyr::distinct(DTXSID) 
+httk.nophyschem.classy <- subset(all.pipeline.classy, dtxsid %in% 
+                        unlist(httk.nophyschem))
+httk.nophyschem.prevalence <- httk.nophyschem.classy |> 
+  group_by(class) |> 
+  summarise(Prevalence = n()/nrow(httk.nophyschem.classy)) |>
+  arrange(desc(Prevalence))
+
+class.with.invitrotk.but.no.physchem <- 
+  httk.nophyschem.prevalence$class[!(httk.nophyschem.prevalence$class %in%
+                                       httk.physchem.prevalence$class)]
+subset(httk.nophyschem.prevalence, class %in% 
+         class.with.invitrotk.but.no.physchem)
+
+cat(paste0("There were ", nrow(httk.nophyschem),
+           " chemicals with at least one in vitro measured TK parameter that were outside the AD of the QSPR models for physico-chemical properties.\n"))
+cat(paste0("The most common chemicals for which physico-chemical QSPRs failed were: ",
+           paste(unlist(httk.nophyschem.prevalence[1:5,"class"]),collapse=", ")))
+
+not.in.physchem <- NULL
+more.prevalent <- NULL
+for (this.class in httk.nophyschem.prevalence$class)
+{
+  if (this.class %in% httk.physchem.prevalence$class)
+  {
+    if (httk.nophyschem.prevalence[httk.nophyschem.prevalence$class==this.class, "Prevalence"] >
+        httk.physchem.prevalence[httk.physchem.prevalence$class==this.class, "Prevalence"])
+    more.prevalent <- rbind(more.prevalent,
+                            httk.nophyschem.prevalence[httk.nophyschem.prevalence$class==this.class,])
+  } else not.in.physchem <- rbind(not.in.physchem,
+                                  httk.nophyschem.prevalence[httk.nophyschem.prevalence$class==this.class,])
+}
+
+cat(paste0("The most common chemical classes that were more prevalent when the physico-chemical QSPRs failed were: ",
+           paste(unlist(more.prevalent[1:5,"class"]),collapse=", ")))
+
+```
+
+```{r create_chemical_class_prevalence_table}
+class.table <- merge(
+  rocks.TK.prevalence,
+  rocks.noTK.prevalence,
+  by="class",all.x=TRUE,all.y=TRUE)
+class.table[is.na(class.table)] <- 0
+colnames(class.table)[2] <- "Prevalence.Chems.with.TK.Predictions"
+colnames(class.table)[3] <- "Prevalence.Chems.without.TK.Predictions"
+class.table <- class.table[order(class.table[,
+  "Prevalence.Chems.without.TK.Predictions"], decreasing=TRUE),]
+class.table <- class.table[order(class.table[,
+  "Prevalence.Chems.with.TK.Predictions"], decreasing=TRUE),]
+class.table$Prevalence.Chems.with.TK.Predictions <- signif(
+  class.table$Prevalence.Chems.with.TK.Predictions, 3)
+class.table$Prevalence.Chems.without.TK.Predictions <- signif(
+  class.table$Prevalence.Chems.without.TK.Predictions, 3)
+write.table(class.table,
+          row.names=FALSE,
+          sep="\t",
+          file="tables/SupTableX-ChemicalClassPrevalence.txt")
+```
+
+```{r cdf_version_fig5}
+  halflife.source.cdf <-
+    ggplot(hl.data, aes(x=as.numeric(Value), color=Type)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+    scale_color_manual(values = c(UL.cols[1], UL.cols[2], UL.cols[3])) +
+    scale_x_log10(
+      limits = hl.time.limits,
+      breaks = hl.time.breaks,
+      labels = hl.time.labels
+    ) +
+   # facet_wrap(~Type, ncol=1)+
+ #   scale_y_log10(labels = scales::label_log())+
+    labs(x = "Human TK Half-life", y = "Cumulative Fraction of Chemicals") +
+    theme_pubr()+
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+  png("figs/SupFigHLCDFs.png", height = 800, width = 800)
+   print(halflife.source.cdf + theme_pubr(base_size = 24))+
+    theme(
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 30),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  dev.off()
+  
+    print(halflife.source.cdf)
+```
+
+# Css evaluation figure
+```{r css_evaluation}
+#
+  # Make Css observed vs. predicted plot
+  #
+
+  pharma.cas <- unlist(as.vector(
+    read_excel("data/Lombardo2018-Supplemental_82966_revised_corrected.xlsx")[,"CAS #"]
+  ))
+  out <- get_cheminfo_from_search(pharma.cas)
+  pharma.dtxsids <- as.data.frame(out)$DTXSID 
+
+  invivocss <- subset(query_invivodb(all.human.invivo.chems, 
+                                     search.col="cichem"), 
+                      tolower(Species) %in% "human")
+  # Find chemicals with Foral and CLtot
+  css.list <- NULL
+  for (this.chem in unique(invivocss$DTXSID))
+  {
+    these.data <- subset(invivocss, DTXSID %in%this.chem &
+                           Parameter %in% c("CLtot", "Foral"))
+    if (all(c("CLtot", "Foral") %in% these.data$Parameter))
+    {
+      css.list <- c(css.list, this.chem)
+    }
+  }
+  csstable <- query_ivivedb(chem.list = all.human.invivo.chems,
+                            uncertainty = NA,
+                            variability = NA, 
+                            search.col="cichem")
+  css.data <- subset(csstable,
+                     Model=="in vivo" &
+                     tolower(Route) %in% "oral")
+  css.data$Class <- "Other"
+  css.data[css.data$DTXSID %in% pharma.dtxsids, "Class"] <- "Pharmaceutical"
+  css.data <- subset(css.data, cichem %in% valid.httk.chems)
+  
+  pfas1comp.chems <- subset(csstable, Model %in% "pfas1compartment")
+  sumclear.chems <- subset(csstable, Model %in% "sumclearancesplus")
+  onecomponly <- pfas1comp.chems[!(pfas1comp.chems %in% sumclear.chems)]
+  css.preds <- subset(csstable,
+                      (Model %in% "sumclearancesplus" |
+                         cichem %in% onecomponly) &
+                        !Uncertainty &
+                        !Variability &
+                        tolower(Route) %in% "oral" &
+                        !(HTTKBasis %in% NA) &
+                        InVivoForal %in% c(NA,FALSE))[,c("DTXSID","Value","HTTKBasis")] 
+  css.data <- merge(css.data, css.preds, by="DTXSID")
+  colnames(css.data)[colnames(css.data)=="Value.x"] <- "Observed"
+  colnames(css.data)[colnames(css.data)=="Value.y"] <- "Predicted"
+  colnames(css.data)[colnames(css.data)=="HTTKBasis.y"] <- "HTTKBasis"
+  #css.data$HTTK <- "All Measured"
+  #css.data[!(css.data$DTXSID %in% 
+  #           get_cheminfo(model="sumclearancesplus",info="dtxsid")),
+  #         "HTTK"] <- "QSPR"
+
+  
+  FigCssObsvsPred <- ggplot(css.data,
+                 aes(y=Observed, x=Predicted, color=Class, fill=Class, alpha=Class)) +
+    geom_point()+
+    scale_alpha_manual(values = c("Other" = 1.0, "Pharmaceutical" = 0.33))+
+    scale_fill_manual(values = c("Other" = UL.cols[4], "Pharmaceutical" = UL.cols[3])) +
+    scale_color_manual(values = c("Other" = UL.cols[4], "Pharmaceutical" = UL.cols[3])) +
+    scale_y_log10(label=label_log())+
+    scale_x_log10(label=label_log())+
+    geom_abline(intercept = 1, slope = 1, color=UL.cols[1], 
+                linetype="dashed", size=1.5)+
+    geom_abline(intercept = -1, slope = 1, color=UL.cols[1], 
+                linetype="dashed", size=1.5)+
+    facet_wrap(~HTTKBasis) +
+    labs(y = expression(Observed ~ C[ss] ~ (mu * M / mg / kg / day)),
+         x = expression(Predicted ~ C[ss] ~ (mu * M / mg / kg / day))) +
+    theme_pubr()
+  print(FigCssObsvsPred)
+  
+  png("figs/FigSX-CssObsvsPred.png", height = 600, width = 800)
+  print(FigCssObsvsPred+ theme_pubr(base_size = 24))
+  dev.off()
+  
+
+  css.inh.data <- subset(csstable,
+                     Model=="in vivo" &
+                     tolower(Route) %in% "inhalation")
+  css.inh.data$Class <- "Other"
+  css.inh.data[css.inh.data$DTXSID %in% pharma.dtxsids, "Class"] <- "Pharmaceutical"
+  
+  css.inh.preds <- subset(csstable,
+                      Model %in% "sumclearancesplus" &
+                        !Uncertainty &
+                        !Variability &
+                        tolower(Route) %in% "inhalation" &
+                        !(HTTKBasis %in% NA) &
+                        InVivoForal %in% c(NA,FALSE))[,c("DTXSID","Value","HTTKBasis")] 
+  css.inh.data <- merge(css.inh.data, css.inh.preds, by="DTXSID")
+  colnames(css.inh.data)[colnames(css.inh.data)=="Value.x"] <- "Observed"
+  colnames(css.inh.data)[colnames(css.inh.data)=="Value.y"] <- "Predicted"
+  colnames(css.inh.data)[colnames(css.inh.data)=="HTTKBasis.y"] <- "HTTKBasis"
+  
+  SupFig2 <- ggplot(css.inh.data,
+                 aes(y=Observed, x=Predicted, color=Class, fill=Class, alpha=Class)) +
+    geom_point()+
+    scale_alpha_manual(values = c("Other" = 1.0, "Pharmaceutical" = 0.33))+
+    scale_fill_manual(values = c("Other" = UL.cols[4], "Pharmaceutical" = UL.cols[3])) +
+    scale_color_manual(values = c("Other" = UL.cols[4], "Pharmaceutical" = UL.cols[3])) +
+    scale_y_log10(label=label_log(), 
+                  limits=c(0.01,100), 
+                  guide = "axis_logticks")+
+    scale_x_log10(label=label_log(), 
+                  limits=c(0.01,100), 
+                  guide = "axis_logticks")+
+    geom_abline(intercept = 0, slope = 1, color="black", 
+                linetype="dotted", size=1.5)+
+    geom_abline(intercept = 1, slope = 1, color=UL.cols[1], 
+                linetype="dashed", size=1.5)+
+    geom_abline(intercept = -1, slope = 1, color=UL.cols[1], 
+                linetype="dashed", size=1.5)+
+    facet_wrap(~HTTKBasis) +
+    labs(y = expression(Observed ~ C[ss] ~ (mu * M / ppm)),
+         x = expression(Predicted ~ C[ss] ~ (mu * M / ppm))) +
+    theme_pubr()
+  print(SupFig2)
+summary(lm(log10(Observed) ~ log10(Predicted), data=css.inh.data))
+
+  png("figs/SupFig2.png", height = 600, width = 800)
+  print(SupFig2 + theme_pubr(base_size = 24))
+  dev.off()
+```
+
+# Evaluation of HTTK Predictions (Table 2)
+```{r evaluate_httk}
+get_tkparam_data <- function(con, param, num.meas.chems, log=TRUE)
+{
+  num.chems.meas <- DBI::dbGetQuery(con, paste0("
+  SELECT COUNT(DISTINCT chem_id_fk) AS unique_count
+  FROM CITK.invivo
+  WHERE Parameter = '", param, "'
+    AND Species ='Human';
+  "))
+
+  data.set <- DBI::dbGetQuery(con, paste0("
+         SELECT 
+          chemicals.Compound,
+          chemicals.DTXSID as DTXSID,
+          chemicals.cichem as cichem,
+          measured.Value as Observed,
+          measured.Units,
+          refs.Reference,
+          predicted.Value as Predicted,
+          predicted.HTTKBasis,
+          Model
+        FROM CITK.invivo as measured
+        LEFT OUTER JOIN CITK.httk as predicted
+          ON measured.chem_id_fk = predicted.chem_id_fk
+        LEFT OUTER JOIN CITK.models
+          ON predicted.model_id_fk = models.model_id
+        LEFT OUTER JOIN CITK.chemicals
+          ON measured.chem_id_fk = chemicals.chem_id
+        LEFT OUTER JOIN CITK.refs
+          ON measured.ref_id_fk = refs.ref_id
+        WHERE measured.Parameter = '", param, "'
+          AND measured.Species = 'Human'
+          AND models.Model IN ('pfas1compartment', 'sumclearancesplus')
+          AND predicted.Parameter = '", param, "'
+          AND predicted.Species = 'Human'
+          AND predicted.Type = 'Predicted';
+    "))
+  pfas1comp.chems <- subset(data.set, Model %in% "pfas1compartment")
+  sumclear.chems <- subset(data.set, Model %in% "sumclearancesplus")
+  onecomponly <- subset(pfas1comp.chems, !(cichem %in% sumclear.chems$cichem))
+  data.set <- subset(data.set, Model %in% c(NA, "sumclearancesplus") | 
+                 cichem %in% onecomponly)
+  data.set <- subset(data.set, !duplicated(data.set))
+  data.set <- subset(data.set, cichem %in% valid.httk.chems)
+  data.set$Observed <- as.numeric(data.set$Observed)
+  data.set$Predicted <- as.numeric(data.set$Predicted)
+
+  this.plot <- ggplot(data.set, aes(x = Observed, y = Predicted)) +
+                      geom_point(alpha=0.05, size=3)+
+    ggtitle(param)
+  if (log) {
+    this.plot <- this.plot +
+      scale_x_log10(labels = scales::label_log())+
+      scale_y_log10(labels = scales::label_log())
+  }
+  
+  print(this.plot)
+  png(paste0("figs/SupFigX-",
+      param, 
+      "-obspred.png"), 
+    height = 900, 
+    width = 800)
+  print(this.plot+ theme_pubr(base_size = 24))
+  dev.off()
+  
+  write.table(data.set,
+              file=paste0("tables/SupTableX-",
+                          param,
+                          "data.txt"),
+              sep="\t", 
+              row.names=FALSE)
+
+  return(list(
+    data.set = data.set,
+    num.chems.meas = num.chems.meas,
+    this.plot = this.plot))
+}
+
+  duckdb::dbDisconnect(con)
+  con <- duckdb::dbConnect(
+    duckdb::duckdb(), 
+    dbdir = ivivedb, 
+    read_only = FALSE)
+  
+  out <- get_tkparam_data(con, "halflife")
+  hl <- out$data.set
+  hl.row <- tkstats.log(hl, "Half-Life", out[["num.chems.meas"]][[1]])
+
+  out <- get_tkparam_data(con, "Vdist")
+  vd <- out$data.set
+  vd.row <- tkstats.log(vd, "Vdist", out[["num.chems.meas"]][[1]])
+
+  out <- get_tkparam_data(con, "Foral")
+  foral <- out$data.set
+  foral.row <- tkstats.alg(foral, "Foral*", out[["num.chems.meas"]][[1]])
+
+  out <- get_tkparam_data(con, "Cltot")
+  cltot <- out$data.set
+  cltot.row <- tkstats.log(cltot, "Cltot", out[["num.chems.meas"]][[1]])
+  
+  css.chems.meas <- length(unique(subset(css.data, Type == "Measured"))$cichem)
+  css.row <- tkstats.log(css.data, "Css", css.chems.meas)
+    
+
+  # Close DB connection:
+  duckdb::dbDisconnect(con)
+
+```
+
+
+  # Calc stats:  
+```{r calc_tkstata}
+  colnames(foral.row)[colnames(foral.row) == "RMSE"] <- "RMSLE"
+  colnames(foral.row)[colnames(foral.row) == "ME"] <- "MLE"
+  tkstats.table <- rbind(hl.row, vd.row, cltot.row, foral.row, css.row)
+  write.table(tkstats.table, file="tables/Table2-TKStats.txt", sep="\t", row.names=FALSE)
+# Display stats table  
+View(tkstats.table)
+```
+
+
+# Create supplemental table comparing stats for different chemical subsets
+```{r subset_stats_analysis}
+  HTTKBasis.AllInVitro <- unique(subset(css.data, HTTKBasis=="All measured")$cichem)
+  HTTKBasis.Mixed <- unique(subset(css.data, HTTKBasis=="Mixed")$cichem)
+  HTTKBasis.AllQSPR <- unique(subset(css.data, HTTKBasis=="QSPR")$cichem)
+  
+  con <- duckdb::dbConnect(
+    duckdb::duckdb(), 
+    dbdir = ivivedb, 
+    read_only = FALSE)
+    
+  chem_qry <- paste0("
+      SELECT DISTINCT 
+        cichem,
+        DTXSID
+      FROM CITK.chemicals
+    ")
+  chems <- DBI::dbGetQuery(con, chem_qry)
+  
+  httk.pfas <- subset(chem.physical_and_invitro.data$chemprop,
+                      property %in% "Chemical.Class")
+  httk.pfas <- subset(httk.pfas, regexpr("PFAS", value)!=-1)
+  httk.pfas <- httk.pfas |> dplyr::left_join(
+    chem.physical_and_invitro.data$chemicals,
+    by=c("chem_id_fk"="chem_id"))
+  
+  pfas.dtxsid <- httk.pfas$DTXSID
+  pfas.chems <- subset(chems, DTXSID %in% pfas.dtxsid)$cichem
+  
+  hl.aiv <- tkstats.log(subset(hl, cichem %in% HTTKBasis.AllInVitro), "Half-Life")$RMSLE
+  vd.aiv <- tkstats.log(subset(vd, cichem %in% HTTKBasis.AllInVitro), "Vdist")$RMSLE
+  foral.aiv <- tkstats.alg(subset(foral, cichem %in% HTTKBasis.AllInVitro), "Foral*")$RMSE
+  cltot.aiv <- tkstats.log(subset(cltot, cichem %in% HTTKBasis.AllInVitro), "CLtot")$RMSLE
+  css.aiv <- tkstats.log(subset(css.data, cichem %in% HTTKBasis.AllInVitro), "Css")$RMSLE
+  hl.mix <- tkstats.log(subset(hl, cichem %in% HTTKBasis.Mixed), "Half-Life")$RMSLE
+  vd.mix <- tkstats.log(subset(vd, cichem %in% HTTKBasis.Mixed), "Vdist")$RMSLE
+  foral.mix <- tkstats.alg(subset(foral, cichem %in% HTTKBasis.Mixed), "Foral*")$RMSE
+  cltot.mix <- tkstats.log(subset(cltot, cichem %in% HTTKBasis.Mixed), "CLtot")$RMSLE
+  css.mix <- tkstats.log(subset(css.data, cichem %in% HTTKBasis.Mixed), "Css")$RMSLE
+  hl.aq <- NA
+  if (nrow(subset(hl, cichem %in% HTTKBasis.AllQSPR))>4)
+    hl.aq <- tkstats.log(subset(hl, cichem %in% HTTKBasis.AllQSPR), "Half-Life")$RMSLE
+  vd.aq <- NA
+  if (nrow(subset(vd, cichem %in% HTTKBasis.AllQSPR))>4)
+    vd.aq <- tkstats.log(subset(vd, cichem %in% HTTKBasis.AllQSPR), "Vdist")$RMSLE
+  foral.aq <- NA
+  if (nrow(subset(foral, cichem %in% HTTKBasis.AllQSPR))>4)
+    foral.aq <- tkstats.alg(subset(foral, cichem %in% HTTKBasis.AllQSPR), "Foral*")$RMSE
+  cltot.aq <- NA
+  if (nrow(subset(cltot, cichem %in% HTTKBasis.AllQSPR))>4)
+    cltot.aq <- tkstats.log(subset(cltot, cichem %in% HTTKBasis.AllQSPR), "CLtot")$RMSLE
+  css.aq <- NA
+  if (nrow(subset(css.data, cichem %in% HTTKBasis.AllQSPR))>4)
+    css.aq <- tkstats.log(subset(css.data, cichem %in% HTTKBasis.AllQSPR), "Css")$RMSLE
+  hl.pfas <- tkstats.log(subset(hl, cichem %in% pfas.chems), "Half-Life")$RMSLE
+  vd.pfas <- NA
+  foral.pfas <- NA
+  cltot.pfas <- NA
+  css.pfas <- tkstats.log(subset(css.data, cichem %in% pfas.chems), "Css")$RMSLE
+  hl.other <- tkstats.log(subset(hl, !(cichem %in% pfas.chems)), "Half-Life")$RMSLE
+  vd.other <- tkstats.log(subset(vd, !(cichem %in% pfas.chems)), "Vdist")$RMSLE
+  foral.other <- tkstats.alg(subset(foral, !(cichem %in% pfas.chems)), "Foral*")$RMSE
+  cltot.other <- tkstats.log(subset(cltot, !(cichem %in% pfas.chems)), "CLtot")$RMSLE
+  css.other <- tkstats.log(subset(css.data, !(cichem %in% pfas.chems)), "Css")$RMSLE
+  
+  subset.stats.table <- t(data.frame("Half-Life" = c(hl.aiv, hl.mix, hl.aq, hl.pfas, hl.other),
+             "Vdist" = c(vd.aiv, vd.mix, vd.aq, vd.pfas, vd.other),
+             "Foral*" = c(foral.aiv, foral.mix, foral.aq, foral.pfas, foral.other),
+             "Cltot" = c(cltot.aiv, cltot.mix, cltot.aq, cltot.pfas, cltot.other),
+             "Css" = c(css.aiv, css.mix, css.aq, css.pfas, css.other)))
+  colnames(subset.stats.table) <- c("All In Vitro", "Mixed", "All QSPR", "PFAS", "Non-PFAS")
+  
+  write.table(subset.stats.table, 
+              file="tables/SupTableX-SubsetTKStats.txt", 
+              sep="\t")
+```
+
+# Css by route figure
+```{r create_css_by_route_figure}
+  csstable.rocks <- query_ivivedb(chem.list = all.rocks.chems,
+                            uncertainty = NA,
+                            variability = NA, 
+                            search.col="cichem")
+  #
+  # Create list of chemicals with in vivo data:
+  #
+  invivo_qry <- paste0("
+      SELECT DISTINCT 
+        cichem,
+        CASRN,
+        DTXSID,
+        Compound
+      FROM CITK.invivo 
+      INNER JOIN CITK.chemicals
+        ON invivo.chem_id_fk = chemicals.chem_id;
+    ")
+  invivo <- DBI::dbGetQuery(con, invivo_qry)
+  write.table(invivo, file="tables/ChemsWithInvivoTK.tsv", sep="\t", row.names=FALSE)
+  
+  bioaccum <- subset(csstable.rocks, Type=="Predicted" &
+                       cichem %in% valid.httk.chems &
+                     Model%in%c("sumclearancesplus", "dermal_1subcomp") &
+                     Uncertainty == FALSE &
+                     Variability == FALSE)
+  bioaccum.summary <- data.frame(Route = NA,
+                                 Upper.99 =NA,
+                                 Ten.Fold = NA,
+                                 Ten.Fold.Quant = NA)
+  for (this.route in unique(bioaccum$Route))
+  {
+    this.subset <- subset(bioaccum, Route %in% this.route)
+      bioaccum.summary[this.route,] <- c(
+        this.route,
+        signif(quantile(this.subset$Value, 0.99),3),
+        signif(quantile(this.subset$Value, 0.99)/10,3),
+        signif(
+          sum(this.subset$Value < signif(quantile(this.subset$Value, 0.99)/10,3)) /
+          nrow(this.subset), 3) 
+      )
+    bioaccum.summary$Upper.99 <- as.numeric(bioaccum.summary$Upper.99)
+    bioaccum.summary$Ten.Fold <- as.numeric(bioaccum.summary$Ten.Fold)
+    bioaccum.summary$Ten.Fold.Quant <- as.numeric(bioaccum.summary$Ten.Fold.Quant)
+    bioaccum[bioaccum$Route %in% this.route,"LowerBioaccum"] <-
+      bioaccum[bioaccum$Route %in% this.route,"Value"] > 
+      bioaccum.summary[this.route,"Ten.Fold"]
+  }
+  bioaccum.summary <- bioaccum.summary[-1,]
+  # Fig6 <- ggplot(bioaccum, aes(Route)) +
+  #   geom_bar(aes(fill=LowerBioaccum))+
+  #   labs(fill = "Bioaccumulation") +
+  #   scale_fill_discrete(labels = c("TRUE" = "Within Ten-Fold of 99th Percentile", 
+  #                                   "FALSE" = "Unlikely"))+
+  #   theme(legend.position = "bottom")
+  route.labels <- paste0(
+                   unique(bioaccum$Route_Description),
+                   " of ",
+                   unique(bioaccum$Route_Magnitude),
+                   " ",
+                   unique(bioaccum$Route_Units),
+                   "")
+  names(route.labels) <- unique(bioaccum$Route_Description)
+  short.route.labels <- c("Inhalation","Dermal","Oral")
+  names(short.route.labels) <- unique(bioaccum$Route_Description)
+  
+  FigIVIVEFactorbyRoute <- ggplot(bioaccum) +
+    geom_histogram(aes(Value, bins=20, fill=Route_Description))+
+    scale_x_log10(label=label_log())+
+    scale_y_log10(label=label_log())+
+    facet_wrap(~Route_Description, ncol=1, labeller=as_labeller(route.labels))+
+    scale_fill_manual(values = UL.cols,
+                      labels = short.route.labels,
+                      name = expression(Plasma ~ C[ss] ~ from)) +
+    labs(x = expression(Predicted ~ C[ss] ~ (mu * M / mg / kg / day)),
+         y = "Chemicals") +
+    theme_pubr()
+                 
+  print(FigIVIVEFactorbyRoute)
+  
+  png("figs/Fig6-IVIVEFactorbyRoute.png", height = 600, width = 800)
+  print(FigIVIVEFactorbyRoute+ theme_pubr(base_size = 24))
+  dev.off()
+```
+
+# Supplemental Table with accuracy for long half-lives
+```{r long_halflife_analysis}
+hl.predgt1000 <- subset(hl, Predicted > 1000)
+signif(sum(hl.predgt1000$Observed>1000)/nrow(hl.predgt1000)*100,
+       PERCENTILE.SIG.FIGS)
+
+hl.quant.frac <- NULL
+for (quant in sort(c(seq(0.05,0.97,0.05),seq(0.97,0.9975,0.0025))))
+{
+  this.observed.quant <- quantile(as.numeric(hl$Observed), quant)
+  this.subset <- subset(hl, Observed >= this.observed.quant)
+  this.frac.tenfold <- sum(abs(log10(this.subset$Predicted /
+                        this.subset$Observed)) < 1, na.rm=TRUE)/nrow(this.subset)
+  this.frac.over1000 <- sum(this.subset$Predicted > 
+                                     1000, na.rm=TRUE)/nrow(this.subset)
+  hl.quant.frac <- rbind(hl.quant.frac,
+    data.frame(Quant.Prob=quant,
+               Obs.Quant = this.observed.quant,
+                  Num.Obs = nrow(this.subset),
+                  Frac.Tenfold = signif(this.frac.tenfold, 3),
+                  FRAC.Over1000 = signif(this.frac.over1000, 3))
+  )
+}
+write.table(hl.quant.frac,
+          file="tables/SupTableX-HLQuantileAccuracy.txt",
+          row.names=FALSE,
+          sep="\t")
+```
+
+# Examine "uncertainty factors"
+```{r uncertainty_analysis}
+  # Should be median not 00:
+  css.uf.table.m0 <- subset(csstable.rocks, Type=="Predicted" &
+                           Uncertainty & !Variability &
+                           Model %in% "sumclearancesplus" &
+                           Percentile %in% "50%")
+  dim(css.uf.table.m0)
+  css.uf.table.10 <- subset(csstable.rocks, Type=="Predicted" &
+                              Uncertainty & !Variability &
+                              Model %in% "sumclearancesplus" &
+                              Percentile %in% "95%")
+  css.uf.table.0m <- subset(csstable.rocks, Type=="Predicted" &
+                              !Uncertainty & Variability &
+                              Model %in% "sumclearancesplus" &
+                              Percentile %in% "50%")
+  css.uf.table.01 <- subset(csstable.rocks, Type=="Predicted" &
+                              !Uncertainty & Variability &
+                              Model %in% "sumclearancesplus" &
+                              Percentile %in% "95%")
+  css.uf.table.u <- merge(css.uf.table.m0,
+                        css.uf.table.10[,c("DTXSID","Route","Value")],by=c("DTXSID","Route"))
+  dim(css.uf.table.u)
+  css.uf.table.u$Ratio.Type <- "Uncertainty"
+  css.uf.table.v <- merge(css.uf.table.0m,
+                        css.uf.table.01[,c("DTXSID","Route","Value")],by=c("DTXSID","Route"))
+  css.uf.table.v$Ratio.Type <- "Variability"
+  css.uf.table <- rbind(css.uf.table.u,css.uf.table.v)
+ # css.uf.table$Ratio <- signif(css.uf.table$Value.y/css.uf.table$Value.x, 3)
+  css.uf.table$Ratio <- css.uf.table$Value.y/css.uf.table$Value.x
+  dim(css.uf.table)
+  
+  panel.text <- data.frame(
+    Ratio.Type = c("Uncertainty", "Variability"),
+    label = c("a","b")
+  )
+  SupFig3 <- ggplot(css.uf.table, aes(x = as.numeric(Ratio), fill=Ratio.Type)) +
+    geom_histogram(binwidth = 0.1,
+                   color = "black", boundary = 0) +
+    scale_x_log10(label=label_log(),
+                  breaks=c(1,1e1),
+                  limits=c(5e-1,5e1), 
+                  guide = "axis_logticks")+
+    scale_fill_manual(values = c(UL.cols[1], UL.cols[3])) +
+    geom_vline(xintercept = 3, color=UL.cols[4],linetype="dashed", size=1.5)+
+    facet_wrap(~Ratio.Type) +
+    labs(x = expression(C[ss] ~ Ratio),
+         y = "Chemicals",
+         fill = expression(Ratio ~ 95^th ~ Percentile:Median)) +
+    geom_text(data=panel.text,
+              mapping = aes(x=0.6,y=1250,label=label),
+              size=8)+
+    theme_pubr()
+  print(SupFig3)
+  
+  
+  png("figs/SupFig3.png", height = 600, width = 800)
+  print(SupFig3)+ theme_pubr(base_size = 24)
+  dev.off()
+  
+    signif(mean(subset(css.uf.table,Ratio.Type=="Uncertainty")$Ratio),3)
+    signif(mean(subset(css.uf.table,Ratio.Type=="Variability")$Ratio),3)
+    signif(max(subset(css.uf.table,Ratio.Type=="Variability")$Ratio),3)
+subset(chem.physical_and_invitro.data$chemicals, chem_id ==
+         css.uf.table[which(css.uf.table$Ratio==max(subset(css.uf.table,Ratio.Type=="Variability")$Ratio)),"chem_id_fk"]
+)
+```
+
+```{r high_variability_chemicals, eval=FALSE}
+high.var <- subset(css.uf.table, Ratio.Type == "Variability" & Ratio > 4)
+med.var <- subset(css.uf.table, Ratio.Type == "Variability" & Ratio > 2 & Ratio < 3)
+low.var <- subset(css.uf.table, Ratio.Type == "Variability" & Ratio < 1.1)
+
+high.var.props <- query_chemprops(high.var$cichem, search.col="cichem")
+med.var.props <- query_chemprops(med.var$cichem, search.col="cichem")
+low.var.props <- query_chemprops(low.var$cichem, search.col="cichem")
+table(subset(low.var.props, Property == "Volatility")$Value)/length(subset(low.var.props, Property == "Volatility")$Value)
+table(subset(med.var.props, Property == "Volatility")$Value)/length(subset(med.var.props, Property == "Volatility")$Value)
+table(subset(high.var.props, Property == "Volatility")$Value)/length(subset(high.var.props, Property == "Volatility")$Value)
+high.var.props.means <- high.var.props |> summarise(mean = mean(as.numeric(Value), na.rm = TRUE), .by = Property)
+med.var.props.means <- med.var.props |> summarise(mean = mean(as.numeric(Value), na.rm = TRUE), .by = Property)
+low.var.props.means <- low.var.props |> summarise(mean = mean(as.numeric(Value), na.rm = TRUE), .by = Property)
+
+
+high.var.invitrotk <- query_invitrotkdb(high.var$cichem, search.col="cichem")
+med.var.invitrotk <- query_invitrotkdb(med.var$cichem, search.col="cichem")
+low.var.invitrotk <- query_invitrotkdb(low.var$cichem, search.col="cichem")
+high.var.invitrotk.means <- high.var.invitrotk |> summarise(mean = mean(Value, na.rm = TRUE), .by = Parameter)
+med.var.invitrotk.means <- med.var.invitrotk |> summarise(mean = mean(Value, na.rm = TRUE), .by = Parameter)
+low.var.invitrotk.means <- low.var.invitrotk |> summarise(mean = mean(Value, na.rm = TRUE), .by = Parameter)
+nrow(subset(med.var.invitrotk, (Parameter == "Clint" & as.numeric(Value) == 0) | 
+              (Parameter == "Clint.pValue" & as.numeric(Value) > 0.05)))/nrow(med.var.invitrotk)
+nrow(subset(low.var.invitrotk, (Parameter == "Clint" & as.numeric(Value) == 0) | 
+              (Parameter == "Clint.pValue" & as.numeric(Value) > 0.05)))/nrow(low.var.invitrotk)
+
+
+
+high.var.httk <- subset(query_httkdb(high.var$cichem, search.col="cichem"), Species =="Human")
+med.var.httk <- subset(query_httkdb(med.var$cichem, search.col="cichem"), Species =="Human")
+low.var.httk <- subset(query_httkdb(low.var$cichem, search.col="cichem"), Species =="Human")
+high.var.httk.means <- high.var.httk |> summarise(mean = mean(as.numeric(Value)[!is.infinite(as.numeric(Value))], na.rm = TRUE), .by = Parameter)
+med.var.httk.means <- med.var.httk |> summarise(mean = mean(as.numeric(Value)[!is.infinite(as.numeric(Value))], na.rm = TRUE), .by = Parameter)
+low.var.httk.means <- low.var.httk |> summarise(mean = mean(as.numeric(Value)[!is.infinite(as.numeric(Value))], na.rm = TRUE), .by = Parameter)
+  duckdb::dbDisconnect(con, shutdown = TRUE)
+```
+
+
+
+
+
+# Density plot (code from Kristin, coords from Nate)
+```{r density_plot}
+#j3 <- read.csv("../chemical_fingerprint_densmap_8.18.2026.csv")
+#save(j3, file="data/densmap.RData")
+write_parquet(j3, "data/densmap.parquet")
+j3 <- read_parquet("data/densmap.parquet")
+j3$InVivoTK <- 0
+j3[j3$cichem %in% invivo.chems$cichem, "InVivoTK"] <- 1
+j3$InVitroTK <- 0
+j3[j3$cichem %in% invitrotk.chems$cichem, "InVitroTK"] <- 1
+j3$InSilicoTK <- 0
+j3[j3$cichem %in% insilicotk.chems$cichem, "InSilicoTK"] <- 1
+
+convert_to_fp_matrix <- function(x)
+{
+  mat <- x[, c("densmap_1", "densmap_2")]
+  mat$densmap_1 <- as.numeric(mat$densmap_1)
+  mat$densmap_2 <- as.numeric(mat$densmap_2)
+  rownames(mat) <- x$cichem
+  
+  colnames(mat) <- c("UMAP1", "UMAP2")
+
+  return(mat)  
+}
+
+train.httk <- convert_to_fp_matrix(subset(j3, cichem %in%
+                          any.httk.meas$cichem))
+target.httk <- convert_to_fp_matrix(subset(j3, 
+                         !(cichem %in% all.httk.allgoodqspr$cichem) & 
+                          cichem %in% rocks.meas.targets))
+train.logp <- convert_to_fp_matrix(subset(j3, cichem %in%
+                    subset(rocks, dtxsid %in% opera.logp.training)$cichem))
+target.logp <- convert_to_fp_matrix(subset(j3, 
+                      !(cichem %in% rocks.opera.logP.withinAD$cichem) & 
+                      cichem %in% rocks.meas.targets))
+train.pka <- convert_to_fp_matrix(subset(j3, cichem %in%
+                    subset(rocks, dtxsid %in% opera.pka.training)$cichem))
+target.pka <- convert_to_fp_matrix(subset(j3, 
+                            !(cichem %in% rocks.opera.pKa.withinAD$cichem) & 
+                          cichem %in% rocks.meas.targets))
+
+kmeans_elbow <- function(x, label)
+{ 
+  wss.httk <- vapply(2:50, 
+                 function(n_clusters) {
+                   # luggage combination:
+                   set.seed(12345)       
+                   kmeans(x, 
+                           centers = n_clusters, 
+                           nstart = 5, 
+                           iter.max = 100)$tot.withinss
+                  }, 
+                numeric(1))
+  
+  png(paste0("figs/SupFigX-ElbowPlot",
+  label,
+  ".png"), height = 600, width = 800)
+  plot(2:50, wss.httk, type = "b", pch = 19, xlab = "Number of clusters k",
+   ylab = "Total within-cluster sum of squares", 
+   main = paste0(label," Targets Elbow plot"))
+  dev.off()
+}
+
+kmeans_elbow(target.httk, "HTTK")
+k.httk <- 10
+kmeans_elbow(target.logp, "LogP")
+k.logp <- 10 
+kmeans_elbow(target.pka, "pKa")
+k.pka <- 10
+
+library(data.table)
+
+find_closest_to_centroid <- function(x, k, NUM.SELECT)
+{
+  x <- as.data.table(x, keep.rownames = TRUE)
+  set.seed(12345)
+  km_result <- kmeans(x[, c("UMAP1", "UMAP2")], centers = k, nstart = 25, iter.max = 200)
+  x[, cluster := factor(km_result$cluster)]
+  centroids <- as.data.table(km_result$centers)
+  setnames(centroids, c("centroid_UMAP1", "centroid_UMAP2"))
+  centroids[, cluster := factor(seq_len(.N))]
+  x[, dist_to_centroid := {
+    center <- centroids[cluster == .BY$cluster]
+    sqrt((UMAP1 - center$centroid_UMAP1)^2 + (UMAP2 - center$centroid_UMAP2)^2)
+  }, by = cluster]
+  medoid_reps <- x[, .SD[which.min(dist_to_centroid)], by = cluster]
+  
+  compounds_per_cluster <- ceiling(NUM.SELECT / k)
+  diverse_selection <- x[, .SD[order(dist_to_centroid)][seq_len(min(.N, compounds_per_cluster))],
+                                    by = cluster]
+}
+
+NUM.SELECT <- 200
+httk.target.selections <- find_closest_to_centroid(target.httk,
+                                                   k.httk,
+                                                   NUM.SELECT)
+logp.target.selections <- find_closest_to_centroid(target.logp,
+                                                   k.logp,
+                                                   NUM.SELECT)
+pka.target.selections <- find_closest_to_centroid(target.pka,
+                                                   k.pka,
+                                                   NUM.SELECT)
+
+target.chems <- subset(j3,
+                       cichem %in% c(
+                         httk.target.selections$rn,
+                         logp.target.selections$rn,
+                         pka.target.selections$rn
+                         )
+                       )$cichem
+                       
+j3$HTTKTarget <- 0
+j3[j3$cichem %in% httk.target.selections$rn, "HTTKTarget"] <- 1
+j3$logPTarget <- 0
+j3[j3$cichem %in% logp.target.selections$rn, "logPTarget"] <- 1
+j3$pKaTarget <- 0
+j3[j3$cichem %in% pka.target.selections$rn, "pKaTarget"] <- 1
+
+cat(paste0("The ", NUM.SELECT, " farthest (in the 2D projection) chemicals from the training sets for HTTK, logP, and pKa models in Fig X that also in classes where measurements have been successful are targets for future measurement to expand AD (", length(target.chems), " unique chemicals listed in Table SX). These \"measurement target\" chemicals are indicated in Fig X.\n"))
+
+write.table(subset(j3, cichem %in% target.chems)[,
+                          c("cichem","primary_name",
+                            "densmap_1","densmap_2",
+                            "HTTKTarget","logPTarget",
+                            "pKaTarget")],
+            file="tables/SupTableX-TargetsForMeasurement.txt",
+            row.names=FALSE,
+          sep="\t")
+```
+
+```{R do_this_with_morgan, eval=FALSE}
+convert_to_fp_matrix <- function(x)
+{
+  mat_list <- lapply(x$fp_bit, 
+                     function(s) as.integer(unlist(strsplit(s, ""))))
+  mat <- do.call(rbind, mat_list)
+  rownames(mat) <- x$cichem
+  mat <- subset(mat,
+                apply(mat, 1, function(x) !all(is.na(x))))
+  return(mat)  
+}
+
+train.invitro <- convert_to_fp_matrix(subset(all.pipeline.morgan, cichem %in%
+                          any.httk.meas$cichem))
+target.invitro <- convert_to_fp_matrix(subset(all.pipeline.morgan, 
+                         !(cichem %in% all.httk.allgoodqspr$cichem) & 
+                          cichem %in% rocks.meas.targets))
+train.logp <- convert_to_fp_matrix(subset(all.pipeline.morgan, cichem %in%
+                    subset(rocks, dtxsid %in% opera.logp.training)$cichem))
+target.logp <- convert_to_fp_matrix(subset(all.pipeline.morgan, 
+                      !(cichem %in% rocks.opera.logP.withinAD$cichem) & 
+                      cichem %in% rocks.meas.targets))
+train.pka <- convert_to_fp_matrix(subset(all.pipeline.morgan, cichem %in%
+                    subset(rocks, dtxsid %in% opera.pka.training)$cichem))
+target.pka.target <- convert_to_fp_matrix(subset(all.pipeline.morgan, 
+                            !(cichem %in% rocks.opera.pKa.withinAD$cichem) & 
+                          cichem %in% rocks.meas.targets))
+                    
+library(parallelDist)
+library(cluster) # For PAM (k-medoids) clustering
+browser()
+jaccard_dist <- parallelDist::parDist(target.invitro, method = "jaccard")
+# luggage combination:
+set.seed(12345)       
+km_res <- kmeans(target.invitro,  centers = 20, nstart = 25)  
+
+closest_chemical <- function(df1, df2, method = "Jaccard")
+{
+  # Compute the full distance matrix (rows = matrix1, cols = matrix2)
+  library(proxy)
+  dist_matrix<- as.matrix(proxy::dist(
+    df1[,c("densmap_1","densmap_2")], 
+    df2[,c("densmap_1","densmap_2")], 
+    method = method))
+  rownames(dist_matrix) <- df1$cichem
+  colnames(dist_matrix) <- df2$cichem
+  
+  # Find the closest point in matrix2 for each row in matrix1
+  pos <- apply(dist_matrix, 1, which.min)
+  min_dist <- apply(dist_matrix, 1, min)
+}
+
+j3.invitro.target$InVitroDist <- signif(closest_chemical(j3.invitro.target, j3.invitro),3)
+j3.logp.target$logPDist <- signif(closest_chemical(j3.logp.target, j3.logp),3)
+j3.pka.target$pKaDist <- signif(closest_chemical(j3.pka.target, j3.pka),3)
+
+
+j3.meastarget <- merge(j3.invitro.target, j3.logp.target, 
+                       by=c("cichem", "primary_name"),
+                       all.x=TRUE,
+                       all.y=TRUE)
+j3.meastarget <- merge(j3.meastarget, j3.pka.target, 
+                       by=c("cichem", "primary_name"),
+                       all.x=TRUE,
+                       all.y=TRUE)
+
+NUM.SELECT <- 300
+
+
+target.rows <- unique(c(
+  order(j3.meastarget$InVitroDist, decreasing=TRUE)[1:NUM.SELECT],
+  order(j3.meastarget$logPDist, decreasing=TRUE)[1:NUM.SELECT],
+  order(j3.meastarget$pKaDist, decreasing=TRUE)[1:NUM.SELECT]
+  ))
+target.chems <- j3.meastarget[target.rows,"cichem"]  
+
+cat(paste0("The ", NUM.SELECT, " farthest (in the 2D projection) chemicals from the training sets for HTTK, logP, and pKa models in Fig X that also in classes where measurements have been successful are targets for future measurement to expand AD (", length(target.chems), " unique chemicals listed in Table SX). These \"measurement target\" chemicals are indicated in Fig X.\n"))
+
+write.table(j3.meastarget[target.rows,
+                          c("cichem","primary_name",
+                            "densmap_1","densmap_2",
+                            "InVitroDist","logPDist","pKaDist")],
+            file="tables/SupTableX-TargetsForMeasurement.txt",
+            row.names=FALSE,
+          sep="\t")
+```
+
+```{r make_landscape_embedding_figure}
+j3$MeasTarget <- 0
+j3[j3$cichem %in% target.chems, "MeasTarget"] <- 1
+  
+struct.colors <- c("No TK" = UL.cols[3],
+                              "In Vivo"= "#00A451",
+                              "In Vitro"=UL.cols[1], 
+                              "QSPR"=UL.cols[4],
+                   "Measurement Targets"=UL.cols[11])
+
+
+p1<-ggplot(j3, aes(x=densmap_1, y=densmap_2)) +
+  geom_point(data=j3[which(j3$InVivoTK==0),],       
+             aes(color="No TK"),
+             alpha=0.2, size=0.6, shape=16)+
+  geom_point(data=j3[which(j3$MeasTarget==1),], 
+             aes(color="Measurement Targets"),
+             alpha=0.9, size=0.6, shape=16) +
+  geom_point(data=j3[which(j3$InSilicoTK==1),], 
+             aes(color="QSPR"), 
+             alpha=0.2, size=0.6, shape=16) +
+  geom_point(data=j3[which(j3$InVitroTK==1),], 
+             aes(color="In Vitro"), 
+             alpha=0.5, size=0.6, shape=16) +
+  geom_point(data=j3[which(j3$InVivoTK==1),], 
+             aes(color="In Vivo"),
+             alpha=0.5, size=0.6, shape=16) +
+  theme_minimal() +
+  labs(title="TK Information on ROCKS Collection",
+       x=" ", y=" ") +
+  scale_color_manual(values=struct.colors,
+                     breaks=names(struct.colors),
+                     labels = c(
+       "No TK" ="No TK",
+       "QSPR" ="QSPR",
+       "Measurement Targets"= "Measurement Targets",
+       "In Vitro" = expression(paste(italic("In Vitro"))),
+       "In Vivo" = expression(paste(italic("In Vivo"))) 
+       )) +
+  theme(legend.title = element_blank()) +
+  ylim(-5,20)+xlim(-10,20)+ guides(color = guide_legend(override.aes = list(size = 4, alpha = 1)))
+print(p1)
+png("figs/FigX-Landscape2DProjection.png", height = 600, width = 1000)
+print(p1 + theme_pubr(base_size = 24))
+dev.off()
+
+```
+# Modified from code by Katie and Chelsea
+```{r make_landscape_data_frame}
+landscape <- read.csv("data/rocks_sector_table_2026-08-27.csv")
+# Check for chemicals with no known use:
+any(apply(landscape, 1, function(x) 
+  all(x[c("consumer","food","industrial","agricultural","pharmaceutical")]==0)))
+landscape$unknown <- 0
+landscape[landscape$sector_class %in% "Unknown","unknown"] <- 1
+landscape$HumanTK <- 0
+landscape[landscape$cichem %in% invivo.chems$cichem, "HumanTK"] <- 1
+landscape$AnimalTK <- 0
+landscape[landscape$cichem %in% invivo.table.cichems.nonhuman$cichem, "AnimalTK"] <- 1
+landscape$InVitroTK <- 0
+landscape[landscape$cichem %in% invitrotk.chems$cichem, "InVitroTK"] <- 1
+landscape$InSilicoTK <- 0
+landscape[landscape$cichem %in% insilicotk.chems$cichem, "InSilicoTK"] <- 1
+landscape$TKCoverage <- "No TK Data"
+landscape[landscape$cichem %in% insilicotk.chems$cichem, "TKCoverage"] <-
+  "In Silico Predictions"
+landscape[landscape$cichem %in% invitrotk.chems$cichem, "TKCoverage"] <-
+  "In Vitro Data"
+landscape[landscape$cichem %in% invivo.table.cichems.nonhuman$cichem, "TKCoverage"] <- "Animal Data"
+landscape[landscape$cichem %in% invivo.chems$cichem, "TKCoverage"] <- "Human Data"
+
+```
+
+# Modified from code by Katie and Chelsea
+```{r landscape_panel_a}
+panelA_df <- data.frame(coverage_group = factor(c(
+  "No TK Data",
+  "Human Data",
+  "Animal Data",
+  "In Vitro Data",
+  "In Silico Predictions"
+  ), levels = c(
+  "In Silico Predictions",
+  "In Vitro Data",
+  "Animal Data",
+  "Human Data",
+  "No TK Data"
+  )))
+for (this.group in panelA_df$coverage_group)
+{
+  panelA_df[panelA_df$coverage_group %in% this.group, "n"] <-
+    sum(landscape[,"TKCoverage"] %in% this.group)
+  panelA_df[panelA_df$coverage_group %in% this.group, "pct"] <-
+    sum(landscape[,"TKCoverage"] %in% this.group)/nrow(landscape)
+}
+panelA_df$label <- paste0(comma(panelA_df$n), "\n(", percent(panelA_df$pct, accuracy = 0.1), ")")
+
+panelA_labels <- panelA_df %>%
+#  arrange(coverage_group) %>%
+  mutate(
+    cumulative = cumsum(pct),
+    mid_point = cumulative - pct/2,
+    outside = pct < 0.05
+  )
+n_inventory <- nrow(landscape)
+
+p_panelA <- ggplot(panelA_df, aes(x = 1, 
+                                  y = pct, 
+                                  fill = coverage_group)) +
+  geom_col(width = 0.6, color = "white", linewidth = 0.5) +
+  # labels inside larger segments
+  geom_text(
+    data = panelA_labels %>% filter(!outside),
+    aes(
+      y = mid_point,
+      label = percent(pct, accuracy = 0.1),
+      color = coverage_group
+    ),
+    size = 8
+  ) +
+  scale_color_manual(
+    values = c(
+      "Human Data" = "white",
+      "Animal Data" = "black",
+      "In Vitro Data" = "black",
+      "In Silico Predictions" = "white",
+      "No TK Data" = "black"
+      ),
+    guide = "none"
+  ) +
+  # labels outside for tiny segments
+#  geom_text(
+#    data = panelA_labels %>% filter(outside),
+#    aes(
+#      y = 1.01,   # just beyond 100%
+#      label = percent(pct, accuracy = 0.1)
+#    ),
+#    hjust = 0,
+#    size = 6
+#  ) +
+  coord_flip() +
+  scale_y_continuous(
+    labels = percent_format(accuracy = 1),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  scale_fill_manual(
+    values = c(
+      "No TK Data"=UL.cols[3],
+      "Human Data"=UL.cols[2],
+      "Animal Data"=UL.cols[5],
+      "In Vitro Data"=UL.cols[4],
+      "In Silico Predictions"=UL.cols[1]),
+    labels = c(
+       expression(paste(italic("In Silico"), " Predictions")), 
+       expression(paste(italic("In Vitro"), " Data")),
+       "Animal Data",
+       "Human Data",
+       "No TK Data"
+       ),
+    drop = FALSE,
+    guide = guide_legend(reverse=TRUE)
+  ) +
+  labs(
+    title = paste0("ROCKS Chemical Collection (n = ", comma(n_inventory), ")"),
+    x = NULL,
+    y = "Percent of ROCKS chemicals",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    plot.title = element_text(face = "bold", size = 20),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+  axis.text.x = element_blank(),
+  axis.ticks.x = element_blank(),
+  panel.grid.major.x = element_blank(),
+  legend.position = "bottom",
+  legend.text = element_text(size = 16),
+  legend.key.size = unit(1.2, "cm")
+)
+p_panelA
+
+```
+
+```{r landscape_panel_b}
+landscape$combo <- 
+  apply(landscape, 1, function(x)
+    ifelse(x["HumanTK"]==0 &
+           x["AnimalTK"]==0 &
+           x["InVitroTK"] == 0 & 
+           x["InSilicoTK"] == 0,
+           "No TK Data",
+           paste(c("HumanTK","AnimalTK","InVitroTK","InSilicoTK")[
+             x[c("HumanTK","AnimalTK","InVitroTK","InSilicoTK")]==1],
+             collapse=" + ")))
+
+landscape <- landscape %>%
+    mutate(
+    coverage_group = case_when(
+      HumanTK == 1 ~ "Human Data",
+      AnimalTK == 1 ~ "Animal Data",
+      InVitroTK == 1 ~ "In Vitro Data",
+      InSilicoTK == 1 ~ "In Silico Predictions"
+    )
+  )
+
+df_combo <- landscape %>%
+  filter(combo != "No TK Data") %>%
+  add_count(combo, name = "combo_n") %>%
+  filter(combo_n >= 20)
+        
+bar_df <- df_combo %>%
+  count(combo, name = "n")
+
+totals_df <- bar_df  %>%
+  group_by(combo) %>%
+  summarise(
+    total = sum(n),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    pct_inventory = total / n_inventory ,
+    pct_label = percent(pct_inventory, accuracy = 0.1)
+  ) %>%
+  arrange(desc(total))
+
+label_df <- totals_df %>%
+  left_join(
+    bar_df %>%
+      group_by(combo) %>%
+      summarise(
+        y_pos = 1.6*sum(n),
+        .groups = "drop"
+      ),
+    by = "combo"
+  )
+
+bar_df$combo <- factor(bar_df$combo, levels = totals_df$combo)
+totals_df$combo <- factor(totals_df$combo, levels = totals_df$combo)
+
+#----------------------------
+# 4. Matrix (dot panel)
+#----------------------------
+matrix_df <- df_combo %>%
+  distinct(combo, HumanTK, AnimalTK, InVitroTK, InSilicoTK) %>%
+  pivot_longer(
+    cols = c(HumanTK, AnimalTK, InVitroTK, InSilicoTK),
+    names_to = "stream",
+    values_to = "present"
+  )
+
+matrix_df$combo <- factor(matrix_df$combo, levels = levels(bar_df$combo))
+
+#----------------------------
+# 5. Top bar plot
+#----------------------------
+p_bar <- ggplot(
+  bar_df,
+  aes(x = combo, y = n, fill = UL.cols[6])) +
+  geom_col(
+    color = "white",
+    linewidth = 0.4
+  ) +
+geom_text(
+  data = label_df,
+  aes(
+    x = combo,
+    y = y_pos,
+    angle = 45,
+    label = percent(
+      pct_inventory,
+      accuracy = ifelse(pct_inventory>.1, 0.1, 0.01)
+    )
+  ),
+  inherit.aes = FALSE,
+  color = "black",
+  size = 3) +
+  labs(
+    y = "Number of chemicals",
+    x = NULL,
+    fill = NULL
+  ) +
+  scale_y_log10(labels = label_log())+
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.text.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+print(p_bar)
+
+matrix_df$present <- matrix_df$present==1
+#----------------------------
+# 6. Dot matrix plot
+#----------------------------
+p_matrix <- ggplot(matrix_df,
+                   aes(x = combo, y = stream)) +
+  geom_line(
+    data = subset(matrix_df, present),
+    aes(group = combo),
+    color = "black",
+    linewidth = 1
+  ) +
+  geom_point(
+    aes(color = present),
+    size = 4
+  ) +
+  scale_color_manual(
+    values = c(
+      "TRUE" = "black",
+      "FALSE" = "grey80"
+    ),
+    guide = "none"
+  ) +
+  scale_y_discrete(
+    labels = c(
+       HumanTK ="Human Data",
+       AnimalTK = "Animal Data",
+       InVitroTK = expression(paste(italic("In Vitro"), " Data")),
+       InSilicoTK = expression(paste(italic("In Silico"), " Predictions")) 
+       )
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 16) +
+theme(
+  axis.text.x = element_blank(),
+  panel.grid.minor = element_blank(),
+  legend.position = "none"
+)
+print(p_matrix)
+```
+
+```{r make_panel_c}
+sector_cols <- c(
+  "consumer",
+  "industrial",
+  "agricultural",
+  "food",
+  "pharmaceutical",
+  "biomonitoring",
+  "env_monitoring"
+)
+
+primary_sector_cols <- c(
+  "consumer",
+  "industrial",
+  "agricultural",
+  "food",
+  "pharmaceutical"
+)
+
+fallback_sector_cols <- c(
+  "biomonitoring",
+  "env_monitoring"
+)
+
+sector_long <- landscape %>%
+  select(cichem_id, TKCoverage, all_of(sector_cols)) %>%
+  mutate(
+    # Convert the sector fields to explicit logical flags.
+    # coalesce() prevents NA values from propagating.
+    across(
+      all_of(sector_cols),
+      ~ coalesce(.x == TRUE | .x == 1, FALSE)
+    ),
+
+    has_primary_sector = if_any(
+      all_of(primary_sector_cols),
+      ~ .x
+    ),
+
+    has_biomonitoring = biomonitoring,
+    has_env_monitoring = env_monitoring,
+
+    # Fallback categories apply only when there is no primary sector.
+    biomonitoring_unknown =
+      !has_primary_sector & has_biomonitoring,
+
+    env_monitoring_unknown =
+      !has_primary_sector & has_env_monitoring,
+
+    # True unknown means no primary or fallback annotation.
+    unknown =
+      !has_primary_sector &
+      !has_biomonitoring &
+      !has_env_monitoring
+  ) %>%
+  pivot_longer(
+    cols = c(
+      all_of(primary_sector_cols),
+      biomonitoring_unknown,
+      env_monitoring_unknown,
+      unknown
+    ),
+    names_to = "sector",
+    values_to = "in_sector_raw"
+  ) %>%
+  filter(in_sector_raw)
+
+sector_long <- sector_long %>%
+  mutate(
+sector = recode(
+  sector,
+  consumer = "Consumer",
+  industrial = "Industrial",
+  agricultural = "Agricultural",
+  food = "Food",
+  pharmaceutical = "Pharmaceutical",
+  biomonitoring_unknown = "Unknown\nBiomonitoring",
+  env_monitoring_unknown = "Unknown\nEnv. monitoring",
+  unknown = "Unknown"
+)
+  )
+
+sector_counts <- sector_long %>%
+  count(sector, TKCoverage, name = "n")
+
+sector_order <- c(
+  "Pharmaceutical",
+  "Agricultural",
+  "Food",
+  "Consumer",
+  "Industrial",
+  "Unknown\nBiomonitoring",
+  "Unknown\nEnv. monitoring",
+  "Unknown"
+)
+
+sector_totals <- sector_long %>%
+  count(sector, name = "total_n")
+
+sector_totals <- sector_totals %>%
+  mutate(
+    sector = factor(sector, levels = sector_order)
+  ) %>%
+  arrange(sector) %>%
+  mutate(
+    sector_label = paste0(sector, " (n=", comma(total_n), ")")
+  )
+
+sector_counts <- sector_counts %>%
+  left_join(sector_totals, by = "sector") %>%
+  mutate(
+    sector_label = factor(sector_label, levels = rev(sector_totals$sector_label))
+    )
+
+sector_plot_df <- sector_counts %>%
+  group_by(sector_label) %>%
+  mutate(
+    pct = n / sum(n),
+    pct_label = case_when(
+      TKCoverage == "No TK Data" ~
+        percent(pct, accuracy = 1),
+      TKCoverage == "In Silico Predictions" ~
+        percent(pct, accuracy = 1),
+      TKCoverage == "Human Data" & pct > 0.05 ~
+        percent(pct, accuracy = 1),
+#      TKCoverage == "In Vivo Data" ~
+#        as.character(paste0(signif(pct*100, 1),"%")),
+      TRUE ~ ""
+    )
+  ) %>%
+  ungroup()
+
+
+#test
+assessment_labels <- sector_plot_df %>%
+  filter(TKCoverage  == "Human Data") %>%
+  mutate(
+    label_y = c(
+      1.03,  # Ag
+      1.03,  # 
+      1.03,  # Food
+      1.03,  # Consumer
+      1.03,  # Pharm
+      1.07,  # Biomonitoring
+      1.06   # Env monitoring
+    )
+  )
+
+p_sector <- ggplot(
+  sector_plot_df,
+  aes(x = sector_label, y = pct, fill = TKCoverage)
+) +
+  geom_col(
+    width = 0.75,
+    color = "white",
+    linewidth = 0.4
+  ) +
+
+  # Labels inside the bars:
+  # all light-blue segments and beige segments >= 10%
+  geom_text(
+    aes(
+      label = pct_label,
+      color = TKCoverage
+    ),
+    position = position_stack(vjust = 0.5),
+    size = 5,
+    lineheight = 0.95
+  ) +
+
+#geom_text(
+#  data = assessment_labels,
+#  aes(
+#    x = sector_label,
+#    y = label_y,
+#    label = label
+#  ),
+#  inherit.aes = FALSE,
+#  hjust = 0,
+#  size = 5,
+#  color = "black"
+#)+
+
+  coord_flip(clip = "off") +
+
+  scale_y_continuous(
+    labels = percent_format(accuracy = 1),
+    limits = c(0, 1.15),
+    expand = expansion(mult = c(0, 0))
+  ) +
+
+ scale_fill_manual(
+    values = c(
+  "No TK Data"=UL.cols[3],
+  "Human Data"=UL.cols[2],
+  "Animal Data"=UL.cols[5],
+  "In Vitro Data"=UL.cols[4],
+  "In Silico Predictions"=UL.cols[1]),
+    drop = FALSE
+  ) +
+
+  scale_color_manual(
+    values = c(
+      "Human Data" = "white",
+      "Animal Data" = "black",
+      "In Vitro Data" = "black",
+      "In Silico Predictions" = "white",
+      "No TK Data" = "black"    ),
+    guide = "none"
+  ) +
+
+  labs(
+    x = NULL,
+    y = "Percent of chemicals within sector"
+  ) +
+
+    theme_minimal(base_size = 16) +
+  theme(
+    axis.text.y = element_text(size = 14),
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+      plot.margin = margin(5.5, 45, 5.5, 5.5)
+  )
+
+print(p_sector)
+```
+
+```{r make_multipanel_landscape}
+layout <- c(
+    area(1, 1, 1, 4),
+     area(2, 1, 4, 2),
+    # area(4, 1, 4, 2),
+     area(2,3,4,4))
+plot(layout)
+p_bar <- p_bar + #scale_y_log10(position = "right", labels=label_log())
+  scale_y_log10(labels=label_log())+
+  theme(axis.title.y = element_text(margin = margin(r = -20)))
+
+landscape.plot <- 
+  (p_panelA + theme_minimal(base_size = 16) +
+     theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+  axis.text.x = element_blank(),
+  axis.ticks.x = element_blank(),
+  panel.grid.major.x = element_blank(),
+  legend.position = "bottom",
+  legend.text = element_text(size = 16),
+  legend.key.size = unit(1, "cm"))) +
+  ((p_bar + theme_minimal(base_size = 12) + 
+      theme(axis.title.y = element_blank(),
+            axis.text.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")) / 
+     (p_matrix + theme_minimal(base_size = 16) + 
+        theme(axis.text.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none"))) + 
+  (p_sector + theme_minimal(base_size = 16) + theme(legend.position = "none"))+ 
+  plot_layout(
+    design=layout,
+    heights=c(4,4,1)#,
+    #guides = 'collect'
+    ) +
+  plot_annotation(
+    tag_levels = "A") & theme(plot.tag=element_text(size = 14))
+  
+print(landscape.plot)
+
+png(filename="figs/FigY-Landscape.png",
+    height = 1.2*600, width = 1.2*800)
+print(landscape.plot)
+dev.off()
+```
+
+```{r facts_about_invitro_httk_data}
+cat(paste0("\n",
+           sum(!(rocks.invitro$cichem %in% rocks.nostructure$cichem_id)),
+           " of the ROCKS collection that have in vitro HTTK data have structures, while ",
+           sum((rocks.invitro$cichem %in% rocks.nostructure$cichem_id)),
+           " do not.\n"))
+
+cat(paste0("\n",
+           sum(!(rocks.invitro$cichem %in% rocks.opera.logP.withinAD$cichem)),
+           " were outside the AD of the logP QSPR, while ",
+           sum(!(rocks.invitro$cichem %in% rocks.opera.pKa.withinAD$cichem)),
+           " were outside the AD of the pKa QSPR.\n"))
+
+cat("\nFor the chemicals with in vitro HTTK data we used the OPERA phys-chem irrespective of AD.\n")
+
+```
+
+
+```{r chemical_targets_text}
+cat(paste0("\nIn Figure 4 we identify \"measurement target\" chemicals to expand the AD of the HTTK, logP, and pKa QSPR models (",
+           length(target.chems),
+           " unique chemicals listed in Table SX)."
+    ))
+```
+
+```{r stats_for_toc_graphic}
+cat("Num ROCKS collection:", num.rocks,"chemicals\n")
+cat("Num In Vivo TK data:", num.invivo.rocks.anyspecies, "chemicals\n")
+cat("Num In Vitro TK data:", num.invitro.rocks, " chemicals\n")
+cat("Num In Silico TK predictions:", num.insilico.rocks, "chemicals\n\n")
+
+cat("Sector\tTK\tTotal\tNumber\tPercent\n")
+apply(subset(sector_plot_df,!pct_label=="")[,c("sector","TKCoverage","total_n","n","pct_label")],
+      1, function(x) cat(paste(x,sep="\t"),"\n"))
+
+```
+
+```{R graphic_abstract_old, eval=FALSE}
+#How many ROCKS, how many have in vivo, how many in vitro, out of total IVIVE, how many entirely in silico?
+cat(length(unique(rocks$cichem_id)),"chemicals in ROCKS\n")
+cat(sum(unique(invitrotk.chems$cichem) %in% rocks$cichem_id),"chemicals with human in vitro TK\n")
+cat(sum(unique(invivo.chems$cichem) %in% rocks$cichem_id),"chemicals with human in vivo TK\n")
+cat(num.insilico.rocks, "chemicals with in silico TK\n")
+```
+# Manuscript text with numbers that need to be updated
+
+## Abstract
+```{r text_for_abstract}
+cat(paste0("\nHere we examined a list of ",
+           format(num.rocks, big.mark = ",", scientific = FALSE),
+           " substances potentially in commerce or the human exposome...\n"))
+cat("\n...human in vivo TK data for fewer than",
+    signif(num.invivo.rocks.human/num.rocks*100,1),
+    "%, necessitating...\n")
+cat(paste0("\nCITK provides predictions ... for ",
+           format(num.ivive.rocks, big.mark = ",", scientific = FALSE),
+          " chemicals.\n"))
+cat(paste0("\nConfidence in these predictions was evaluated using human in vivo data for ",
+           format(num.invivo.human, big.mark = ",", scientific = FALSE),
+           " chemicals.\n"))
+cat(paste0("\nCITK expands available TK information to ",
+    signif(num.ivive/num.rocks*100,
+           PERCENTILE.SIG.FIGS),
+    "% of the ROCKS collection, highlighting gaps in the TK data landscape.\n"))
+```
+
+
+
+## Results and Discussion
+
+### Describe CITK
+
+```{r citk_results_text}
+
+cat(paste0("\nWe analyzed the public human TK data and in vitro and in silico ",
+           "tools to predict human TK for the ROCKS collection of ",
+           format(num.rocks, big.mark = ",", scientific = FALSE),
+           " unique chemicals that are either recognized as being in global ",
+           "commerce or are believed to contribute to the human exposome.\n"))
+
+cat(paste0("\nHuman in vivo data were available for ",
+           format(num.invivo.rocks.human, big.mark = ",", scientific = FALSE),
+           " chemicals of the ROCKS collection (",
+           signif(num.invivo.rocks.human/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), in vitro TK measurements were available for ",
+           format(num.invitro.rocks, big.mark = ",", scientific = FALSE),
+           " (",
+           signif(num.invitro.rocks/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), and in silico prediction of TK parameters were made for ",
+           format(num.insilico.rocks, big.mark = ",", scientific = FALSE),
+           " (",
+           signif(num.insilico.rocks/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%).\n"))
+```
+
+```{r invivo_data}
+num.species.avg <- invivo.table |>
+  summarise(distinct_count = n_distinct(Species), .by = cichem) |>
+  summarise(avg_distinct = mean(distinct_count))
+
+cat(paste0("\nIn vivo TK summary statistics were compiled from human-focused ",
+           "peer-reviewed scientific literature (",
+           format(length(unique(c(invivo.refs$Reference,css.invivo.refs$Reference))), big.mark = ",", scientific = FALSE),
+           " sources, Table S3 and Figure SX) characterizing ",
+           format(length(all.invivo.chems.anyspecies), big.mark = ",", scientific = FALSE), 
+           " chemicals across ",
+           num.species,
+           " species.\n"))
+
+cat(paste0("\nChemicals had, on average, data in ",
+           signif(num.species.avg,2),
+           " species.\n"))
+  
+cat(paste0("\nAmong the ROCKS collection chemicals we found human in vivo data on TK half-life for ",
+           format(CITK.summary.table[CITK.summary.table$Parameter=="halflife",
+                                     "Num.ROCKS.Meas.Chems"], 
+                  big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(CITK.summary.table[CITK.summary.table$Parameter=="halflife",
+                                     "Num.ROCKS.Meas.Chems"] /
+                    num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), Cltot for ",
+           format(CITK.summary.table[CITK.summary.table$Parameter=="Cltot",
+                                     "Num.ROCKS.Meas.Chems"], 
+                  big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(CITK.summary.table[CITK.summary.table$Parameter=="Cltot",
+                                     "Num.ROCKS.Meas.Chems"] /
+                    num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), Fabs,oral for ",
+           format(CITK.summary.table[CITK.summary.table$Parameter=="Foral",
+                                     "Num.ROCKS.Meas.Chems"], 
+                  big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(CITK.summary.table[CITK.summary.table$Parameter=="Foral",
+                                     "Num.ROCKS.Meas.Chems"] /
+                    num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), Css for ",
+           format(CITK.summary.table[CITK.summary.table$Parameter=="Css",
+                                     "Num.ROCKS.Meas.Chems"],
+                  big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(CITK.summary.table[CITK.summary.table$Parameter=="Css",
+                                     "Num.ROCKS.Meas.Chems"] /
+                    num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), and Vdist for ",
+           format(CITK.summary.table[CITK.summary.table$Parameter=="Vdist",
+                                     "Num.ROCKS.Meas.Chems"], 
+                  big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(CITK.summary.table[CITK.summary.table$Parameter=="Vdist",
+                                     "Num.ROCKS.Meas.Chems"] /
+                    num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%).\n"))
+```
+
+```{r animal_data_text}
+cat(paste0("\nAnimal in vivo TK data were available for ",
+  sum(!(all.nonhuman.invivo.chems %in% all.human.invivo.chems)),
+  " chemicals without human in vivo data (",
+  num.invivo.nonhuman,
+  " chemicals overall).\n"))
+
+pharma.chems <- subset(use.table, pharmaceutical==1)$cichem_id
+num.pharma <- length(pharma.chems)
+ag.chems <- subset(use.table, agricultural==1)$cichem_id
+num.ag<- length(ag.chems)
+
+cat(paste0("\nOnly ",
+  signif(sum(all.human.invivo.chems %in% pharma.chems)/num.pharma*100,
+         PERCENTILE.SIG.FIGS),
+  "% of chemicals with pharmaceutical use have public human in vivo data, while ",
+  signif(sum(all.nonhuman.invivo.chems %in% pharma.chems)/num.pharma*100,
+         PERCENTILE.SIG.FIGS),
+  "% have animal data. For chemicals with agricultural use the percentages are ",
+  signif(sum(all.human.invivo.chems %in% ag.chems)/num.ag*100,
+         PERCENTILE.SIG.FIGS),
+  "% and ",
+  signif(sum(all.nonhuman.invivo.chems %in% ag.chems)/num.ag*100,
+         PERCENTILE.SIG.FIGS),
+  "%, respectively."))
+```
+
+### Transition to QSPR
+```{r transtion_to_qspr_text}
+  cat(paste0("Given that in vivo data are available for ~",
+             signif(num.invivo.rocks.anyspecies /
+                      num.rocks*100,2),
+             "\n"))
+  cat(paste0("\nMeasurements of one or more key in vitro TK ... available for ",
+             format(num.invitro.rocks, big.mark = ",", scientific = FALSE),
+             " chemicals in the collection (",
+             signif(num.invitro.rocks/num.rocks*100, PERCENTILE.SIG.FIGS),
+             "%).\n"))
+```
+
+```{r qspr_and_sankey_text}
+cat(paste0("\nAs shown in Figure 3, we could apply HTTK to only a portion of the ",
+           format(num.rocks, big.mark = ",", scientific = FALSE),
+           " chemicals in the ROCKS collection due to key limitations in the ",
+           "information and tools needed to fill data TK gaps.\n"))
+
+cat(paste0("\nFirst, ",
+           format(num.rocks.nostructure, big.mark = ",", scientific = FALSE),
+           " chemicals (",
+           signif(num.rocks.nostructure/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%) could not be described with Padel descriptors.\n"))
+
+cat(paste0("\nThe biggest loss of chemicals in Figure 3 was due to the AD of ",
+           "the physico-chemical QSPRs. Only ",
+           format(nrow(rocks.opera.withinAD), big.mark = ",", scientific = FALSE),
+           " (",
+           signif(nrow(rocks.opera.withinAD)/num.rocks*100,2),
+           "%) were within the AD of the QSPR models for both logP and pKa (ionization).\n"))
+
+cat(paste0("\nThere were ", 
+           format(nrow(httk.nophyschem), big.mark = ",", scientific = FALSE),
+           " chemicals with at least one in vitro measured TK parameter that ",
+           "were outside the AD of the QSPR models for physico-chemical ",
+           "properties.\n"))
+
+cat(paste0("\nThe QSPR models for HTTK properties require both structural ",
+           "descriptors and physico-chemical properties.\n"))
+
+cat(paste0("\nThere were ",
+           format(nrow(rocks.clint.withinAD), big.mark = ",", scientific = FALSE),
+           " chemicals with Clint QSPR predictions (",
+           signif(nrow(rocks.clint.withinAD)/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%),\n",
+           format(nrow(rocks.fup.withinAD), big.mark = ",", scientific = FALSE),
+           " chemicals with Fup predictions (",
+           signif(nrow(rocks.fup.withinAD)/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%), and ",
+           format(nrow(rocks.caco2.withinAD), big.mark = ",", scientific = FALSE),
+           " chemicals with Caco-2 predictions (",
+          signif(nrow(rocks.caco2.withinAD)/num.rocks*100, PERCENTILE.SIG.FIGS),
+          "%) within the AD of each model.\n"))
+
+cat(paste0("\nChemical-specific HTTK predictions could be made for a total of ",
+           format(num.ivive, big.mark = ",", scientific = FALSE),
+           " chemicals in the ROCKS collection (",
+           signif(num.ivive/nrow(rocks)*100, PERCENTILE.SIG.FIGS),
+           " percent).\n"))
+
+pfas.onecomp <- unique(subset(ivivedata, Model %in% "pfas1compartment")$cichem)
+not.pfas.onecomp <- unique(subset(ivivedata, !(Model %in% "pfas1compartment"))$cichem)
+pfas.onecomp.only <- pfas.onecomp[!(pfas.onecomp %in% not.pfas.onecomp)]
+cat(paste0("\nThese predictions include ",
+           format(length(pfas.onecomp.only), big.mark = ",", scientific = FALSE),
+           " made with the empirical ML model for PFAS.\n"))
+```
+
+```{R sankey_text}
+cat("\n",
+    format(num.rocks.structure, big.mark = ",", scientific = FALSE), 
+    "chemicals from ROCKS inventory where descriptors could be generated.\n")
+cat("\n",
+    format(nrow(subset(rocks.httk, clint_outlier %in% 1.0)), big.mark = ",", scientific = FALSE), 
+    "chemicals outside AD of Clint model.\n")
+cat("\n",
+    format(nrow(subset(rocks.httk, fup_outlier %in% 1.0)), big.mark = ",", scientific = FALSE), 
+    "chemicals outside AD of Fup model.\n")
+cat("\n",
+    format(nrow(subset(rocks.httk, papp_outlier %in% 1.0)), big.mark = ",", scientific = FALSE), 
+    "chemicals outside AD of Papp model.\n")
+cat("\n",
+    format(nrow(subset(rocks.httk, clint_outlier %in% 0.0 &
+                fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 &
+                  logp_ad_flag==FALSE)), big.mark = ",", scientific = FALSE), 
+    "chemicals with Clint, Fup, and Papp but outside AD of logP model.\n")
+cat("\n",
+    format(nrow(subset(rocks.httk, clint_outlier %in% 0.0 &
+                  fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 & pka_ad_flag==FALSE)), big.mark = ",", scientific = FALSE), 
+    "chemicals with Clint, Fup, and Papp but outside AD of pKa model.\n")
+cat("\n",
+    format(nrow(rocks.httk), big.mark = ",", scientific = FALSE), 
+    "chemicals from ROCKS inventory with Clint, fup, and Papp, and in domain",
+    "of those models, logP, and pKa.\n")
+```
+
+
+### Chemical use text
+```{r text_on_chem_use}
+  cat(paste0(
+  use.and.preds.table[which(use.and.preds.table$Num.Chems == 
+                              max(use.and.preds.table$Num.Chems)),
+                      "Use"],
+  " chemicals are the largest overall category and also have the fewest chemicals with HTTK predictions (",
+  signif(use.and.preds.table[which(use.and.preds.table$Num.Chems == 
+                                     max(use.and.preds.table$Num.Chems)),
+                             "Frac.No.Pred"]*100, PERCENTILE.SIG.FIGS),
+  "% with no prediction).\n"))
+
+cat(paste0("\nThe structures of ",
+  signif(use.and.preds.table[use.and.preds.table=="industrial", "Frac.No.Structure"]*100, 
+         PERCENTILE.SIG.FIGS),
+  "% of industrial chemicals could not be described, which precludes use of ",
+  "QSPR models to predict TK parameters.\n"))
+
+cat(paste0("\nAmong the industrial chemicals with structures, ",
+  signif(use.and.preds.table[use.and.preds.table=="industrial", "Frac.with.Struct.but.No.Pred"]*100, 
+         PERCENTILE.SIG.FIGS),
+  "% of have no prediction (that is, were outside the AD of at least one QSPR model).\n"))
+
+
+cat(paste0("\n",
+  use.and.preds.table[which(use.and.preds.table$Frac.No.Pred == 
+                              min(use.and.preds.table$Frac.No.Pred)),
+                      "Use"],
+    " chemicals are the best covered, although ",
+    signif(use.and.preds.table[which(use.and.preds.table$Frac.No.Pred == 
+                                       min(use.and.preds.table$Frac.No.Pred)),
+                               "Frac.No.Pred"]*100, PERCENTILE.SIG.FIGS),
+    "% still lack predictions.\n"))
+
+cat(paste0("\nThere are ",
+    format(length(unique(invivo.unknown$dtxsid)), big.mark = ",", scientific = FALSE),
+    " chemicals in Figure 4 with unknown current use that have in vivo TK data (see Table SX in Supporting information).\n"))
+```
+
+### Use Sector and AD text
+```{r text_for_use_sector_and_ad}
+useinfo <- read.csv("data/rocks_sector_table_2026-08-27.csv")
+pharma.with.desc <- subset(rocks.httk, cichem %in% 
+                   subset(useinfo, pharmaceutical==1)$cichem_id)
+num.pharma <- nrow(subset(useinfo, pharmaceutical==1))
+num.pharma.with.desc <- nrow(pharma.with.desc)
+
+cat(paste0("Among ", 
+    format(num.pharma, big.mark = ",", scientific = FALSE), 
+    " pharmaceuticals in the inventory, ",
+    "structure descriptors could be generated for ",
+    format(num.pharma.with.desc, big.mark = ",", scientific = FALSE),
+    " (",
+      signif(num.pharma.with.desc/num.pharma*100, 
+         PERCENTILE.SIG.FIGS),
+    "%).\n"))
+
+cat(paste0("\nThere were ",
+    format(nrow(subset(pharma.with.desc, clint_outlier %in% 1.0)), 
+           big.mark = ",", scientific = FALSE), 
+    " (",
+    signif(nrow(subset(pharma.with.desc, clint_outlier %in% 1.0)) / 
+             num.pharma*100, 
+           PERCENTILE.SIG.FIGS),
+    "%) pharmaceuticals outside the AD of Clint model, ",
+    format(nrow(subset(pharma.with.desc, fup_outlier %in% 1.0)), 
+           big.mark = ",", scientific = FALSE), 
+    " (",
+    signif(nrow(subset(pharma.with.desc, fup_outlier %in% 1.0)) / 
+             num.pharma*100, 
+           PERCENTILE.SIG.FIGS),
+    "%) outside the AD of Fup model, and ",
+    format(nrow(subset(pharma.with.desc, papp_outlier %in% 1.0)), 
+           big.mark = ",", scientific = FALSE), 
+    " (",
+    signif(nrow(subset(pharma.with.desc, papp_outlier %in% 1.0)) / 
+             num.pharma*100, 
+           PERCENTILE.SIG.FIGS),
+    "%) outside the AD of Papp model.\n"))
+    
+cat(paste0("\nThere were some pharmaceuticals with valid Clint, Fup, and Papp ",
+    "predictions that were outside AD of one or both phys-chem QSPRs: ",
+     format(nrow(subset(pharma.with.desc, clint_outlier %in% 0.0 &
+                  fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 &
+                  logp_ad_flag==FALSE)), 
+            big.mark = ",", scientific = FALSE), 
+    " (",
+    signif(nrow(subset(pharma.with.desc, clint_outlier %in% 0.0 &
+                  fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 &
+                  logp_ad_flag==FALSE)) / 
+             num.pharma*100, 
+           PERCENTILE.SIG.FIGS),
+    "%) for the logP model and ",
+    format(nrow(subset(pharma.with.desc, clint_outlier %in% 0.0 &
+                  fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 & 
+                  pka_ad_flag==FALSE)), 
+           big.mark = ",", scientific = FALSE), 
+    " (",
+    signif(nrow(subset(pharma.with.desc, clint_outlier %in% 0.0 &
+                  fup_outlier %in% 0.0 &
+                  papp_outlier %in% 0.0 & 
+                  pka_ad_flag==FALSE)) /
+             num.pharma*100, 
+           PERCENTILE.SIG.FIGS),    
+    "%) for the pKa model.\n"))
+
+```
+
+### Chemical class analysis
+```{r chem_class_text}
+# Find first noTk.class not in top of TK class:
+  TK.class <- rocks.TK.prevalence$class[1:20]
+  TK.class <- TK.class[TK.class!=""]
+  noTK.class <- rocks.noTK.prevalence$class[1:20]
+  noTK.class <- noTK.class[noTK.class!=""]
+  
+  this.index <- 1
+  while(all(noTK.class[1:this.index] %in% TK.class[1:this.index]) |
+        all(noTK.class[1:(this.index+1)] %in% TK.class[1:(this.index+1)]))
+  {
+    this.index <- this.index + 1
+  }
+  class.dif <- this.index
+  most.common.classes <- TK.class[1:(class.dif-1)]
+cat(paste0("TThe most prevalent chemical classes in order were: ",
+    paste(TK.class[1:(class.dif-1)],collapse=", "),
+    ".\n"))
+
+cat(paste0("\nThe next most prevalent classes for chemicals with TK predictions were: ",
+           paste(unlist(
+             TK.class[class.dif:(class.dif+2)]),collapse=", "),
+           "while the next classes among the chemicals with no TK predictions were: ",
+           paste(unlist(
+             noTK.class[class.dif:(class.dif+2)]),collapse=", "),
+           ".\n"))
+
+cat(paste0("\nThere are ",
+           dim(rocks.noTK.prevalence)[1] - dim(rocks.TK.prevalence)[1],
+           " more classes present among the chemicals with no TK predictions (see Supplemental Table X).\n"))
+missing.TK.prevalance <- subset(rocks.noTK.prevalence,
+                               !(class %in% rocks.TK.prevalence$class))
+
+cat(paste0("\nThe most prevalent classes that do not have any HTTK predictions were: ",
+           paste(unlist(
+             subset(rocks.noTK.prevalence, !(class %in% rocks.TK.prevalence$class))[1:5,"class"]),collapse=", ")))
+
+cat(paste0("\nThe most prevalent classes that do not have any HTTK predictions were various classes of metallic compounds. The TK of metals may be very different from the organic and PFAS chemicals covered by the QSPRs [KENTUCKY REF].\n"))  
+
+```
+
+### Half-life stats
+```{r text_for_halflife}
+  hl.invivo <- subset(hl.data, Type == "In Vivo" & 
+                        tolower(Species)=="human" &
+                        is.finite(as.numeric(Value)))
+  min.row <- which(as.numeric(hl.invivo$Value) == 
+                     min(as.numeric(hl.invivo$Value), na.rm=TRUE))
+  if (hl.invivo[min.row, "Units"] == "hours") 
+  {
+    cat(paste0(hl.invivo[min.row, "Compound"],
+        " has a half life of ",
+        signif(as.numeric(hl.invivo[min.row, "Value"])*60, 2),
+        " minutes (",
+        query_reference(hl.invivo[min.row,"ref_id_fk"])$Reference,
+        ")\n"
+        ))
+    cat(paste0(hl.invivo[min.row, "Compound"],
+        " has a half life of ",
+        signif(as.numeric(hl.invivo[min.row, "Value"])*60*60, 2),
+        " seconds (",
+        query_reference(hl.invivo[min.row,"ref_id_fk"])$Reference,
+        ")\n"
+        ))
+  }
+  max.row <- which(as.numeric(hl.invivo$Value) == 
+                     max(as.numeric(hl.invivo$Value), na.rm=TRUE))
+  if (all(hl.invivo[max.row, "Units"] == "hours"))
+  {
+    cat(paste0(hl.invivo[max.row, "Compound"],
+               " has a half life of ",
+               signif(as.numeric(hl.invivo[max.row, "Value"])/24/365, 2),
+               " years (",
+               query_reference(hl.invivo[max.row,"ref_id_fk"])$Reference,
+               ")\n"
+    ))
+  }
+  
+  cat("The in vivo half-lives span",
+      signif(log10(as.numeric(hl.invivo[max.row, "Value"]) /
+                     as.numeric(hl.invivo[min.row, "Value"])), 1),
+      "orders of magnitude.")
+```
+
+
+
+### TK Stats Text
+```{r tk_stats_text}
+cat(paste0("For halflife, ",
+           signif(tkstats.table[tkstats.table$Parameter=="Half-Life",
+                                "Within.Ten"]*100, 
+                  PERCENTILE.SIG.FIGS),
+           "% of predictions fall within ten-fold of the measured value, while ",
+           signif(tkstats.table[tkstats.table$Parameter=="Half-Life",
+                                "Within.Three"]*100, 
+                  PERCENTILE.SIG.FIGS),
+           "% fall within three-fold."))
+
+first.over.1000 <- hl.quant.frac[hl.quant.frac$Obs.Quant>1000,"Quant.Prob"][1]
+cat(paste0("\nThere are ",
+           hl.quant.frac[hl.quant.frac$Quant.Prob==first.over.1000,"Num.Obs"],
+           " chemicals in the upper ",
+           signif(first.over.1000*100,3),
+           "% quantile with measured human in vivo half-lives of ",
+           format(signif(hl.quant.frac[hl.quant.frac$Quant.Prob==first.over.1000,
+                                       "Obs.Quant"], PERCENTILE.SIG.FIGS), 
+                  big.mark = ",", scientific = FALSE),
+           " h or longer.\n"))
+
+cat(paste0("\nFor these chemicals, HTTK based on QSPRs predicts that the ",
+           "half-life would be more than 1000 h for ",
+           signif(hl.quant.frac[hl.quant.frac$Quant.Prob==first.over.1000,
+                                "FRAC.Over1000"]*100, PERCENTILE.SIG.FIGS),
+           "%.\n"))
+
+hl.predgt1000 <- subset(hl, Predicted > 1000)
+cat(paste0("\nHowever, HTTK predictions are conservative, and only ",
+           signif(sum(hl.predgt1000$Observed>1000)/nrow(hl.predgt1000)*100,
+       PERCENTILE.SIG.FIGS),
+       "% of chemicals predicted to have half-lives greater than 1000 h actually had such half-lives.\n"))
+
+pred.over.1000 <- subset(hl.data,Type %in% c("QSPR","In Vitro") &
+                           Value > 1000)[,c("cichem", "DTXSID", "CASRN", "Compound",
+                                            "Model", "Type", "Species",
+                                            "Value", "Units")]
+write.table(pred.over.1000, file="tables/SupTableX-PredictedLongHalflives.txt",
+            sep="\t",
+            row.names=FALSE)
+cat(paste0("\nThere are ",
+           length(unique(pred.over.1000$cichem)),
+           " chemicals predicted to have half-lives over 1000 h, as given in Table SX.\n"))
+
+min.1000 <- min(subset(hl.quant.frac, Quant.Prob > first.over.1000)$FRAC.Over1000)
+max.1000 <- max(subset(hl.quant.frac, Quant.Prob > first.over.1000)$FRAC.Over1000)
+cat(paste0("\nAs we look to higher quantiles ...  half-life ranges from ",
+           signif(min.1000*100,
+                  PERCENTILE.SIG.FIGS),
+           "% to ",
+           signif(max.1000*100,
+                  PERCENTILE.SIG.FIGS),
+           "% (see Table S9, Supporting Information).\n"))
+
+min.short <- min(subset(hl.quant.frac, Quant.Prob < first.over.1000)$Frac.Tenfold)
+max.short <- max(subset(hl.quant.frac, Quant.Prob < first.over.1000)$Frac.Tenfold)
+cat(paste0("\nFor chemicals with half-lives less than ... factor of ten ranges from ",
+           signif(min.short*100,
+                  PERCENTILE.SIG.FIGS),
+           "% to ",
+           signif(max.short*100,
+                  PERCENTILE.SIG.FIGS),
+           "%.\n"))    
+```
+
+```{r other_tk_stats_text}
+min.ten <- min(subset(tkstats.table, Parameter %in% c("Vdist","CLtot","Foral*","Css"))$Within.Ten)
+min.three <- min(subset(tkstats.table, Parameter %in% c("Vdist","CLtot","Foral*","Css"))$Within.Three)
+cat(paste0("\nFor Css, Vdist, Cltot, and Fabs,oral, >",
+           signif(min.ten*100,
+                  PERCENTILE.SIG.FIGS),
+           "% of the predictions are also within tenfold and >",
+           signif(min.three*100,
+                  PERCENTILE.SIG.FIGS),
+           "% are within three-fold\n"))
+
+min.r2 <- min(tkstats.table$RSquared)
+max.r2 <- max(tkstats.table$RSquared)
+cat(paste0("The percentage of chemical-to chemical variance explained ranges from ",
+           signif(min.r2*100,
+                  PERCENTILE.SIG.FIGS),
+           "% to ",
+           signif(max.r2*100,
+                  PERCENTILE.SIG.FIGS),
+           "% in Table 2.\n"))
+
+
+```
+
+
+### Implications for Chemical Risk
+
+### Half-life and chemical use
+```{r halflife_and_use_text}
+  max.hl <- subset(hl.invivo.data, Bin %in% c(max(hl.invivo.data$Bin),
+                                              max(hl.invivo.data$Bin)-1,
+                                              max(hl.invivo.data$Bin)-2))
+  num.max <- nrow(max.hl)
+  cat(paste0("On the far right of Figure 5, a total of ",
+    num.max," with the longest half-lives (>",
+             signif(unlist(BinLeft)[length(BinLeft)-2]/24/365,2),
+      " years) are represented..\n"))
+  
+  cat(paste0(sum(max.hl$biomonitoring),
+             " of these ",
+             num.max,
+            " chemicals have been detected in human biomonitoring. [REF ISAACS]\n"))
+  
+  cat(paste0("The chemical among the longest half-lives with pharmaceutical use is ",
+             subset(max.hl, pharmaceutical==1)$Compound,
+             ".\n"))
+  cat(paste0("The chemicals among the longest half-lives and food use are ",
+             paste(subset(max.hl, food==1)$Compound, collapse=" and "),
+             ".\n"))
+```
+
+```{r implications_css}
+cat("\nCss is the key TK parameter for the incorporation of data from toxicological NAMs into chemical risk assessment.")
+cat(paste0(signif(subset(tkstats.table, Parameter %in% c("Css"))$Within.Ten*100,
+                  PERCENTILE.SIG.FIGS),
+           "% of predictions fall within ten-fold of in vivo estimates, while ",
+           signif(subset(tkstats.table, Parameter %in% c("Css"))$Within.Three*100,
+                  PERCENTILE.SIG.FIGS),
+           "% fall within three-fold.\n"))
+```
+
+### Uncertainty/Variability Ratios
+```{r uncertainty_analysis_text}
+cat(paste0("\nis approximately log-normally distributed with a mean of ",
+           signif(mean(subset(css.uf.table,Ratio.Type=="Uncertainty")$Ratio),2),
+           ".\n"))
+cat(paste0("\nis approximately log-normally distributed with a mean of ",
+           signif(mean(subset(css.uf.table,Ratio.Type=="Variability")$Ratio),2),
+           ".\n"))
+uf.var <- subset(css.uf.table, Ratio.Type =="Variability")
+ratio.max.row <- which(uf.var$Ratio == max(uf.var$Ratio))
+ratio.max.id <- uf.var[which(uf.var$Ratio == max(uf.var$Ratio)), "chem_id_fk"]
+cat(paste0("\nwith some chemicals having much larger ratios (maximum ",
+  signif(uf.var[ratio.max.row,"Ratio"],3),
+           " for ",
+  subset(chem.physical_and_invitro.data$synonyms,
+       chem_id_fk==ratio.max.id)$synonym_formal,
+       ").\n"))
+```
+
+### Final Remarks
+```{r closing_text}
+cat(paste0("\nBased on the public data collected here, human in vivo-derived ",
+"TK summary parameters are available for ",
+           format(num.invivo.rocks.human, big.mark = ",", scientific = FALSE),
+           " of the ", 
+           num.rocks,
+           " chemicals of the ROCKS collection (",
+           signif(num.invivo.rocks.human/num.rocks*100, PERCENTILE.SIG.FIGS),
+           "%).\n"))
+
+cat(paste0("\nFor HTTK methods, in vitro TK measurements were available for ",
+           format(num.invitro.rocks, big.mark = ",", scientific = FALSE),
+           " (",
+           signif(num.invitro.rocks/num.rocks*100,
+                  PERCENTILE.SIG.FIGS),
+           "%), and in silico predictions of HTTK parameters were generated for ",
+           format(num.insilico.rocks, big.mark = ",", scientific = FALSE),
+           " (",
+           signif(num.insilico.rocks/num.rocks*100,
+                  PERCENTILE.SIG.FIGS),
+           "%). Together they allow HTTK predicions for ",
+           format(num.ivive.rocks, big.mark = ",", scientific = FALSE),
+           " (",
+           signif(num.ivive.rocks/num.rocks*100,
+                  PERCENTILE.SIG.FIGS),
+           "%).\n"))
+
+cat(paste0("\nWe have further made available predictions of these statistics and conversions for reverse dosimetry IVIVE via three exposure routes available for ",
+           format(num.ivive.rocks, big.mark = ",", scientific = FALSE),
+           " chemicals in the ROCKS collection.\n"))
+
+cat(paste0("\ncan inform TK assumptions for ",
+    signif(num.ivive/num.rocks*100,
+           PERCENTILE.SIG.FIGS),
+    "% of the ROCKS collection, highlighting...\n"))
+
+```
